@@ -1,0 +1,52 @@
+.contenedorInicio {
+    padding-top: 5vh;
+    padding-bottom: 10vh;
+}
+
+
+#btnContSIS {
+    margin-top: 5vh;
+}
+
+.bordeMedio2 {
+    position: relative;
+
+}
+
+.bordeMedio1 {
+    position: relative;
+    padding-bottom: 6vh
+}
+
+.bordeMedio1 {
+    border-style: solid;
+    border-width: 0 1px 0 0;
+}
+
+.bordeMedio2 {
+    border-style: solid;
+    border-width: 0 0 0 1px;
+}
+
+@media (min-width: 500px) and (max-width: 767.98px) {
+    .bordeMedio1 {
+        border-style: solid;
+        border-width: 0 0 1px 0;
+    }
+    
+    .bordeMedio2 {
+        border-style: solid;
+        border-width: 1px 0 0 0;
+    }
+}
+@media (max-width: 499.98px) {
+    .bordeMedio1 {
+        border-style: solid;
+        border-width: 0 0 1px 0;
+    }
+    
+    .bordeMedio2 {
+        border-style: solid;
+        border-width: 1px 0 0 0;
+    }
+}

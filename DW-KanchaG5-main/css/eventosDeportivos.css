@@ -1,0 +1,141 @@
+main {
+    margin-top: 20px;
+}
+
+.tipo-evento {
+    margin: 0 10px;
+    cursor: pointer;
+    padding-bottom: 5px;
+    border: 2px transparent;
+    background-color: transparent;
+    color: black;
+    font-size: 20px;
+}
+
+.tipo-evento.active {
+    border-bottom: 2px solid red;
+}
+
+#proximos,
+#pasados {
+    margin: 0 auto;
+    width: 80%;
+}
+
+#proximos .mes-evento,
+#pasados .mes-evento {
+    text-align: center;
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+
+.month-container {
+    background-color: #f2eaea;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.event-details {
+    display: none;
+    margin-top: 20px;
+}
+
+.event-card {
+    background-color: #fff5f5;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.event-card h3 {
+    margin-top: 0;
+}
+
+#tipo {
+    margin: 0 auto;
+    display: flex;
+}
+
+
+.image-with-text {
+    position: relative;
+    text-align: center;
+    color: #fff;
+    overflow: hidden;
+    /* Para ocultar partes de la imagen que sobresalgan */
+}
+
+.image-with-text img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    /* Ajusta la imagen para cubrir completamente el contenedor */
+    object-position: center top;
+    /* Ajusta la posición de la imagen (centro arriba en este caso) */
+}
+
+.image-with-text .text-nav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    /* Ajuste el ancho del contenedor de texto */
+
+    /* Ancho máximo del contenedor de texto */
+}
+
+.image-with-text .text-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    /* Ajuste el ancho del contenedor de texto */
+    max-width: 600px;
+    /* Ancho máximo del contenedor de texto */
+}
+
+.image-with-text h2,
+.image-with-text p {
+    font-size: 1.5rem;
+    /* Tamaño del texto */
+    line-height: 1.6;
+    /* Espaciado entre líneas */
+    margin-bottom: 0;
+    /* Margen inferior */
+}
+
+/* Estilos adicionales para pantallas pequeñas */
+@media (max-width: 768px) {
+    .image-with-text .text-overlay {
+        padding: 10px;
+    }
+
+    .image-with-text h2,
+    .image-with-text p {
+        font-size: 16px;
+        /* Reducir el tamaño del texto para pantallas pequeñas */
+    }
+
+    .text-nav {
+        padding: 5px;
+    }
+}
+
+.text-nav {
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+    color: rgb(193, 60, 60);
+    padding: 10px;
+}
+
+.text-nav p, .text-nav a {
+    margin: 0;
+}
