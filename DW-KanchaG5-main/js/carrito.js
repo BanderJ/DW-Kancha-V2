@@ -1,31 +1,30 @@
 document.getElementById('anadir').addEventListener('click', function() {
     // Datos del producto que se van a agregar al carrito
+
     const producto = {
-        id: 1, // Puedes cambiarlo según sea necesario
-        nombre: 'Nike Mercurial',
+        nombre: document.getElementById("idNombre").textContent,
         talla: 'M', // Ejemplo de talla
         cantidad: 1, // Cantidad inicial
-        precio: 120.00,
-        img: '../img/adidas_logo.svg'
+        precio: document.getElementById("idPrecio").textContent,
+        img: document.getElementById("idImagen").src
     };
 
     // Obtener el carrito del localStorage
     let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
 
-    // Verificar si el producto ya está en el carrito
-    const index = carrito.findIndex(item => item.id === producto.id);
-    if (index !== -1) {
-        // Si el producto ya está en el carrito, aumentar la cantidad
-        carrito[index].cantidad += 1;
-    } else {
+    // // Verificar si el producto ya está en el carrito
+     const index = carrito.findIndex(item => item.id === producto.id);
+     if (index !== -1) {
+    //     // Si el producto ya está en el carrito, aumentar la cantidad
+         carrito[index].cantidad += 1;
+     } else {
         // Si el producto no está en el carrito, agregarlo
         carrito.push(producto);
-    }
+     }
 
     // Guardar el carrito actualizado en el localStorage
     localStorage.setItem('carrito', JSON.stringify(carrito));
 
-    alert('Producto añadido al carrito!');
 });
 
 document.getElementById('basket-icon').addEventListener('click', function() {
