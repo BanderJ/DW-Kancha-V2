@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='../static/css/bootstrap.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='../static/css/cabezapie.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='../static/css/MenuPrincipal.css') }}">
+    <title>Kancha</title>
+    <link rel="icon" href="{{ url_for('static',filename='../static/img/logo_kancha_club.svg') }}">
+</head>
+
+<body>
+    <header>
+        <div class="row g-0 align-items-center bg-negro-k py-3 py-lg-0">
+            <div class="col"></div>
+
+            <div class="col-4 col-md-6 col-lg-3 d-flex justify-content-center order-2 order-lg-1">
+                <a class="nav-link" href="index.html">
+                    <img src="{{ url_for('static',filename='../static/img/logo_kancha_encabezado.svg') }}" class="img-fluid log1" alt="logo_kancha_encabezado">
+                </a>
+            </div>
+
+            <div class="col-3 col-md-3 col-lg-6 order-1 order-lg-2">
+                <nav class="navbar navbar-expand-lg p-0">
+                    <div class="container-fluid d-flex justify-content-center p-0">
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                            <img class="togbicon" src="../img/tb.svg" alt="Toggle">
+                        </button>
+                        <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                            <ul class="navbar-nav">
+                                <li class="nav-item dropdown py-4 d-flex">
+                                    <a class="nav-link dropdown-toggle l-rojo-k px-4" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        News
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <div class="col d-flex">
+                                            <div><img src="../img/buscar.svg" alt=""></div>
+                                            <li><a class="dropdown-item" href="#">Action</a></li>
+                                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                        </div>
+                                    </ul>
+                                    <a class="nav-link dropdown-toggle l-rojo-k px-4" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Hombre
+                                    </a>
+                                    <ul class="dropdown-menu hombre-dropdown">
+                                        <div class="row g-3 px-3 py-3">
+                                            <div class="col-md-2">
+                                                <h6 class="fw-bold">DESTACADO</h6>
+                                                <ul class="list-unstyled">
+                                                    <li><a class="dropdown-item" href="#">Hot Sale</a></li>
+                                                    <li><a class="dropdown-item" href="#">Outlet</a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <h6 class="fw-bold">CALZADO</h6>
+                                                <ul class="list-unstyled">
+                                                    <li><a class="dropdown-item" href="#">Correr</a></li>
+                                                    <li><a class="dropdown-item" href="/productos">Fútbol</a></li>
+                                                    <li><a class="dropdown-item" href="#">Vóley</a></li>
+                                                    <li><a class="dropdown-item" href="#">Básquet</a></li>
+                                                    <li><a class="dropdown-item" href="#">Gimnasio</a></li>
+                                                    <li><a class="dropdown-item" href="#">Senderismo</a></li>
+                                                    <li><a class="dropdown-item" href="#">Otros</a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <h6 class="fw-bold">ROPA</h6>
+                                                <ul class="list-unstyled">
+                                                    <li><a class="dropdown-item" href="#">Polos</a></li>
+                                                    <li><a class="dropdown-item" href="#">Poleras</a></li>
+                                                    <li><a class="dropdown-item" href="#">Shorts</a></li>
+                                                    <li><a class="dropdown-item" href="#">Casacas</a></li>
+                                                    <li><a class="dropdown-item" href="#">Camisetas</a></li>
+                                                    <li><a class="dropdown-item" href="#">Buzos</a></li>
+                                                    <li><a class="dropdown-item" href="#">Otros</a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <h6 class="fw-bold">ACCESORIOS</h6>
+                                                <ul class="list-unstyled">
+                                                    <li><a class="dropdown-item" href="#">Tomatodos</a></li>
+                                                    <li><a class="dropdown-item" href="#">Guantes</a></li>
+                                                    <li><a class="dropdown-item" href="#">Gorras</a></li>
+                                                    <li><a class="dropdown-item" href="#">Lentes</a></li>
+                                                    <li><a class="dropdown-item" href="#">Mochilas</a></li>
+                                                    <li><a class="dropdown-item" href="#">Medias</a></li>
+                                                    <li><a class="dropdown-item" href="#">Otros</a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <h6 class="fw-bold">MARCAS</h6>
+                                                <ul class="list-unstyled">
+                                                    <li><a class="dropdown-item" href="#">Adidas</a></li>
+                                                    <li><a class="dropdown-item" href="#">Nike</a></li>
+                                                    <li><a class="dropdown-item" href="#">Umbro</a></li>
+                                                    <li><a class="dropdown-item" href="#">Puma</a></li>
+                                                    <li><a class="dropdown-item" href="#">Otros</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </ul>
+                                    <a class="nav-link dropdown-toggle l-rojo-k px-4" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Mujer
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <div class="col d-flex">
+                                            <div><img src="../img/buscar.svg" alt=""></div>
+                                            <li><a class="dropdown-item" href="#">Action</a></li>
+                                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                        </div>
+                                    </ul>
+                                    <a class="nav-link dropdown-toggle l-rojo-k px-4" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Niños
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <div class="col d-flex">
+                                            <div><img src="../img/buscar.svg" alt=""></div>
+                                            <li><a class="dropdown-item" href="#">Action</a></li>
+                                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                        </div>
+                                    </ul>
+                                    <a class="nav-link dropdown-toggle l-rojo-k px-4" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Deportes
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <div class="col d-flex">
+                                            <div><img src="../img/buscar.svg" alt=""></div>
+                                            <li><a class="dropdown-item" href="#">Action</a></li>
+                                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                        </div>
+                                    </ul>
+                                    <a class="nav-link dropdown-toggle l-rojo-k px-4" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Ofertas
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <div class="col d-flex">
+                                            <div><img src="../img/buscar.svg" alt=""></div>
+                                            <li><a class="dropdown-item" href="#">Action</a></li>
+                                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                        </div>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="col-5 col-md-3 col-lg-3 order-3 order-lg-3 d-flex justify-content-center align-items-center">
+                <button type="button" class="btn btrig py-2"><img src="../img/buscar.svg" alt=""></button>
+                <button type="button" class="btn btrig py-2"><img src="../img/carrito.svg" alt=""></button>
+                <button type="button" class="btn btrig py-2"><img src="../img/usuario.svg" alt=""></button>
+            </div>
+
+            <div class="col">
+
+            </div>
+        </div>
+        <div class="row g-0 cabi py-2 px-4">
+            <div class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active" data-bs-interval="2500">
+                        <p>
+                            <a class="nav-link" href="#">15% DSCTO. EN TODO EL CALZADO DEPORTIVO<br class="d-md-none"><span class="d-md-inline d-none">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>¡ÚNETE A KANCHA CLUB!</a>
+                        </p>
+                    </div>
+                    <div class="carousel-item" data-bs-interval="2500">
+                        <p>
+                            <a class="nav-link" href="#">OFERTAS EXCLUSIVAS EN TU CUMPLE<br class="d-md-none"><span class="d-md-inline d-none">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>¡CELEBRA CON KANCHA CLUB!</a>
+                        </p>
+                    </div>
+                    <div class="carousel-item" data-bs-interval="2500">
+                        <p>
+                            <a class="nav-link" href="#">COMPARTE TU PASIÓN POR EL DEPORTE<br class="d-md-none"><span class="d-md-inline d-none">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>¡SÉ PARTE DE NUESTRA COMUNIDAD!</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div>
+        <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel" itemid="carrusel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="{{ url_for('static',filename='../static/img/adidas.jpg') }}" class="imagenes_banner" class="d-block w-100"
+                        alt="...">
+                </div>
+                <div class="carousel-item">
+                    <img src="{{ url_for('static',filename='../static/img/puma.jpg')}}" class="imagenes_banner" class="d-block w-100"
+                        alt="...">
+                </div>
+                <div class="carousel-item">
+                    <img src="{{ url_for('static',filename='../static/img/newbalance.jpg') }}" class="imagenes_banner" class="d-block w-100"
+                        alt="...">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying"
+                data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying"
+                data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+    <main class="container">
+        <h2 class="text-danger">En tendencia</h2>
+        <br>
+        <div class="row mx-2 gap-4 d-flex justify-content-center align-items-center">
+            <div class="card" style="width: 18rem;">
+                <img src="{{url_for('static',filename='../static/img/foto (22).avif')}}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Future 7 ultimate</h5>
+                    <div class="row">
+                        <p class="card-text col">S/ 540.00</p>
+                        <p class="col"><del>S/ 600.00</del></p>
+                    </div>
+                    <p><strong>S/ 520.00</strong></p>
+                    <a href="#" class="btn btn-danger">Añadir al carrito</a>
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+                <img src="{{url_for('static',filename='../static/img/foto (27).avif')}}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Future 7 ultimate</h5>
+                    <div class="row">
+                        <p class="card-text col">S/ 540.00</p>
+                        <p class="col"><del>S/ 600.00</del></p>
+                    </div>
+                    <p><strong>S/ 520.00</strong></p>
+                    <a href="#" class="btn btn-danger">Añadir al carrito</a>
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+                <img src="{{url_for('static',filename='../static/img/foto (71).webp')}}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Mercurial Vapor 15</h5>
+                    <div class="row">
+                        <p class="card-text col">S/ 341.10</p>
+                        <p class="col"><del>S/ 379.00</del></p>
+                    </div>
+                    <p><strong>S/ 320.00</strong></p>
+                    <a href="#" class="btn btn-danger">Añadir al carrito</a>
+                </div>
+            </div>
+        </div>
+        <br>
+        <h2 class="text-danger">Kancha News</h2>
+        <br>
+        <br>
+        <div class="row mx-2 gap-4 d-flex justify-content-center align-items-center">
+            <div class="card" style="width: 18rem;">
+                <img src="{{url_for('static',filename='../static/img/nike.jpg')}}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">NOTICIA</h5>
+                    <p>Lo último en exportaciones de Nike</p>
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+                <img src="{{url_for('static',filename='../static/img/fondo4.jpg')}}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">NOTICIA</h5>
+                    <p>Nuevas sedes de Kancha. Entérate hoy mismo </p>
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+                <img src="{{url_for('static',filename='../static/img/adidas.jpg')}}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">NOTICIA</h5>
+                    <p>Se firma acuerdo de exclusividad con Adidas</p>
+                </div>
+            </div>
+        </div>
+        <button class="btn col-lg-4 col-sm-8 bg-danger text-white my-5 p-3">Explorar las últimas noticias y tendencias</button>
+        <br>
+        <h2 class="text-danger">¿Quienes Somos?</h2>
+        <br>
+        <p><strong>Kancha</strong> nace desde la idea compartida de sus fundadores por recrear un espacio donde las
+            personas se conecten a través del deporte y lo hagan acompañados con los mejores artículos deportivos, más
+            modernos y más cómodos del ámbito del deporte y el entrenamiento.
+            Nuestra misión como organización es ofrecer a nuestros clientes acceso a los mejores productos deportivos
+            del mundo, proporcionando la más alta calidad y una amplia variedad de marcas reconocidas.</p>
+        <br>
+        <a href="../html/SobreNosotros.html" class="text-white bg-danger col-lg-4 col-sm-8 py-3 px-5 d-flex justify-content-center rounded-2">Conocer más sobre Kancha</a>
+        <br>
+    </main>
+    <footer class="text-center text-lg-start text-white bg-negro-k">
+        <div class="row p-0 m-0 align-items-center bg-blanco-k py-2">
+            <div class="col p-0">
+
+            </div>
+            <div class="col-xl-1 col-lg-1 col-md-12 col-sm-12 p-0 logopie text-center">
+                <a href="KanchaClub.html">
+                    <img src="{{ url_for('static',filename='../static/img/logo_kancha_club.svg') }}" alt="logopie">
+                </a>
+            </div>
+            <div class="col-xl-7 col-lg-8 col-md-12 col-sm-12 p-0 accionpie d-flex justify-content-center my-lg-0 my-3">
+                <p class="l-negro-k"><b>SÉ MIEMBRO DE KANCHA CLUB</b><br>Accede a descuentos únicos y ofertas exclusivas</p>
+            </div>
+            <div class="col-xl-1 col-lg-1 col-md-12 col-sm-12 p-0 unirsepie d-flex justify-content-center my-lg-0 my-3">
+                <a class="d-flex align-items-center unirse" href="KanchaClub.html">
+                    <button class="btn bg-rojo-k l-blanco-k">UNIRSE</button>
+                </a>
+            </div>
+            <div class="col p-0">
+
+            </div>
+        </div>
+
+        <div>
+            <div class="container text-center text-md-start mt-5">
+                <div class="row mt-3">
+                    <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4 ayudapie">
+                        <h6 class="text-uppercase fw-bold">Ayuda</h6>
+                        <br>
+                        <p>
+                        <a href="#!">Obtener</a>
+                        </p>
+                        <p>
+                        <a href="#!">Pedidos y Devoluciones</a>
+                        </p>
+                        <p>
+                        <a href="#!">Envíos y Entregas</a>
+                        </p>
+                        <p>
+                        <a href="#!">Opciones de Pago</a>
+                        </p>
+                        <p>
+                        <a href="#!">Guía de Tallas</a>
+                        </p>
+                        <p>
+                        <a href="#!">Mapa del Sitio</a>
+                        </p>
+                        <p>
+                        <a href="#!">Soporte en Linea</a>
+                        </p>
+                        <p>
+                        <a href="#!">Dudas Frecuentes</a>
+                        </p>
+                    </div>
+                    <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4 ayudapie">
+                        <h6 class="text-uppercase fw-bold">Productos</h6>
+                        <br>
+                        <p>
+                        <a href="#!">Novedades</a>
+                        </p>
+                        <p>
+                        <a href="#!">Outlet</a>
+                        </p>
+                        <p>
+                        <a href="#!">Marcas</a>
+                        </p>
+                        <p>
+                        <a href="#!">KanchaClub</a>
+                        </p>
+                        <p>
+                        <a href="#!">KanchaCustom</a>
+                        </p>
+                        <br>
+                        <p>
+                        <a href=""><button class="btn"><img class="me-2" src="../img/lb.svg" alt="">Libro de Reclamaciones</button></a>
+                        </p>
+                    </div>
+                    <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4 ayudapie">
+                        <h6 class="text-uppercase fw-bold">Empresa</h6>
+                        <br>
+                        <p>
+                        <a href="#!">Acerca de Kancha</a>
+                        </p>
+                        <p>
+                        <a href="#!">Novedades</a>
+                        </p>
+                        <p>
+                        <a href="#!">Misión</a>
+                        </p>
+                        <p>
+                        <a href="#!">Visión</a>
+                        </p>
+                        <p>
+                        <a href="#!">Nuestra Historia</a>
+                        </p>
+                        <p>
+                        <a href="#!">Contáctanos</a>
+                        </p>
+                    </div>
+                    <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-md-0 mb-4 ayudapie">
+                        <h6 class="text-uppercase fw-bold">Redes Kancha</h6>
+                        <br>
+                        <p><a href="#"><img class="me-2" src="{{url_for('static',filename='../static/img/fb.svg')}}" alt="fb">KanchaPeru</a><p>
+                        <p><a href="#"><img class="me-2" src="{{url_for('static',filename='../static/img/ig.svg')}}" alt="ig">@kanchape</a><p>
+                        <p><a href="#"><img class="me-2" src="{{url_for('static',filename='../static/img/wsp.svg')}}" alt="wsp">+51 971133030</a><p>
+                        <p><a href="#"><img class="me-2" src="{{url_for('static',filename='../static/img/tw.svg')}}" alt="tw">@kancheperu</a><p>
+                        <p><a href="#"><img class="me-2" src="{{url_for('static',filename='../static/img/gm.svg')}}" alt="gm">kancha@gmail.com</a><p>
+                        <p><a href="#"><img class="me-2" src="{{url_for('static',filename='../static/img/dc.svg')}}" alt="dc">Kancha Club</a><p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center p-3 bg-rojo-k legalpie">
+            <p>
+                <a class="mx-4" href="">Configuración de Cookies</a>|
+                <a class="mx-4" href="">Términos y Condiciones</a>|
+                <a class="mx-4" href="">Política de Privacidad</a>|
+                <a class="mx-4" href="">Preguntas Frecuentes</a>|
+                <a class="mx-4" href="">Nuestros Datos</a>
+            </p>
+            <br>
+            <div class="d-md-flex d-block justify-content-center">
+                <p class="mx-4">
+                    Copyright © 2024 Grupo 5 Kancha.pe
+                </p>
+                <p class="mx-4">
+                    Av. San Josemaría Escriva de Balaguer 855, Chiclayo 14012
+                </p>
+            </div>
+        </div>
+    </footer>
+    <script src="{{ url_for('static',filename='../static/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="../js/ProductoSelect.js"></script>
+</body>
+
+</html>
