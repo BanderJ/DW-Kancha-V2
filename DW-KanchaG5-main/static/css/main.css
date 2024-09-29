@@ -1,0 +1,235 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+ul {
+  list-style: none;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+:root {
+  --negro: #1b1415;
+  --blanco: #fff;
+  --rojo: #ff1d25;
+}
+
+nav {
+  background: var(--negro);
+  width: 100vw;
+  height: 12vh;
+}
+
+nav > ul {
+  color: var(--rojo);
+  list-style: none;
+  width: 87vw;
+  font-size: 1.1em;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 4vw;
+}
+
+#logo {
+  width: 10vw;
+}
+
+nav > ul > li {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+nav > ul > li::after {
+  content: "";
+  background: var(--negro);
+  width: 80px;
+  border-radius: 5px;
+  height: 10px;
+  transition: all 0.3s;
+}
+
+nav > ul > li:hover::after {
+  background: var(--rojo);
+  transition: all 0.3s;
+}
+
+h2,
+.seccion {
+  font-size: 1.3em;
+  font-weight: bold;
+}
+
+h3 {
+  font-size: 1.5em;
+}
+
+#buscar,
+#carrito,
+#usuario {
+  background: var(--negro);
+  border: hidden;
+  width: 50px;
+}
+
+nav ul li .ocultar {
+  display: none;
+  transition: all 0.3s;
+}
+
+nav ul li:hover .ocultar {
+  width: 100vw;
+  height: 42vh;
+  background: var(--blanco);
+  color: var(--negro);
+  border: var(--negro) 1px solid;
+  top: 12vh;
+  left: 0;
+  position: absolute;
+  z-index: +1;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 8vw;
+  transition: all 0.3s;
+}
+
+.ocultar > img {
+  width: 12vw;
+  height: 25vh;
+  border-radius: 8px;
+  border: var(--negro) 1px solid;
+}
+
+.ocultar > div > ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 3vh;
+}
+
+header {
+  width: 100vw;
+}
+
+.carousel-item > img {
+  width: 100%;
+  height: 88dvh;
+}
+
+main {
+  padding: 30px 0 0 0;
+}
+
+footer {
+  width: 100vw;
+  background: var(--negro);
+  color: #fff;
+  padding: 8vh 0 0 0;
+}
+
+#ctn_opciones_footer {
+  width: 100vw;
+  height: max-content;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  gap: 5vw;
+  margin: 0 0 10vh 0;
+}
+
+.categorias > ul {
+  list-style: none;
+}
+
+.categorias > ul > li > a {
+  text-decoration: none;
+  color: #fff;
+}
+
+#union_apartados {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  place-items: center;
+  gap: 5vw;
+}
+
+br + ul > li > a,
+a {
+  text-decoration: none;
+  color: #fff;
+}
+
+#reclamaciones {
+  display: grid;
+  grid-column-start: 1;
+  grid-column-end: 3;
+  grid-template-columns: 30px auto;
+  place-items: center;
+  background: #fff;
+  color: #ff1d25;
+  font-weight: bold;
+  padding: 10px 30px;
+  border-radius: 7px;
+}
+
+#ctn_final {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  background: #ff1d25;
+  padding: 30px 0 30px 0;
+}
+
+#ctn_final > ul {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 2vw;
+  margin: 0 0 20px 0;
+}
+
+#ubicacion {
+  font-weight: 100;
+  text-wrap: balance;
+}
+
+@media screen and (max-width: 1300px) {
+  nav {
+    height: max-content;
+    padding: 20px 0;
+  }
+
+  nav > ul {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #logo {
+    width: 100vw;
+    height: 70px;
+    margin-bottom: 20px;
+  }
+
+  nav ul li:hover .ocultar {
+    display: none;
+  }
+}

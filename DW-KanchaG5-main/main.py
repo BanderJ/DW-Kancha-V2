@@ -1,4 +1,5 @@
 from flask import Flask,render_template,request,jsonify
+from controlador_productos import insertProduct,listarProductos,updateProducto,deleteProducto
 
 app = Flask(__name__)
 
