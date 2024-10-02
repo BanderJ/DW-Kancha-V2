@@ -19,13 +19,13 @@ body {
   --rojo: #ff1d25;
 }
 
-nav {
+#nav_principal {
   background: var(--negro);
   width: 100vw;
   height: 12vh;
 }
 
-nav > ul {
+#nav_principal > ul {
   color: var(--rojo);
   list-style: none;
   width: 87vw;
@@ -42,7 +42,7 @@ nav > ul {
   width: 10vw;
 }
 
-nav > ul > li {
+#nav_principal > ul > li {
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -50,7 +50,7 @@ nav > ul > li {
   align-items: center;
 }
 
-nav > ul > li::after {
+#nav_principal > ul > li::after {
   content: "";
   background: var(--negro);
   width: 80px;
@@ -59,7 +59,7 @@ nav > ul > li::after {
   transition: all 0.3s;
 }
 
-nav > ul > li:hover::after {
+#nav_principal > ul > li:hover::after {
   background: var(--rojo);
   transition: all 0.3s;
 }
@@ -82,12 +82,12 @@ h3 {
   width: 50px;
 }
 
-nav ul li .ocultar {
+#nav_principal ul li .ocultar {
   display: none;
   transition: all 0.3s;
 }
 
-nav ul li:hover .ocultar {
+#nav_principal ul li:hover .ocultar {
   width: 100vw;
   height: 42vh;
   background: var(--blanco);
@@ -209,12 +209,12 @@ a {
 }
 
 @media screen and (max-width: 1300px) {
-  nav {
+  #nav_principal {
     height: max-content;
     padding: 20px 0;
   }
 
-  nav > ul {
+  #nav_principal > ul {
     height: 100%;
     display: flex;
     flex-direction: row;
@@ -229,7 +229,7 @@ a {
     margin-bottom: 20px;
   }
 
-  nav ul li:hover .ocultar {
+  #nav_principal ul li:hover .ocultar {
     display: none;
   }
 }
