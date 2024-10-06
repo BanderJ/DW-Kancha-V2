@@ -1,0 +1,19 @@
+.titulo2 {
+    color: red;
+    font-weight: bold;
+    font-size: 56px;
+}
+
+.contenidoPerfil {
+    margin-left: 40vh;
+    margin-right: 40vh;
+}
+
+.imgTitulo {
+    width: 30px;
+}
+
+.imgTitulo2 {
+    width: 7vw;
+}
+
