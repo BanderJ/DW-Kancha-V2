@@ -1,0 +1,211 @@
+{% extends "maestra.html" %} 
+
+{% block estilos %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SeccionProductos.css') }}">
+{% endblock %}
+
+{% block title %}Productos{% endblock %} 
+
+{% block contenido %}
+<main class="mt-2">
+    <div class="row m-0 py-2">
+        <div class="col p-0"></div>
+        <div class="col-xl-9 col-lg-9 col-md-9 col-sm-10 col-10 d-flex align-items-center p-0 justify-content-sm-start">
+            <a class="d-flex align-items-center me-2 regresar" href="Productos.html">
+                <button class="btn bg-rojo-k me-2 d-flex"><img class="img-fluid" src="../img/fr.svg" alt=""></button>
+                <label class="l-rojo-k" for="regresar">Regresar</label>
+            </a>
+            <nav data-mdb-navbar-init class="navbar navbar-expand-lg p-0 ms-2 d-sm-block d-none">
+                <div class="container-fluid">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a class="l-gris-k" href="../html/index.html">Inicio</a></li>
+                            <li class="breadcrumb-item"><a class="l-gris-k" href="#">Hombre</a></li>
+                            <li class="breadcrumb-item active" aria-current="page"><a class="l-gris-k" href="#">Calzado</a></li>
+                        </ol>
+                    </nav>
+                </div>
+            </nav>
+        </div>
+        <div class="col p-0"></div>
+    </div>
+
+    <div class="row mt-2 py-2">
+    <div class="col py-0"></div>
+    <div class="col-xl-9 col-lg-9 col-md-9 col-sm-10 col-10 d-flex text-center p-0 justify-content-sm-start">
+        <h2 id="tituloSeccion" class="d-flex justify-content-start w-100 mb-3 align-items-center">Zapatillas</h2>
+    </div>
+    <div class="col py-0"></div>
+</div>
+    
+    <div class="row mt-2 py-2">
+        <div class="col py-0"></div>
+        <div class="col-xl-9 col-lg-9 col-md-9 col-sm-10 col-10 d-flex text-center p-0 justify-content-sm-start">
+            <div class="d-flex justify-content-end w-100 mb-3 align-items-center">
+                <span class="d-none d-md-inline">Ocultar filtros</span>
+                <button id="toggleFilters" class="btn btn-secondary ms-2"><img src="../img/filtro-productos.png" alt=""></button>
+                <select id="sortBy" class="form-select w-auto ms-2">
+                    <option value="">Ordenar por</option>
+                    <option value="destacado">Destacado</option>
+                    <option value="ultimo">Último lanzamiento</option>
+                    <option value="oferta">Oferta</option>
+                    <option value="precio-asc">Precio: bajo-alto</option>
+                    <option value="precio-desc">Precio: alto-bajo</option>
+                </select>
+            </div>
+        </div>
+        <div class="col py-0"></div>
+    </div>
+    
+    <div class="row mt-2 py-2">
+        <div class="col py-0"></div>
+        <div class="col-xl-9 col-lg-9 col-md-9 col-sm-10 col-10 d-flex text-center p-0 justify-content-sm-start">
+            <div class="col-md-3 filter-section" id="filtersContainer">
+                <button id="closeFilters" class="btn btn-secondary d-md-none mb-2">Cerrar</button>
+                <button id="clearFilters" class="btn btn-danger mb-3">Eliminar filtros</button>
+                <div class="accordion" id="filtersAccordion">
+                    <div class="accordion-item">
+                        <h5 class="filter-title accordion-header" id="headingGenero">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#filterGenero" aria-expanded="true" aria-controls="filterGenero">
+                                Género
+                            </button>
+                        </h5>
+                        <div id="filterGenero" class="accordion-collapse collapse show" aria-labelledby="headingGenero" data-bs-parent="#filtersAccordion">
+                            <div class="accordion-body">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="genero" value="Masculino" id="generoMasculino">
+                                    <label class="form-check-label" for="generoMasculino">Masculino</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="genero" value="Femenino" id="generoFemenino">
+                                    <label class="form-check-label" for="generoFemenino">Femenino</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="genero" value="Niños" id="generoNino">
+                                    <label class="form-check-label" for="generoNino">Niño</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="genero" value="Niña" id="generoNina">
+                                    <label class="form-check-label" for="generoNina">Niña</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h5 class="filter-title accordion-header" id="headingDeporte">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filterDeporte" aria-expanded="false" aria-controls="filterDeporte">
+                                Deporte
+                            </button>
+                        </h5>
+                        <div id="filterDeporte" class="accordion-collapse collapse" aria-labelledby="headingDeporte" data-bs-parent="#filtersAccordion">
+                            <div class="accordion-body">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="deporte" value="Fútbol" id="deporteFutbol">
+                                    <label class="form-check-label" for="deporteFutbol">Fútbol</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="deporte" value="Voley" id="deporteVoley">
+                                    <label class="form-check-label" for="deporteVoley">Voley</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="deporte" value="Básquet" id="deporteBasquet">
+                                    <label class="form-check-label" for="deporteBasquet">Básquet</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h5 class="filter-title accordion-header" id="headingPrecio">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filterPrecio" aria-expanded="false" aria-controls="filterPrecio">
+                                Precio
+                            </button>
+                        </h5>
+                        <div id="filterPrecio" class="accordion-collapse collapse" aria-labelledby="headingPrecio" data-bs-parent="#filtersAccordion">
+                            <div class="accordion-body">
+                                <label for="precioRange">Rango de precio:</label>
+                                <input type="range" class="form-range" min="100" max="2000" value="2000" id="precioRange">
+                                <span id="precioMinValue">100</span> - <span id="precioValue">2000</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h5 class="filter-title accordion-header" id="headingColor">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filterColor" aria-expanded="false" aria-controls="filterColor">
+                                Color
+                            </button>
+                        </h5>
+                        <div id="filterColor" class="accordion-collapse collapse" aria-labelledby="headingColor" data-bs-parent="#filtersAccordion">
+                            <div class="accordion-body">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="color" value="Negro" id="colorNegro">
+                                    <label class="form-check-label" for="colorNegro">Negro</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="color" value="Rosado" id="colorRosado">
+                                    <label class="form-check-label" for="colorRosado">Rosado</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="color" value="Blanco" id="colorBlanco">
+                                    <label class="form-check-label" for="colorBlanco">Blanco</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="color" value="Azul" id="colorAzul">
+                                    <label class="form-check-label" for="colorAzul">Azul</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h5 class="filter-title accordion-header" id="headingMarca">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filterMarca" aria-expanded="false" aria-controls="filterMarca">
+                                Marca
+                            </button>
+                        </h5>
+                        <div id="filterMarca" class="accordion-collapse collapse" aria-labelledby="headingMarca" data-bs-parent="#filtersAccordion">
+                            <div class="accordion-body">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="marca" value="Adidas" id="marcaAdidas">
+                                    <label class="form-check-label" for="marcaAdidas">Adidas</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="marca" value="Nike" id="marcaNike">
+                                    <label class="form-check-label" for="marcaNike">Nike</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="marca" value="Puma" id="marcaPuma">
+                                    <label class="form-check-label" for="marcaPuma">Puma</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="marca" value="Asics" id="marcaAsics">
+                                    <label class="form-check-label" for="marcaAsics">Ascis</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="row" id="productContainer">
+                    <!-- Aquí se generarán las tarjetas de productos -->
+                </div>
+            </div>
+        </div>
+        <div class="col p-0"></div>
+    </div>
+
+    <div class="row mt-2 py-2">
+        <div class="col p-0"></div>
+        <div class="col-xl-9 col-lg-9 col-md-9 col-sm-10 col-10 d-flex text-center p-0 justify-content-center">
+            <nav>
+                <ul class="pagination">
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="col p-0"></div>
+    </div>
+
+</main>
+{% endblock %}

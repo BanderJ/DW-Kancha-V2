@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/titulo.css">
+    <title>Mis Favoritos</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/cabezapie.css">
+    <link rel="stylesheet" href="../css/carrito.css">
+    <link rel="stylesheet" href="../css/MisFavoritos.css">
+    <link rel="stylesheet" href="../css/opcionesUser.css">
+    <link rel="icon" type="image/svg" href="../img/logo_kancha_club.svg">
+</head>
+<body>
+    <header id="header"></header>
+    <main class="mt-4">
+        <div class="row m-0 py-2">
+            <div class="col p-0"></div>
+            <div class="col-xl-9 col-lg-9 col-md-9 col-sm-10 col-10 d-flex align-items-center p-0 justify-content-sm-start">
+                <a class="d-flex align-items-center me-2 regresar" href="Productos.html">
+                    <button class="btn bg-rojo-k me-2 d-flex"><img class="img-fluid" src="../img/fr.svg" alt=""></button>
+                    <label class="l-rojo-k" for="regresar">Regresar</label>
+                </a>
+                <nav data-mdb-navbar-init class="navbar navbar-expand-lg p-0 ms-2 d-sm-block d-none">
+                    <div class="container-fluid">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a class="l-gris-k" href="index.html">Inicio</a></li>
+                                <li class="breadcrumb-item active" aria-current="page"><a class="l-gris-k" href="#">Mis favoritos</a></li>
+                            </ol>
+                        </nav>
+                    </div>
+                </nav>
+            </div>
+            <div class="col p-0"></div>
+        </div>
+        <div class="row">
+            <div class="col p-0"></div>
+            <div class="col-xl-9 col-lg-9 col-md-9 col-sm-10 col-10 p-0 my-5">
+                <h4 class="titulo2 text-center mb-5">Mis favoritos</h4>
+                <div class="container-fluid px-0">
+                    <div class="carousel">
+                        <button class="nav left"><img src="/img/circle-arrow-left-solid.svg" alt="Izquierda"></button>
+                        <div class="items" id="losfavoritos">
+                            <!-- Productos cargados desde localStorage se insertarán aquí -->
+                        </div>
+                        <button class="nav right"><img src="/img/circle-arrow-right-solid.svg" alt="Derecha"></button>
+                    </div>
+                    <div class="indicators"></div>
+                </div>
+            </div>
+            <div class="col p-0"></div>
+        </div>
+        <div id="usuario"></div>
+        <div id="carrito"></div>
+    </main>
+    <footer id="footer"></footer>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script src="../js/headerfooter.js"></script>
+    <script src="../js/opcionesUser.js"></script>
+    <script src="../js/carrito.js"></script>
+    <script src="../js/scriptFavoritos.js"></script>
+</body>
+</html>

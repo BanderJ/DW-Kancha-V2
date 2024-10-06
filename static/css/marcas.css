@@ -1,0 +1,16 @@
+.bor-rojo-k{
+    border-color: rgb(255, 29, 37);
+}
+
+.imgmarca img{
+    height: 40vh;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 0 0 30px 30px;
+}
+
+.marti{
+    border-style: solid;
+    border-color: rgb(255, 29, 37);
+    border-width: 0 0 2px 0;
+}

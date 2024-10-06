@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProductoSelect</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/cabezapie.css">
+    <link rel="stylesheet" href="../css/eventosDeportivos.css">
+    <link rel="stylesheet" href="../css/carrito.css">
+    <link rel="stylesheet" href="../css/opcionesUser.css">
+    <link rel="icon" type="image/svg" href="../img/logo_kancha_club.svg">
+</head>
+
+<body>
+    <header id="header"></header>
+
+    <main class="mt-0">
+        <div class="row m-0 p-0">
+            
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 d-flex text-center p-0 justify-content-sm-start">
+                <div class="image-with-text">
+                    <img src="../img/fondo1.jpg" alt="Evento Deportivo" class="img-fluid">
+                    <div class="text-nav position-absolute top-0 left-0 w-100">
+                        <div class="row m-0 py-2">
+                            <div class="col p-0"></div>
+                            <div
+                                class="col-xl-9 col-lg-9 col-md-9 col-sm-10 col-10 d-flex align-items-center p-0 justify-content-sm-start">
+                                <a class="d-flex align-items-center me-2 regresar" href="Productos.html">
+                                    <button class="btn bg-rojo-k me-2 d-flex"><img class="img-fluid" src="../img/fr.svg"
+                                            alt=""></button><label class="l-rojo-k" for="regresar">Regresar</label>
+                                </a>
+                                <nav data-mdb-navbar-init class="navbar navbar-expand-lg p-0 ms-2 d-sm-block d-none">
+                                    <div class="container-fluid">
+                                        <nav aria-label="breadcrumb">
+                                            <ol class="breadcrumb m-0">
+                                                <li class="breadcrumb-item"><a class="l-blanco-k" href="index.html">Eventos Deportivos</a>
+                                                </li>
+                                            </ol>
+                                        </nav>
+                                    </div>
+                                </nav>
+                            </div>
+                            <div class="col p-0"></div>
+                        </div>
+                    </div>
+                    <div class="text-overlay">
+                      <h2>Eventos deportivos</h2>
+                      <p>Kancha no es solo una tienda, es una comunidad deportiva. ¡Únete a nosotros y vive la pasión del deporte!</p>
+                    </div>
+                  </div>
+            </div>
+        </div>
+
+        <div class="row mt-2 py-2">
+            <div class="col p-0"></div>
+            <div class="col-xl-9 col-lg-9 col-md-9 col-sm-10 col-10 d-flex text-center p-0 justify-content-sm-start">
+                <div id="tipo">
+                    <button class="nav-link active tipo-evento" id="proximos-tab" onclick="toggleTab('proximos')"
+                        type="button">Próximos</button>
+                    <button class="nav-link tipo-evento" id="pasados-tab" onclick="toggleTab('pasados')"
+                        type="button">Pasados</button>
+                </div>
+            </div>
+            <div class="col p-0">
+            </div>
+        </div>
+
+        <div class="row m-0 py-2">
+            <div class="col p-0"></div>
+            <div
+                class="col-xl-9 col-lg-9 col-md-9 col-sm-10 col-10 d-flex align-items-center p-0 justify-content-sm-start">
+
+                <div id="proximos" class="event-content">
+                    <div class="month-container" onclick="toggleMonth(this)">
+                        <p class="mes-evento">Julio</p>
+                        <div class="event-details">
+                            <div class="event-card">
+                                <h3>Torneo de futsal 5v5</h3>
+                                <p>Un emocionante torneo de fútbol de fin de semana, abierto a equipos masculinos. Los
+                                    equipos competirán en un formato de eliminación directa.</p>
+                                <p><strong>Fecha:</strong> 16 y 17</p>
+                                <p><strong>Lugar:</strong> Canchita Don Vite</p>
+                                <p><strong>Bases:</strong></p>
+                                <ul>
+                                    <li>Inscripción abierta hasta el 14 de junio</li>
+                                    <li>Cada equipo debe estar compuesto por 6 jugadores (5 jugadores y 1 suplente)</li>
+                                    <li>Se aplicarán reglas de oficiales de futsal</li>
+                                </ul>
+                                <p><strong>Premios:</strong></p>
+                                <ul>
+                                    <li>1er Lugar: Trofeo + Camisetas de la FPF 2023</li>
+                                    <li>2do Lugar: Medalla + Balón de fútbol profesional</li>
+                                    <li>3er Lugar: Medalla + Botellas deportivas</li>
+                                </ul>
+                                <a href="#" class="btn btn-danger">Inscribirse</a>
+                            </div>
+                            <div class="event-card">
+                                <h3>Voleibol Playa</h3>
+                                <p>Un emocionante torneo de voleibol de fin de semana en la playa para equipos mixtos y
+                                    femeninos. Se jugará en formato de grupos y eliminación directa.</p>
+                                <p><strong>Fecha:</strong> 28 y 29</p>
+                                <p><strong>Lugar:</strong> Playa Pimentel</p>
+                                <p><strong>Bases:</strong></p>
+                                <ul>
+                                    <li>Inscripción abierta hasta el 25 de junio</li>
+                                    <li>Cada equipo debe estar compuesto por 4 jugadores (2 titulares y 2 suplentes)
+                                    </li>
+                                    <li>Se aplicarán reglas de oficiales de la FIVB para voleibol de playa</li>
+                                </ul>
+                                <p><strong>Premios:</strong></p>
+                                <ul>
+                                    <li>1er Lugar: Trofeo + Camisetas de la FPV 2023</li>
+                                    <li>2do Lugar: Medalla + Balón de voley profesional</li>
+                                    <li>3er Lugar: Medalla + Botellas deportivas</li>
+                                </ul>
+                                <a href="#" class="btn btn-danger">Inscribirse</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="month-container" onclick="toggleMonth(this)">
+                        <p class="mes-evento">Agosto</p>
+                        <div class="event-details">
+                            <div class="event-card">
+                                <h3>Torneo de futsal 5v5</h3>
+                                <p>Un emocionante torneo de fútbol de fin de semana, abierto a equipos masculinos. Los
+                                    equipos competirán en un formato de eliminación directa.</p>
+                                <p><strong>Fecha:</strong> 16 y 17</p>
+                                <p><strong>Lugar:</strong> Canchita Don Vite</p>
+                                <p><strong>Bases:</strong></p>
+                                <ul>
+                                    <li>Inscripción abierta hasta el 14 de junio</li>
+                                    <li>Cada equipo debe estar compuesto por 6 jugadores (5 jugadores y 1 suplente)</li>
+                                    <li>Se aplicarán reglas de oficiales de futsal</li>
+                                </ul>
+                                <p><strong>Premios:</strong></p>
+                                <ul>
+                                    <li>1er Lugar: Trofeo + Camisetas de la FPF 2023</li>
+                                    <li>2do Lugar: Medalla + Balón de fútbol profesional</li>
+                                    <li>3er Lugar: Medalla + Botellas deportivas</li>
+                                </ul>
+                                <a href="#" class="btn btn-danger">Inscribirse</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="month-container" onclick="toggleMonth(this)">
+                        <p class="mes-evento">Setiembre</p>
+                        <div class="event-details"></div>
+                    </div>
+                </div>
+
+
+                <div id="pasados" class="event-content" style="display:none;">
+                    <div class="month-container" onclick="toggleMonth(this)">
+                        <p class="mes-evento">Abril</p>
+                        <div class="event-details"></div>
+                    </div>
+                    <div class="month-container" onclick="toggleMonth(this)">
+                        <p class="mes-evento">Mayo</p>
+                        <div class="event-details">
+                            <div class="event-card">
+                                <h3>Torneo de Baloncesto 3v3</h3>
+                                <p>Un emocionante torneo de baloncesto para equipos mixtos.</p>
+                                <p><strong>Fecha:</strong> 15 y 16</p>
+                                <p><strong>Lugar:</strong> Polideportivo Municipal</p>
+                                <p><strong>Bases:</strong></p>
+                                <ul>
+                                    <li>Inscripción abierta hasta el 10 de mayo</li>
+                                    <li>Cada equipo debe estar compuesto por 3 jugadores</li>
+                                    <li>Se aplicarán reglas oficiales de la FIBA</li>
+                                </ul>
+                                <p><strong>Ganodores:</strong></p>
+                                <ul>
+                                    <li>1er Lugar: Trofeo + Camisetas del torneo</li>
+                                    <li>2do Lugar: Medalla + Balón de baloncesto</li>
+                                    <li>3er Lugar: Medalla + Botellas deportivas</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="month-container" onclick="toggleMonth(this)">
+                        <p class="mes-evento">Junio</p>
+                        <div class="event-details"></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col p-0">
+            </div>
+        </div>
+        <div id="carrito"></div>
+        <div id="usuario"></div>
+    </main>
+
+    <footer id="footer"></footer>
+
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script src="../js/eventosDeportivos.js"></script>
+    <script src="../js/headerfooter.js"></script>
+    <script src="../js/carrito.js"></script>
+    <script src="../js/opcionesUser.js"></script>
+</body>
+
+</html>

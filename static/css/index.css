@@ -1,0 +1,50 @@
+/* General styles for dropdown menu */
+.hombre-dropdown {
+    width: 100vw; /* Full width of the viewport */
+    left: 0; /* Align to the left edge */
+    right: 0; /* Align to the right edge */
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 0 0 5px 5px; /* Rounded bottom corners */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* Aligning the dropdown items properly */
+.hombre-dropdown .row {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 10px 0;
+}
+
+.hombre-dropdown .col-md-2 {
+    flex: 1;
+    min-width: 150px; /* Ensuring minimum width for columns */
+    text-align: left;
+}
+
+.hombre-dropdown h6 {
+    margin-bottom: 15px;
+    font-size: 1rem;
+    color: #333;
+}
+
+.hombre-dropdown ul {
+    padding-left: 0;
+}
+
+.hombre-dropdown li {
+    list-style: none;
+    margin-bottom: 10px;
+}
+
+.hombre-dropdown a.dropdown-item {
+    color: #555;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.hombre-dropdown a.dropdown-item:hover {
+    color: #d9534f;
+}
