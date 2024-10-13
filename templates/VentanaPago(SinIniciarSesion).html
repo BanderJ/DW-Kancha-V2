@@ -1,21 +1,16 @@
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/titulo.css">
-    <title>Ventana de Pago(Sin iniciar Sesion)</title>
-    <link rel="stylesheet" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/cabezapie.css">
-    <link rel="stylesheet" href="../css/carrito.css">
-    <link rel="stylesheet" href="../css/VentanaPagoSinIniciar.css">
-    <link rel="stylesheet" href="../css/opcionesUser.css">
-    <link rel="icon" type="image/svg" href="../img/logo_kancha_club.svg">
-</head>
-
-<body>
-    <header id="header"></header>
+{% extends "maestra.html" %}
+{% block titulo %}Ventana de Pago{% endblock %}
+{% block link %}
+<link rel="stylesheet" href="{{url_for('static',filename='../static/css/titulo.css')}}">
+<link rel="stylesheet" href="{{url_for('static',filename='../static/css/bootstrap.min.css')}}">
+<link rel="stylesheet" href="{{url_for('static',filename='../static/css/cabezapie.css')}}">
+<link rel="stylesheet" href="{{url_for('static',filename='../static/css/carrito.css')}}">
+<link rel="stylesheet" href="{{url_for('static',filename='../static/css/VentanaPagoSinIniciar.css')}}">
+<link rel="stylesheet" href="{{url_for('static',filename='../static/css/opcionesUser.css')}}">
+<link rel="icon" type="image/svg" href="{{url_for('static',filename='../static/img/logo_kancha_club.svg')}}">
+{% endblock %}
+{% block contenido %}
+<header id="header"></header>
 
     <main class="mt-4">
         <div class="row m-0 py-2">
@@ -23,7 +18,7 @@
             <div
                 class="col-xl-9 col-lg-9 col-md-9 col-sm-10 col-10 d-flex align-items-center p-0 justify-content-sm-start">
                 <a class="d-flex align-items-center me-2 regresar" href="Productos.html">
-                    <button class="btn bg-rojo-k me-2 d-flex"><img class="img-fluid" src="../img/fr.svg"
+                    <button class="btn bg-rojo-k me-2 d-flex"><img class="img-fluid" src="{{url_for('static',filename='../static/img/fr.svg')}}"
                             alt=""></button><label class="l-rojo-k" for="regresar">Regresar</label>
                 </a>
                 <nav data-mdb-navbar-init class="navbar navbar-expand-lg p-0 ms-2 d-sm-block d-none">
@@ -47,14 +42,14 @@
             <!-- contenido pag -->
             <div class="col-9 contenedorInicio">
                 <div class="row mb-5">
-                    <div class="titulo2 tituloVentanaPagos text-center">
+                    <div class="titulo2 tituloVentanaPagos text-center text-size">
                         ELIGE COMO TE GUSTARIA FINALIZAR TU COMPRA
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-6 col-md-6 col-sm-12 text-center m-0 bordeMedio1">
-                        <h4>Finaliza tu compra como miembro y obten los beneficios de uno</h4>
-                        <a href="../html/RegistroUsuario.html" id="btnIniciar">
+                        <h4 class="mb-5">Finaliza tu compra como miembro y obten los beneficios de uno</h4>
+                        <a href="{{url_for('iniciarSesion')}}" id="btnIniciar">
                             <button" class="btn bg-rojo-k l-blanco-k">Iniciar sesion</button>
                         </a>
                         <br><br>
@@ -66,7 +61,6 @@
                         <h4>Finaliza tu compra como invitado</h4>
                         <a href="../html/Pago(1).html"><button id="btnContSIS"
                                 class="btn bg-rojo-k l-blanco-k">Continuar sin iniciar sesion</button></a>
-
                     </div>
                 </div>
             </div>
@@ -78,13 +72,8 @@
             <div id="usuario"></div>
             <div id="carrito"></div>
     </main>
-
-    <footer id="footer"></footer>
     <script src="../js/bootstrap.bundle.min.js"></script>
     <script src="../js/headerfooter.js"></script>
     <script src="../js/opcionesUser.js"></script>
     <script src="../js/carrito.js"></script>
-
-</body>
-
-</html>
+{% endblock %}

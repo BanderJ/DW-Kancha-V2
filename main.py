@@ -19,5 +19,19 @@ def kancha_club():
 def redirigir_index():
     return render_template('index.html')
 
+#Bloque de rutas Christian
+
+@app.route('/soporte')
+def soporteTecnico():
+    return render_template("SoporteTecnico.html")
+
+@app.route("/VentanaPago")
+def ventatnaPago():
+    return render_template("VentanaPago(SinIniciarSesion).html")
+
+@app.route("/IniciarSesion")
+def iniciarSesion():
+    return render_template("IniciarSesion.html")
+
 if __name__ == "__main__":
     app.run(debug=True)

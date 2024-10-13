@@ -1,28 +1,23 @@
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/titulo.css">
-    <title>Ventana de Pago(Sin iniciar Sesion)</title>
-    <link rel="stylesheet" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/cabezapie.css">
-    <link rel="stylesheet" href="../css/carrito.css">
-    <link rel="stylesheet" href="../css/opcionesUser.css">
-    <link rel="icon" type="image/svg" href="../img/logo_kancha_club.svg">
-</head>
-
-<body>
-    <header id="header"></header>
-
+{% extends "maestra.html" %}
+{% block titulo %}Ventana de Pago(Sin iniciar Sesion){% endblock %}
+{% block link %}
+<link rel="stylesheet" href="{{url_for('static',filename='../static/css/bootstrap.min.css')}}">
+<link rel="stylesheet" href="{{url_for('static',filename='../static/css/cabezapie.css')}}">
+<link rel="icon" type="image/svg" href="{{url_for('static',filename='../static/img/logo_kancha_club.svg')}}">
+<link rel="stylesheet" href="{{url_for('static',filename='../static/css/opcionesUser.css')}}">
+<link rel="stylesheet" href="{{url_for('static',filename='../static/css/titulo.css')}}">
+<link rel="stylesheet" href="{{url_for('static',filename='../static/css/carrito.css')}}">
+<link rel="stylesheet" href="{{url_for('static',filename='../static/css/SoporteTecnico.css')}}">
+{% endblock %}
+{% block contenido %}
     <main class="mt-4">
+    <div>
         <div class="row m-0 py-2">
             <div class="col p-0"></div>
             <div
                 class="col-xl-9 col-lg-9 col-md-9 col-sm-10 col-10 d-flex align-items-center p-0 justify-content-sm-start">
                 <a class="d-flex align-items-center me-2 regresar" href="Productos.html">
-                    <button class="btn bg-rojo-k me-2 d-flex"><img class="img-fluid" src="../img/fr.svg"
+                    <button class="btn bg-rojo-k me-2 d-flex"><img class="img-fluid" src="{{url_for('static',filename='../static/img/fr.svg')}}"
                             alt=""></button><label class="l-rojo-k" for="regresar">Regresar</label>
                 </a>
                 <nav data-mdb-navbar-init class="navbar navbar-expand-lg p-0 ms-2 d-sm-block d-none">
@@ -54,17 +49,17 @@
             <!-- Desplegables -->
             <div id="usuario"></div>
             <div id="carrito"></div>
-    </main>
-    <main>
+        <br>
         <h1 class="text-center text-danger">¿Cómo podemos ayudarte?</h1>
         <br>
-        <p class="text-center">En esta sección, vamos a resolver las dudas de nuestros Kancheros. Anímate a ver los
+        <p class="text-center mt-4 mb-5">En esta sección, vamos a resolver las dudas de nuestros Kancheros. Anímate a ver los
             tutoriales que tenemos listos para ti.</p>
+        <br>
         <hr>
         <br>
-        <h2 class="text-center">Preguntas Frecuentes</h2>
+        <h2 class="text-center mt-3 mb-5">Preguntas Frecuentes</h2>
         <br>
-        <div class="row d-flex justify-content-center gap-3">
+        <div class="row d-flex justify-content-center gap-3 mb-4">
             <div class="card" data-title="¿Como puedo crear una cuenta de kancha club desde 0?">
                 <p>
                     1) Ve al menu principal <br>
@@ -105,11 +100,11 @@
             </div>
         </div>
         <br>
-        <hr>
+        <hr class="col-12 my-4">
         <br>
-        <h2 class="text-center">Tutoriales</h2>
+        <h2 class="text-center mt-2 mb-5">Tutoriales</h2>
         <br>
-        <div id="ctn_tutoriales" class="row d-flex justify-content-center gap-3">
+        <div id="ctn_tutoriales" class="row d-flex justify-content-center gap-3 mb-4">
             <a href="https://youtube.com/shorts/5U6_C8GmRB8?si=NE46ufcT00MrPVAq" id="tutorial1">
                 <h3>Guía Básica: ¿Como unirme a Kancha Club desde 0?</h3>
             </a>
@@ -139,21 +134,4 @@
     <script src="../js/headerfooter.js"></script>
     <script src="../js/opcionesUser.js"></script>
     <script src="../js/carrito.js"></script>
-
-</body>
-
-</html>
-
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
-    <link rel="icon" href="../img/logo_kancha_club.svg">
-    <link rel="stylesheet" type="text/css" href="../css/cabezapie.css">
-    <link rel="stylesheet" type="text/css" href="../css/SoporteTecnico.css">
-    <title>Kancha</title>
-</head>
+{% endblock %}
