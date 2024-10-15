@@ -1,0 +1,22 @@
+{% extends "maestra.html" %}
+{% block titulo %}
+Agregar nivel de usuario
+{% endblock %}
+{% block contenido %}
+<section class="section container my-5">
+    <div class="columns">
+        <div class="column is-one-third">
+            <h3 class="is-size-3">Agregar Nivel Usuario</h3>
+            <form action="{{url_for('guardar_nivelusuario')}}" method="post">
+                <label for="nombre">Nombre:</label>
+                <input required type="text" class="input" placeholder="Nombre" name="nombre" id="nombre">
+                <br><br>
+                <label for="puntos">Puntos Requeridos</label>
+                <input required type="number" class="input" placeholder="Artista" name="puntos" id="puntos">
+                <button type="submit" class="btn bg-azul-k mt-2">Guardar</button>
+                <a href="{{url_for('nivelusuario')}}" class="bg-azul-k">Volver</a>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
