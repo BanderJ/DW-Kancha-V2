@@ -19,8 +19,6 @@ def kancha_club():
 def redirigir_index():
     return render_template('index.html')
 
-#Bloque de rutas Christian
-
 @app.route('/soporte')
 def soporteTecnico():
     return render_template("SoporteTecnico.html")
@@ -32,6 +30,19 @@ def ventatnaPago():
 @app.route("/IniciarSesion")
 def iniciarSesion():
     return render_template("IniciarSesion.html")
+
+@app.route('/EventosDeportivos')
+def redirigirEventosDeportivos():
+    return render_template('EventosDeportivos.html')
+
+@app.route('/Pago')
+def redirigirPago():
+    return render_template('Pago(1).html')
+
+@app.route('/MisPedidos')
+def redirigirPedidos():
+    return render_template('MisPedidos.html')
+
 
 if __name__ == "__main__":
     app.run(debug=True)

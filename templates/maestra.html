@@ -275,7 +275,7 @@
     </header>
 
     <!-- Bloque de contenido dinámico -->
-    <div class="container my-5">
+    <div>
       {% block contenido %}
       <!-- Aquí se insertará el contenido de otras páginas -->
       {% endblock %}
@@ -481,6 +481,10 @@
         </div>
       </div>
     </footer>
+    
     <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    {% block js %}
+    
+    {% endblock %}
   </body>
 </html>
