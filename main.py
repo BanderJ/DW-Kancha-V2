@@ -45,6 +45,9 @@ def redirigirPedidos():
     return render_template('MisPedidos.html')
 
 
+
+# ------------------------------------------------------------------------------------------------------------------------------------------
+# Controladores
 # Nivel de Usuario
 @app.route('/NivelUsuario')
 def nivelusuario():

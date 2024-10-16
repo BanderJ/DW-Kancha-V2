@@ -1,3 +1,7 @@
+button img {
+    pointer-events: none;
+  }
+
 /*Colores Kancha*/
 .bg-rojo-k{
     background-color: rgb(255, 29, 37);
