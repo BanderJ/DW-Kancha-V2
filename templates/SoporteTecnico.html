@@ -16,7 +16,7 @@
             <div class="col p-0"></div>
             <div
                 class="col-xl-9 col-lg-9 col-md-9 col-sm-10 col-10 d-flex align-items-center p-0 justify-content-sm-start">
-                <a class="d-flex align-items-center me-2 regresar" href="Productos.html">
+                <a class="d-flex align-items-center me-2 regresar" href="{{url_for('inicio')}}">
                     <button class="btn bg-rojo-k me-2 d-flex"><img class="img-fluid" src="{{url_for('static',filename='../static/img/fr.svg')}}"
                             alt=""></button><label class="l-rojo-k" for="regresar">Regresar</label>
                 </a>
@@ -24,7 +24,7 @@
                     <div class="container-fluid">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a class="l-gris-k" href="index.html">Inicio</a></li>
+                                <li class="breadcrumb-item"><a class="l-gris-k" href="{{url_for('inicio')}}">Inicio</a></li>
                                 <li class="breadcrumb-item active" aria-current="page"><a class="l-gris-k"
                                         href="#">Ventana de pago</a></li>
                             </ol>

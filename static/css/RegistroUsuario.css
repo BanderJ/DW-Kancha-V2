@@ -2,6 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    overflow-x: hidden;
 }
 
 #metodos_crear{
@@ -26,7 +27,7 @@ button{
 
 fieldset{
     width: 100vw;
-    height: 100vh;
+    height: max-content;
     border: hidden;
     display: flex;
     flex-direction: column;
@@ -42,7 +43,7 @@ hr{
 
 .campo{
     width: 30%;
-    height: 50px;
+    height: 40px;
     border-radius: 5px;
     border: #1B1415 2px solid;
 }
@@ -56,8 +57,10 @@ hr{
     font-size: 1.15em;
 }
 
-label{
-    margin: 8px 0;
+label,input[type="checkbox"]{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 #enviar{
@@ -67,6 +70,14 @@ label{
     height: 60px;
     border: hidden;
     border-radius: 6px;
+}
+
+.metodo_registro{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 35px;
+    height: 35px;
 }
 
 @media screen and (width<950px) {

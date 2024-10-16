@@ -25,7 +25,7 @@ def soporteTecnico():
     return render_template("SoporteTecnico.html")
 
 @app.route("/VentanaPago")
-def ventatnaPago():
+def ventanaPago():
     return render_template("VentanaPago(SinIniciarSesion).html")
 
 @app.route("/IniciarSesion")
@@ -44,7 +44,9 @@ def redirigirPago():
 def redirigirPedidos():
     return render_template('MisPedidos.html')
 
-
+@app.route('/Registrate')
+def registrarUsuario():
+    return render_template('RegistroUsuario.html')
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # Controladores

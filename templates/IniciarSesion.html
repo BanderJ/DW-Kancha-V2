@@ -1,11 +1,14 @@
-{% extends "maestra.html" %} {% block titulo %}Iniciar Sesion{% endblock %} {%
-block link %}
+{% extends "maestra.html" %}
+{% block titulo %}
+Iniciar Sesion
+{% endblock %}
+{%block link %}
 <link
   rel="stylesheet"
   href="{{url_for('static',filename='css/IniciarSesion.css')}}"
 />
 {% endblock %} {% block contenido %}
-<main class="container d-flex justify-content-center">
+<main class="container d-flex justify-content-center py-5">
   <form class="form">
     <div class="flex-column">
       <label>Correo</label>
@@ -45,8 +48,8 @@ block link %}
       </svg>
       <input placeholder="Ingrese su contraseña" class="input" type="password" name=""/>
     </div>
-    <button class="button-submit">Iniciar Sesion</button>
-    <p class="p">Don't have an account? <span class="span">Sign Up</span></p>
+    <button id="iniciarSesion">Iniciar Sesion</button>
+    <p class="p">Don't have an account? <span class="span"><a href="{{url_for('registrarUsuario')}}">Sign Up</a></span></p>
     </div>
   </form>
 </main>
