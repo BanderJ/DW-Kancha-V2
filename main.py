@@ -1,10 +1,13 @@
 from flask import Flask,render_template,request,jsonify, redirect
 import controlador_productos 
 import controlador_nivelusuario
+import controlador_categoria
 
 
 app = Flask(__name__)
 
+# Enlaces html/templates
+@app.route("/")
 @app.get('/Inicio')
 def inicio():
     return render_template("index.html")
@@ -16,10 +19,6 @@ def seccionProductos():
 @app.route('/kancha-club')
 def kancha_club():
     return render_template('KanchaClub.html')
-
-@app.route('/index')
-def redirigir_index():
-    return render_template('index.html')
 
 @app.route('/soporte')
 def soporteTecnico():
@@ -46,17 +45,11 @@ def redirigirPedidos():
     return render_template('MisPedidos.html')
 
 
-@app.route("/discos")
-def discos():
-    discos = controlador_discos.obtener_discos()
-    return render_template("discos.html", discos=discos)
-
-@app.route("/")
+# Nivel de Usuario
 @app.route('/NivelUsuario')
 def nivelusuario():
     lista = controlador_nivelusuario.obtener_nivelusuario()
     return render_template('nivelusuario.html',lista=lista)
-
 
 @app.route('/AgregarNivelUsuario')
 def formulario_agregar_nivelUsuario():
@@ -82,7 +75,7 @@ def formulario_editar_nivelusuario(id):
     return render_template("editar_nivelUsuario.html", disco=nivel)
 
 
-@app.route("/actualizar_disco", methods=["POST"])
+@app.route("/actualizar_nivelUsuario", methods=["POST"])
 def actualizar_nivelusuario():
     id = request.form["id"]
     nombre = request.form["nombre"]
@@ -90,6 +83,42 @@ def actualizar_nivelusuario():
     controlador_nivelusuario.actualizar_nivelusuario(nombre, puntos, id)
     return redirect("/NivelUsuario")
 
+# Categorias
+@app.route('/Categoria')
+def categoria():
+    lista = controlador_categoria.obtener_categorias()
+    return render_template('categoria.html',lista=lista)
+
+
+@app.route('/AgregarCategoria')
+def formulario_agregar_categoria():
+    return render_template('agregar_categoria.html')
+
+@app.route("/guardar_categoria", methods=["POST"])
+def guardar_categoria():
+    nombre = request.form["nombre"]
+    controlador_categoria.insertar_Categoria(nombre)
+    # De cualquier modo, y si todo fue bien, redireccionar
+    return redirect("/Categoria")
+
+@app.route("/eliminar_categoria", methods=["POST"])
+def eliminar_categoria():
+    controlador_categoria.eliminar_categoria(request.form["id"])
+    return redirect("/Categoria")
+
+@app.route("/formulario_editar_categoria/<int:id>")
+def formulario_editar_categoria(id):
+    # Obtener el disco por ID
+    categoria = controlador_categoria.obtener_categoria_por_id(id)
+    return render_template("editar_categoria.html", categoria=categoria)
+
+
+@app.route("/actualizar_categoria", methods=["POST"])
+def actualizar_categoria():
+    id = request.form["id"]
+    nombre = request.form["nombre"]
+    controlador_categoria.actualizar_categoria(nombre, id)
+    return redirect("/Categoria")
 
 if __name__ == "__main__":
     app.run(debug=True)

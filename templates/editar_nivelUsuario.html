@@ -1,12 +1,12 @@
 {% extends "maestra.html" %}
 {% block titulo %}
-Editar disco
+Editar Nivel Usuario
 {% endblock %}
 {% block contenido %}
 <section class="section container my-5">
     <div class="columns">
         <div class="column">
-            <h3 class="is-size-3">Editar disco</h3>
+            <h3 class="is-size-3">Editar Nivel Usuario</h3>
             <form action="{{url_for('actualizar_nivelusuario')}}" method="post">
                 {# Enviar el id en un campo oculto #}
                 <input type="hidden" name="id" value="{{disco[0]}}">
