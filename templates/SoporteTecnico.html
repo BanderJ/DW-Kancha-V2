@@ -1,13 +1,7 @@
 {% extends "maestra.html" %}
 {% block titulo %}Ventana de Pago(Sin iniciar Sesion){% endblock %}
 {% block link %}
-<link rel="stylesheet" href="{{url_for('static',filename='../static/css/bootstrap.min.css')}}">
-<link rel="stylesheet" href="{{url_for('static',filename='../static/css/cabezapie.css')}}">
-<link rel="icon" type="image/svg" href="{{url_for('static',filename='../static/img/logo_kancha_club.svg')}}">
-<link rel="stylesheet" href="{{url_for('static',filename='../static/css/opcionesUser.css')}}">
-<link rel="stylesheet" href="{{url_for('static',filename='../static/css/titulo.css')}}">
-<link rel="stylesheet" href="{{url_for('static',filename='../static/css/carrito.css')}}">
-<link rel="stylesheet" href="{{url_for('static',filename='../static/css/SoporteTecnico.css')}}">
+<link rel="stylesheet" href="{{url_for('static',filename='css/SoporteTecnico.css')}}">
 {% endblock %}
 {% block contenido %}
     <main class="mt-4">
@@ -17,7 +11,7 @@
             <div
                 class="col-xl-9 col-lg-9 col-md-9 col-sm-10 col-10 d-flex align-items-center p-0 justify-content-sm-start">
                 <a class="d-flex align-items-center me-2 regresar" href="{{url_for('inicio')}}">
-                    <button class="btn bg-rojo-k me-2 d-flex"><img class="img-fluid" src="{{url_for('static',filename='../static/img/fr.svg')}}"
+                    <button class="btn bg-rojo-k me-2 d-flex"><img class="img-fluid" src="{{url_for('static',filename='img/fr.svg')}}"
                             alt=""></button><label class="l-rojo-k" for="regresar">Regresar</label>
                 </a>
                 <nav data-mdb-navbar-init class="navbar navbar-expand-lg p-0 ms-2 d-sm-block d-none">
