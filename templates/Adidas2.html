@@ -443,8 +443,7 @@
                                             };
                                     
                                             let productos = JSON.parse(localStorage.getItem('productosFavoritos')) || [];
-                                            const index = productos.findIndex(producto => producto.nombre === nuevoProducto.nombre);
-                                    
+                                            const index = productos.findIndex(producto => producto.nombre === nuevoProducto.nombre);                                    
                                             if (index > -1) {
                                                 productos.splice(index, 1); // Eliminar producto si ya está en favoritos
                                                 alert('Producto eliminado de favoritos!');

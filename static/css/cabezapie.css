@@ -1,103 +1,103 @@
 button img {
     pointer-events: none;
-  }
+}
 
 /*Colores Kancha*/
-.bg-rojo-k{
+.bg-rojo-k {
     background-color: rgb(255, 29, 37);
 }
 
-.bg-azul-k{
+.bg-azul-k {
     background-color: rgb(85, 85, 229);
 }
 
-.l-rojo-k{
+.l-rojo-k {
     color: rgb(255, 29, 37);
 }
 
-.bg-negro-k{
+.bg-negro-k {
     background-color: rgb(20, 12, 12);
 }
 
-.l-negro-k{
+.l-negro-k {
     color: rgb(20, 12, 12);
 }
 
-.bg-blanco-k{
+.bg-blanco-k {
     background-color: rgb(255, 244, 244);
 }
 
-.l-blanco-k{
+.l-blanco-k {
     color: rgb(255, 244, 244);
 }
 
-.bg-gris-k{
+.bg-gris-k {
     background-color: rgb(109, 109, 109);
 }
 
-.l-gris-k{
+.l-gris-k {
     color: rgb(109, 109, 109);
 }
 
-.bg-oscuro-k{
+.bg-oscuro-k {
     background-color: rgb(118, 14, 31);
 }
 
-.l-oscuro-k{
+.l-oscuro-k {
     color: rgb(118, 14, 31);
 }
 
-.bg-humo-k{
+.bg-humo-k {
     background-color: rgb(245, 245, 245);
 }
 
-.l-humo-k{
+.l-humo-k {
     color: rgb(245, 245, 245);
 }
 
 /*Encabezado*/
-.log1{
+.log1 {
     height: 40px;
 }
 
-.navbar-toggler{
+.navbar-toggler {
     border: 0;
 }
 
-.navbar-toggler:hover{
+.navbar-toggler:hover {
     background-color: rgb(10, 5, 5);
 }
 
-.togbicon{
+.togbicon {
     height: 24px;
 }
 
-.btrig:hover{
+.btrig:hover {
     background-color: rgb(10, 5, 5);
 }
 
-.btrig img{
+.btrig img {
     width: 18px;
 }
 
-.dropdown a{
+.dropdown a {
     font-weight: bold;
 }
 
-.dropdown a::after{
+.dropdown a::after {
     display: none;
 }
 
-.dropdown a:hover{
+.dropdown a:hover {
     color: rgb(255, 244, 244);
 }
 
-.cabi{
+.cabi {
     cursor: pointer;
-    background: linear-gradient(to right,rgb(255, 29, 37), rgb(118, 14, 31),rgb(255, 29, 37));
+    background: linear-gradient(to right, rgb(255, 29, 37), rgb(118, 14, 31), rgb(255, 29, 37));
 }
 
-.cabi p{
+.cabi p {
     margin: 0;
     font-size: 0.7rem;
     color: rgb(255, 244, 244);
@@ -105,109 +105,109 @@ button img {
     text-align: center;
 }
 
-.cabi:hover{
-    background: linear-gradient(to left,rgb(118, 14, 31),rgb(255, 29, 37),rgb(118, 14, 31));
+.cabi:hover {
+    background: linear-gradient(to left, rgb(118, 14, 31), rgb(255, 29, 37), rgb(118, 14, 31));
 }
 
 /*BreadCrumb*/
 
-.regresar{
+.regresar {
     text-decoration: none;
 }
 
-.regresar button{
+.regresar button {
     border-radius: 50%;
     padding: 0;
     margin: 0;
 }
 
-.regresar button img{
+.regresar button img {
     width: 24px;
 }
 
-.regresar button:hover{
+.regresar button:hover {
     background-color: rgb(118, 14, 31);
 }
 
-.regresar label{
+.regresar label {
     font-weight: bold;
     cursor: pointer;
 }
 
-.regresar label:hover{
+.regresar label:hover {
     color: rgb(118, 14, 31);
 }
 
-.breadcrumb li a{
+.breadcrumb li a {
     text-decoration: none;
 }
 
-.breadcrumb li a:hover{
+.breadcrumb li a:hover {
     color: rgb(20, 12, 12);
 }
 
 /*Pie de Pagina*/
 
-.logopie{
+.logopie {
     transform: scale(70%);
 }
 
-.logopie img{
+.logopie img {
     max-height: 120px;
 }
 
-.accionpie p{
+.accionpie p {
     text-align: center;
     font-size: 1.8rem;
     margin: 0;
 }
 
-.unirsepie a{
+.unirsepie a {
     text-decoration: none;
 }
 
-.unirsepie button{
+.unirsepie button {
     width: 120px;
     font-weight: bold;
 }
 
-.unirsepie button:hover{
+.unirsepie button:hover {
     background-color: rgb(118, 14, 31);
     color: rgb(255, 244, 244);
 }
 
-.ayudapie a{
+.ayudapie a {
     color: rgb(255, 244, 244);
     text-decoration: none;
 }
 
-.ayudapie img{
+.ayudapie img {
     width: 24px;
 }
 
-.ayudapie a:hover{
+.ayudapie a:hover {
     color: rgb(255, 29, 37);
 }
 
-.ayudapie button{
+.ayudapie button {
     background-color: rgb(255, 244, 244);
     font-weight: bold;
     color: rgb(255, 29, 37);
 }
 
-.ayudapie button:hover{
+.ayudapie button:hover {
     background-color: rgb(246, 216, 216);
 }
 
-.legalpie p{
+.legalpie p {
     margin: 0;
 }
 
-.legalpie a{
+.legalpie a {
     color: rgb(255, 244, 244);
     text-decoration: none;
 }
 
-.legalpie a:hover{
+.legalpie a:hover {
     color: rgb(20, 12, 12);
 }

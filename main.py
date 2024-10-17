@@ -48,6 +48,15 @@ def redirigirPedidos():
 def registrarUsuario():
     return render_template('RegistroUsuario.html')
 
+@app.route('/NikeMercurial')
+def NikeMercurial():
+    return render_template('NikeMercurial2.html')
+
+@app.route('/dashboard')
+def dash():
+    return render_template('maestradashboard.html')
+
+
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # Controladores
 # Nivel de Usuario
@@ -116,7 +125,6 @@ def formulario_editar_categoria(id):
     # Obtener el disco por ID
     categoria = controlador_categoria.obtener_categoria_por_id(id)
     return render_template("editar_categoria.html", categoria=categoria)
-
 
 @app.route("/actualizar_categoria", methods=["POST"])
 def actualizar_categoria():

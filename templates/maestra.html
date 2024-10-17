@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/cabezapie.css') }}" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/opcionesUser.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/carrito.css') }}" />
   <link rel="icon" type="image/svg" href="{{ url_for('static', filename='img/logo_kancha_club.svg') }}" />
   {% block link %}
 
@@ -182,24 +183,60 @@
       </div>
     </div>
   </header>
+
+  <!-- Opciones de usuario -->
   <div class="user-dropdown-content" id="user-dropdown-content">
-    <a href="../html/MiPerfil.html"><span>Mi perfil</span> <img src="{{url_for('static', filename='img/usuario.svg')}}" class="icon"
-        alt="icono-perfil"></a>
-    <a href="{{url_for('redirigirPedidos')}}"><span>Mis pedidos</span> <img src="{{url_for('static', filename='img/box-solid.svg')}}" class="icon"
-        alt="icono-pedidos"></a>
-    <a href="../html/MisFavoritos.html"><span>Mis favoritos</span> <img src="{{url_for('static',filename='img/corazon.svg')}}" class="icon"
-        alt="icono-favoritos"></a>
-    <a href="{{url_for('soporteTecnico')}}"><span>Ayuda</span> <img src="{{url_for('static',filename='img/buscar.svg')}}" class="icon"
-        alt="icono-ayuda"></a>
-    <a href="#cerrar-sesion"><span>Cerrar sesión</span> <img src="{{url_for('static',filename='img/circle-arrow-right-solid.svg')}}" class="icon"
+    <a href="../html/MiPerfil.html"><span>Mi perfil</span> <img src="{{url_for('static', filename='img/usuario.svg')}}"
+        class="icon" alt="icono-perfil"></a>
+    <a href="{{url_for('redirigirPedidos')}}"><span>Mis pedidos</span> <img
+        src="{{url_for('static', filename='img/box-solid.svg')}}" class="icon" alt="icono-pedidos"></a>
+    <a href="../html/MisFavoritos.html"><span>Mis favoritos</span> <img
+        src="{{url_for('static',filename='img/corazon.svg')}}" class="icon" alt="icono-favoritos"></a>
+    <a href="{{url_for('soporteTecnico')}}"><span>Ayuda</span> <img
+        src="{{url_for('static',filename='img/buscar.svg')}}" class="icon" alt="icono-ayuda"></a>
+    <a href="#cerrar-sesion"><span>Cerrar sesión</span> <img
+        src="{{url_for('static',filename='img/circle-arrow-right-solid.svg')}}" class="icon"
         alt="icono-cerrar-sesion"></a>
   </div>
+
+
+  <!-- Carrito de compras -->
+  <div class="basket-dropdown" id="basket-dropdown">
+    <div class="d-flex justify-content-end">
+      <button id="close-basket">&times;</button>
+    </div>
+    <h6 class="text-center" id="shipping-price">Tu envío será completamente gratis</h6>
+    <div class="basket-progress-bar">
+      <div class="basket-progress" id="basket-progress"></div>
+    </div>
+    <div class="basket-header">
+      <h2>Carro de compras (<span id="item-count">0</span> artículos)</h2>
+    </div>
+    <div class="basket-items">
+      <!-- Items del carrito se insertarán aquí -->
+    
+      <!--  -->
+    </div>
+    <p id="empty-basket-message" class="text-center" style="display: none;">Tu carrito está vacío.</p>
+    <div class="basket-summary" id="cuentas">
+      <p>Subtotal: <span id="subtotal">S/0.00</span></p>
+      <p>Entrega: <span id="delivery">S/20.00</span></p>
+      <p>Total: <span id="total">S/0.00</span></p>
+      <a href="{{url_for('redirigirPago')}}"><button class="checkout-button btn btn-danger btn-block">Ir a
+          Pagar</button></a>
+    </div>
+  </div>
+
+
   <!-- Bloque de contenido dinámico -->
+
   <div>
     {% block contenido %}
     <!-- Aquí se insertará el contenido de otras páginas -->
     {% endblock %}
   </div>
+
+
 
   <footer class="text-center text-lg-start text-white bg-negro-k">
     <div class="row p-0 m-0 align-items-center bg-blanco-k py-2">
@@ -357,6 +394,7 @@
 
   <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
   <script src="{{ url_for('static', filename='js/opcionesUser.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/carrito.js') }}"></script>
 
   {% block js %}
 

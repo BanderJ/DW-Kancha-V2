@@ -1,19 +1,14 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kancha</title>
-    <link rel="stylesheet" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/productoselect.css">
-    <link rel="stylesheet" href="../css/cabezapie.css">
-    <link rel="stylesheet" href="../css/carrito.css">
-    <link rel="stylesheet" href="../css/opcionesUser.css">
-    <link rel="icon" type="image/svg" href="../img/logo_kancha_club.svg">
-</head>
-<body>
-    <header id="header"></header>
 
+{% extends "maestra.html" %}
+{% block titulo %}
+Nike Mercurial
+{% endblock %}
+
+{% block link %}
+<link rel="stylesheet" href="{{url_for('static',filename='css/productoselect.css')}}">
+{% endblock %}
+
+{% block contenido %}
     <main class="mt-3">
         <div class="row m-0 py-4">
             <div class="col p-0"></div>
@@ -367,14 +362,13 @@
                                         <p class="l-rojo-k stock">Disponible</p>
                                     </div>
                                     <div class="col-8 p-0 px-1 mb-2 anap">
-                                        <button class="btn bg-rojo-k l-blanco-k d-flex align-items-center justify-content-center py-0 py-lg-3" id="anadir"
-                                        data-id="3"
-                                        data-nombre="Nike Mercurial Superfly 9 Elite"
-                                        data-talla="M"
-                                        data-cantidad="1"
-                                        data-precio="339.99"
-                                        data-img="../img/foto (71).webp"
-                                        >Añadir al carrito</button>
+                                        <button class="btn bg-rojo-k l-blanco-k d-flex align-items-center justify-content-center py-0 py-lg-3 agregar-carrito" id="anadir"
+                                        data-id="5" 
+                                        data-nombre="Nike Pantalón corto Academy" 
+                                        data-precio="209.98" 
+                                        data-imagen="{{url_for('static',filename='img/foto (112).avif')}}" 
+                                        data-talla="32">
+                                            Añadir al carrito</button>
                                     </div>
                                     <div class="col-4 p-0 px-1 mb-2 favp">
                                         <button class="btn p-0 d-flex align-items-center justify-content-center py-0 py-lg-3" id="favoritos"
@@ -502,14 +496,7 @@
         <div id="usuario"></div>
         <div id="carrito"></div>
     </main>
-
-    <footer id="footer"></footer>
-
-    <script src="../js/bootstrap.bundle.min.js"></script>
-    <script src="../js/ProductoSelect.js"></script>
-    <script src="../js/headerfooter.js"></script>
-    <script src="../js/opcionesUser.js"></script>
-    <script src="../js/carrito.js"></script>
-
-</body>
-</html>
+    {% endblock %}
+{% block js %}
+    <script src="{{url_for('static',filename='js/ProductoSelect.js')}}"></script>
+    {% endblock%}
