@@ -3,8 +3,18 @@ import controlador_productos
 import controlador_nivelusuario
 import controlador_categoria
 from bd import conectarse
+from flask import session
+#Para generar claves en hash aleatorias
+import hashlib
+import os
+
+def crearHashSecret():
+    datos_aleatorios = os.urandom(16)
+    hash_objeto = hashlib.sha256(datos_aleatorios)
+    return hash_objeto.hexdigest()
 
 app = Flask(__name__)
+app.secret_key = crearHashSecret()
 
 # Enlaces html/templates
 @app.route("/")
@@ -32,6 +42,50 @@ def ventanaPago():
 def iniciarSesion():
     return render_template("IniciarSesion.html")
 
+@app.route('/Registrate')
+def registrarUsuario():
+    return render_template('RegistroUsuario.html')
+
+@app.route("/perfil")
+def mostrarPerfil():
+    datos = session.get("usuario", {"nombre":"Invitado","apellidos":"Invitado","correo":"example@email.com","numdoc":"11111111"})
+    return render_template("MiPerfil.html", userData=datos)
+
+@app.route('/login', methods=["POST"])
+def validarInicioSesion():
+    datosUsuario = dict()
+    try:
+        email = request.form["correo"]
+        contraseña = request.form["clave"]
+        print(email)
+        print(contraseña)
+        
+        cursor = conectarse().cursor()
+        cursor.execute("SELECT nombre, apePat, apeMat, correo, numdoc FROM usuario WHERE correo=%s AND password=%s", (email, contraseña,))
+        registro = cursor.fetchone()
+
+        if registro:  # Verificar si se encontró un registro
+            datosUsuario["nombre"] = registro[0]
+            datosUsuario["apellidos"] = f"{registro[1]} {registro[2]}"
+            datosUsuario["correo"] = registro[3]
+            datosUsuario["numdoc"] = registro[4]
+            datosUsuario["mensaje"] = "Usuario logueado exitosamente"
+            datosUsuario["status"] = 1
+            session["usuario"] = datosUsuario
+            
+            return redirect('/')  # Redirigir a la ruta del perfil
+        else:
+            datosUsuario["mensaje"] = "Usuario no logueado"
+            datosUsuario["error"] = "Credenciales incorrectas"
+            datosUsuario["status"] = -1
+            return jsonify(datosUsuario)
+
+    except Exception as e:
+        datosUsuario["mensaje"] = "Ha ocurrido un error"
+        datosUsuario["error"] = f"Ha ocurrido un error => {repr(e)}"
+        datosUsuario["status"] = -1
+        return jsonify(datosUsuario)
+
 @app.route('/EventosDeportivos')
 def redirigirEventosDeportivos():
     return render_template('EventosDeportivos.html')
@@ -44,10 +98,6 @@ def redirigirPago():
 def redirigirPedidos():
     return render_template('MisPedidos.html')
 
-@app.route('/Registrate')
-def registrarUsuario():
-    return render_template('RegistroUsuario.html')
-
 @app.route('/NikeMercurial')
 def NikeMercurial():
     return render_template('NikeMercurial2.html')
@@ -55,29 +105,6 @@ def NikeMercurial():
 @app.route('/dashboard')
 def dash():
     return render_template('maestradashboard.html')
-
-@app.route('/login',methods=["POST"])
-def validarInicioSesion():
-    respuesta = dict()
-    try:
-        email = request.form["correo"]
-        contraseña = request.form["clave"]
-        print(email)
-        print(contraseña)
-        cursor = conectarse().cursor()
-        cursor.execute("select nombre,apePat,correo,password from usuario where correo=%s and password=%s",(email,contraseña,))
-        registro = cursor.fetchone()
-        respuesta["nombre"] = str(registro[0])+" "+str(registro[1])
-        respuesta["correo"] = registro[2]
-        respuesta["contraseña"] = registro[3]
-        respuesta["mensaje"]="Usuario logueado exitosamente"
-        respuesta["status"]=1
-        return jsonify(respuesta)
-    except Exception as e:
-        respuesta["mensaje"]="Usuario no logueado"
-        respuesta["error"]="Ha ocurrido un error => "+repr(e)
-        respuesta["status"]=-1
-        return jsonify(respuesta)
     
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # Controladores
