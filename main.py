@@ -2,7 +2,7 @@ from flask import Flask,render_template,request,jsonify, redirect
 import controlador_productos 
 import controlador_nivelusuario
 import controlador_categoria
-
+from bd import conectarse
 
 app = Flask(__name__)
 
@@ -47,6 +47,32 @@ def redirigirPedidos():
 @app.route('/Registrate')
 def registrarUsuario():
     return render_template('RegistroUsuario.html')
+
+from flask import Flask, request, jsonify
+# Asumiendo que ya tienes conexión con la base de datos
+
+@app.route("/validarSesion", methods=["POST"])
+def validarInicioSesion():
+    correo = request.form["correo"]
+    contraseña = request.form["clave"]
+
+    # Imprimir solo si es necesario para depuración
+    print(f"Correo: {correo}")
+    print(f"Contraseña: {contraseña}")
+    
+    try:
+        cursor = conectarse().cursor()
+        cursor.execute("SELECT correo,password FROM usuario WHERE correo=%s and password=%s", (correo,contraseña))
+        registro = cursor.fetchone()
+
+        if registro[0]==registro[0] and registro[1] == contraseña:  # Asegúrate de que el índice sea correcto
+            return jsonify({"message": "Logeado exitosamente", "status": "success"})
+        else:
+            return jsonify({"message": "Correo o contraseña incorrectos", "status": "error"})
+    except Exception as e:
+        return jsonify({"message": str(e), "status": "error"})
+
+        
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # Controladores

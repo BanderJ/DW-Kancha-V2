@@ -9,7 +9,7 @@ Iniciar Sesion
 />
 {% endblock %} {% block contenido %}
 <main class="container d-flex justify-content-center py-5">
-  <form class="form">
+  <form class="form" action="{{url_for('validarInicioSesion')}}" method="post">
     <div class="flex-column">
       <label>Correo</label>
     </div>
@@ -26,7 +26,7 @@ Iniciar Sesion
           ></path>
         </g>
       </svg>
-      <input placeholder="Ingrese su correo electrónico" class="input" type="text" name=""/>
+      <input placeholder="Ingrese su correo electrónico" class="input" type="text" name="correo"/>
     </div>
 
     <div class="flex-column">
@@ -46,7 +46,7 @@ Iniciar Sesion
           d="m304 224c-8.832031 0-16-7.167969-16-16v-80c0-52.929688-43.070312-96-96-96s-96 43.070312-96 96v80c0 8.832031-7.167969 16-16 16s-16-7.167969-16-16v-80c0-70.59375 57.40625-128 128-128s128 57.40625 128 128v80c0 8.832031-7.167969 16-16 16zm0 0"
         ></path>
       </svg>
-      <input placeholder="Ingrese su contraseña" class="input" type="password" name=""/>
+      <input placeholder="Ingrese su contraseña" class="input" type="password" name="clave"/>
     </div>
     <button id="iniciarSesion">Iniciar Sesion</button>
     <p class="p">Don't have an account? <span class="span"><a href="{{url_for('registrarUsuario')}}">Sign Up</a></span></p>
