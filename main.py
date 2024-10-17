@@ -48,33 +48,6 @@ def redirigirPedidos():
 def registrarUsuario():
     return render_template('RegistroUsuario.html')
 
-<<<<<<< HEAD
-from flask import Flask, request, jsonify
-# Asumiendo que ya tienes conexión con la base de datos
-
-@app.route("/validarSesion", methods=["POST"])
-def validarInicioSesion():
-    correo = request.form["correo"]
-    contraseña = request.form["clave"]
-
-    # Imprimir solo si es necesario para depuración
-    print(f"Correo: {correo}")
-    print(f"Contraseña: {contraseña}")
-    
-    try:
-        cursor = conectarse().cursor()
-        cursor.execute("SELECT correo,password FROM usuario WHERE correo=%s and password=%s", (correo,contraseña))
-        registro = cursor.fetchone()
-
-        if registro[0]==registro[0] and registro[1] == contraseña:  # Asegúrate de que el índice sea correcto
-            return jsonify({"message": "Logeado exitosamente", "status": "success"})
-        else:
-            return jsonify({"message": "Correo o contraseña incorrectos", "status": "error"})
-    except Exception as e:
-        return jsonify({"message": str(e), "status": "error"})
-
-        
-=======
 @app.route('/NikeMercurial')
 def NikeMercurial():
     return render_template('NikeMercurial2.html')
@@ -83,8 +56,29 @@ def NikeMercurial():
 def dash():
     return render_template('maestradashboard.html')
 
->>>>>>> 870238b192a38fae562784223b415ef73134d574
-
+@app.route('/login',methods=["POST"])
+def validarInicioSesion():
+    respuesta = dict()
+    try:
+        email = request.form["correo"]
+        contraseña = request.form["clave"]
+        print(email)
+        print(contraseña)
+        cursor = conectarse().cursor()
+        cursor.execute("select nombre,apePat,correo,password from usuario where correo=%s and password=%s",(email,contraseña,))
+        registro = cursor.fetchone()
+        respuesta["nombre"] = str(registro[0])+" "+str(registro[1])
+        respuesta["correo"] = registro[2]
+        respuesta["contraseña"] = registro[3]
+        respuesta["mensaje"]="Usuario logueado exitosamente"
+        respuesta["status"]=1
+        return jsonify(respuesta)
+    except Exception as e:
+        respuesta["mensaje"]="Usuario no logueado"
+        respuesta["error"]="Ha ocurrido un error => "+repr(e)
+        respuesta["status"]=-1
+        return jsonify(respuesta)
+    
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # Controladores
 # Nivel de Usuario
