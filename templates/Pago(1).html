@@ -1,18 +1,17 @@
-
-{% extends "maestra.html" %}
-{% block titulo %}Pago{% endblock %}
-{% block link %}<link rel="stylesheet" href="{{ url_for('static', filename='css/Pago.css') }}" />
+{% extends "maestra.html" %} {% block titulo %}Pago{% endblock %} {% block link
+%}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/Pago.css') }}" />
 <link rel="stylesheet" href="{{ url_for('static', filename='css/titulo.css') }}" />
-{% endblock %}
-{%block contenido%}
+{% endblock %} {% block contenido %}
 <main class="mt-4">
     <div class="row m-0 py-2">
         <div class="col p-0"></div>
         <div class="col-xl-9 col-lg-9 col-md-9 col-sm-10 col-10 d-flex align-items-center p-0 justify-content-sm-start">
             <a class="d-flex align-items-center me-2 regresar" href="Productos.html">
                 <button class="btn bg-rojo-k me-2 d-flex">
-                    <img class="img-fluid" src="{{ url_for('static', filename='img/fr.svg') }}" alt="" /></button><label class="l-rojo-k"
-                    for="regresar">Regresar</label>
+                    <img class="img-fluid" src="{{ url_for('static', filename='img/fr.svg') }}" alt="" />
+                </button>
+                <label class="l-rojo-k" for="regresar">Regresar</label>
             </a>
             <nav data-mdb-navbar-init class="navbar navbar-expand-lg p-0 ms-2 d-sm-block d-none">
                 <div class="container-fluid">
@@ -45,15 +44,18 @@
             <div class="mb-5">
                 <div class="row">
                     <div class="col">
-                        <img src="{{ url_for('static', filename='img/usuario.svg') }}" alt="" class="imgTitulo mx-auto d-block" />
+                        <img src="{{ url_for('static', filename='img/usuario.svg') }}" alt=""
+                            class="imgTitulo mx-auto d-block" />
                         <h3 class="text-center">Contacto</h3>
                     </div>
                     <div class="col">
-                        <img src="{{ url_for('static', filename='img/truck-solid.svg') }}" alt="" class="imgTitulo mx-auto d-block" />
+                        <img src="{{ url_for('static', filename='img/truck-solid.svg') }}" alt=""
+                            class="imgTitulo mx-auto d-block" />
                         <h3 class="text-center">Envio</h3>
                     </div>
                     <div class="col">
-                        <img src="{{ url_for('static', filename='img/money-bill-1-regular.svg') }}" alt="" class="imgTitulo mx-auto d-block" />
+                        <img src="{{ url_for('static', filename='img/money-bill-1-regular.svg') }}" alt=""
+                            class="imgTitulo mx-auto d-block" />
                         <h3 class="text-center">Pago</h3>
                     </div>
                 </div>
@@ -71,13 +73,14 @@
                 <div class="my-4 col-lg-7 col-md-7 col-sm-12 col-12">
                     <!-- Pasos -->
                     <div class="accordion" id="accordionExample">
+                        <!-- Primer paso: Contacto -->
                         <div class="accordion-item">
                             <h2
                                 class="acordionEncabezado accordion-header d-flex justify-content-between align-items-center">
                                 <span id="acordiontitle">Contacto</span>
-                                <img src="{{ url_for('static', filename='img/edit-white.svg') }}" alt="toggle" class="toggle-img d-none" id="toggleOne"
-                                    data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
-                                    aria-controls="collapseOne" />
+                                <img src="{{ url_for('static', filename='img/edit-white.svg') }}" alt="toggle"
+                                    class="toggle-img d-none" id="toggleOne" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" />
                             </h2>
                             <div id="collapseOne" class="accordion-collapse collapse show"
                                 data-bs-parent="#accordionExample">
@@ -95,7 +98,7 @@
                                             <input style="width: 100%" type="text" name="nombres" id="nombres" />
                                         </div>
                                         <div class="col">
-                                            <label for="nombres">Apellidos</label> <br />
+                                            <label for="apellidos">Apellidos</label> <br />
                                             <input style="width: 100%" type="text" name="apellidos" id="apellidos" />
                                         </div>
                                     </div>
@@ -107,7 +110,7 @@
                                                 id="dni" />
                                         </div>
                                         <div class="col">
-                                            <label for="nombres">Movil</label> <br />
+                                            <label for="movil">Movil</label> <br />
                                             <input inputmode="numeric" style="width: 100%" type="text" name="movil"
                                                 id="movil" />
                                         </div>
@@ -123,13 +126,14 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- Segundo paso: Envío -->
                         <div class="accordion-item">
                             <h2
                                 class="acordionEncabezado accordion-header d-flex justify-content-between align-items-center">
                                 <span id="acordiontitle">Envio</span>
-                                <img src="{{ url_for('static', filename='img/edit-white.svg') }}" alt="toggle" class="toggle-img d-none" id="toggleTwo"
-                                    data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false"
-                                    aria-controls="collapseTwo" />
+                                <img src="{{ url_for('static', filename='img/edit-white.svg') }}" alt="toggle"
+                                    class="toggle-img d-none" id="toggleTwo" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" />
                             </h2>
                             <div id="collapseTwo" class="accordion-collapse collapse"
                                 data-bs-parent="#accordionExample">
@@ -172,13 +176,14 @@
                                 </div>
                             </div>
                         </div>
-
+                        <!-- Tercer paso: Pago -->
                         <div class="accordion-item">
                             <h2
                                 class="acordionEncabezado accordion-header d-flex justify-content-between align-items-center">
                                 <span id="acordiontitle">Pago</span>
-                                <img src="{{ url_for('static', filename='img/edit-white.svg') }}" alt="toggle" class="toggle-img d-none" id="toggleThree"
-                                    data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false"
+                                <img src="{{ url_for('static', filename='img/edit-white.svg') }}" alt="toggle"
+                                    class="toggle-img d-none" id="toggleThree" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseThree" aria-expanded="false"
                                     aria-controls="collapseThree" />
                             </h2>
                             <div id="collapseThree" class="accordion-collapse collapse"
@@ -186,18 +191,20 @@
                                 <div class="accordion-body">
                                     <div class="row">
                                         <div class="col">
-                                            <strong>Tarjeta de credito u debito</strong>
+                                            <strong>Tarjeta de crédito o débito</strong>
                                         </div>
                                         <div class="col d-flex justify-content-end">
-                                            <img class="me-3" id="imgTarjet" src="{{ url_for('static', filename='img/cc-visa.svg') }}" alt="" />
-                                            <img id="imgTarjet" src="{{ url_for('static', filename='img/cc-mastercard.svg') }}" alt="" />
+                                            <img class="me-3" id="imgTarjet"
+                                                src="{{ url_for('static', filename='img/cc-visa.svg') }}" alt="" />
+                                            <img id="imgTarjet"
+                                                src="{{ url_for('static', filename='img/cc-mastercard.svg') }}"
+                                                alt="" />
                                         </div>
                                     </div>
                                     <hr />
-
                                     <div class="row">
                                         <div class="col-12">
-                                            <label for="ntarj">Numero de tarjeta</label><br />
+                                            <label for="ntarj">Número de tarjeta</label><br />
                                             <input inputmode="numeric" style="width: 100%" type="text" name="ntarj"
                                                 id="ntarj" />
                                         </div>
@@ -223,16 +230,15 @@
                                         </div>
                                         <br /><br />
                                         <div class="col">
-                                            <label for="codeSeg">Codigo de seguridad</label><br />
+                                            <label for="codeSeg">Código de seguridad</label><br />
                                             <input inputmode="numeric" style="width: 100%" type="text" name="codeSeg"
                                                 id="codeSeg" />
                                         </div>
                                     </div>
-                                    <br />
-                                    <br />
+                                    <br /><br />
                                     <div class="row">
                                         <div class="d-flex justify-content-center">
-                                            <a href="index.html"><button id="btn3" class="btn bg-rojo-k l-blanco-k"
+                                            <a href="{{url_for('inicio')}}"><button id="btn3" class="btn bg-rojo-k l-blanco-k"
                                                     type="button">
                                                     Finalizar
                                                 </button></a>
@@ -243,42 +249,14 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Resumen de compra -->
                 <div class="my-4 col-lg-5 col-md-5 col-sm-12 col-12 resumenCompra">
                     <div class="container border">
                         <h6 class="text-center mt-2">Resumen de compra</h6>
                         <hr />
-                        <div class="tarjetaprod m-2 row d-flex border">
-                            <div class="col">
-                                <img class="imgdetalle" src="../img/foto (100).avif" alt="" />
-                            </div>
-                            <div class="col">
-                                <p>Zapatilla 1</p>
-                                <p>talla 42</p>
-                                <p class="precio text-end"><b>S/229.99</b></p>
-                            </div>
-                            <p id="cantidad">2</p>
-                        </div>
-                        <div class="tarjetaprod m-2 row d-flex border">
-                            <div class="col">
-                                <img class="imgdetalle" src="../img/foto (24).avif" alt="" />
-                            </div>
-                            <div class="col">
-                                <p>Zapatilla 2</p>
-                                <p>talla 42</p>
-                                <p class="precio text-end"><b>S/119.99</b></p>
-                            </div>
-                            <p id="cantidad">2</p>
-                        </div>
-                        <div class="tarjetaprod m-2 row d-flex border">
-                            <div class="col">
-                                <img class="imgdetalle" src="../img/foto (22).avif" alt="" />
-                            </div>
-                            <div class="col">
-                                <p>Zapatilla 3</p>
-                                <p>talla 42</p>
-                                <p class="precio text-end"><b>S/319.99</b></p>
-                            </div>
-                            <p id="cantidad">2</p>
+                        <div id="resumen-carrito" class="carrito-con-scroll">
+                            <!-- Aquí se insertarán dinámicamente los productos del carrito -->
                         </div>
                         <hr />
                         <div class="row" style="color: rgb(255, 29, 37)">
@@ -286,7 +264,7 @@
                                 <p class="text-start"><strong>Total:</strong></p>
                             </div>
                             <div class="col">
-                                <p class="text-end">669.97</p>
+                                <p id="total-compra" class="text-end">0.00</p>
                             </div>
                         </div>
                     </div>
@@ -296,7 +274,70 @@
         <div class="col p-0"></div>
     </div>
 </main>
+{% endblock %} 
+{% block js %}
+<script src="{{ url_for('static', filename='js/scriptPago.js') }}"></script>
+<script>
+   document.addEventListener("DOMContentLoaded", function () {
+    let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+
+    const resumenCarritoEl = document.getElementById("resumen-carrito");
+    const totalCompraEl = document.getElementById("total-compra");
+
+    const costoEnvio = 20.0; // Costo de envío
+    const umbralEnvioGratis = 500.0; // Umbral para envío gratis
+    let totalCompra = 0;
+
+    // Función para renderizar los productos del carrito en el resumen de compra
+    function renderizarResumenCarrito() {
+        resumenCarritoEl.innerHTML = ""; // Limpiar el contenido previo
+
+        // Verificar si el carrito está vacío
+        if (carrito.length === 0) {
+            resumenCarritoEl.innerHTML = "<p>No hay productos en el carrito.</p>";
+            totalCompraEl.innerText = "0.00";
+            return;
+        }
+
+        // Iterar sobre los productos en el carrito
+        carrito.forEach((producto) => {
+            const productoHTML = `
+                <div class="tarjetaprod m-2 row d-flex border">
+                    <div class="col">
+                        <img class="imgdetalle" src="${producto.imagen}" alt="${producto.nombre}" />
+                    </div>
+                    <div class="col">
+                        <p>${producto.nombre}</p>
+                        <p>Talla: ${producto.talla}</p>
+                        <p class="precio text-end"><b>S/${producto.precio.toFixed(2)}</b></p>
+                    </div>
+                    <p id="cantidad" style="background-color: rgb(10, 5, 5);">${producto.cantidad}</p>
+                </div>
+            `;
+            resumenCarritoEl.insertAdjacentHTML("beforeend", productoHTML);
+
+            // Actualizar el total de la compra
+            totalCompra += producto.precio * producto.cantidad;
+        });
+
+        // Si el total es menor a 500, agregar el costo de envío
+        if (totalCompra < umbralEnvioGratis) {
+            totalCompra += costoEnvio;
+        }
+        // Mostrar el total en el HTML
+        totalCompraEl.innerText = `S/${totalCompra.toFixed(2)}`;
+    }
+
+    // Llamar a la función para renderizar el carrito
+    renderizarResumenCarrito();
+
+    // Vaciado del carrito al hacer clic en "Finalizar"
+    const finalizarBtn = document.getElementById("btn3");
+    finalizarBtn.addEventListener("click", function () {
+        // Limpiar el carrito del localStorage
+        localStorage.removeItem("carrito");
+    });
+});
+
+</script>
 {% endblock %}
-{% block js%}
-        <script src="{{ url_for('static', filename='js/scriptPago.js') }}"></script>
-        {% endblock %}

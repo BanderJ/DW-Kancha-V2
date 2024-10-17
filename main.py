@@ -48,6 +48,7 @@ def redirigirPedidos():
 def registrarUsuario():
     return render_template('RegistroUsuario.html')
 
+<<<<<<< HEAD
 from flask import Flask, request, jsonify
 # Asumiendo que ya tienes conexión con la base de datos
 
@@ -73,6 +74,16 @@ def validarInicioSesion():
         return jsonify({"message": str(e), "status": "error"})
 
         
+=======
+@app.route('/NikeMercurial')
+def NikeMercurial():
+    return render_template('NikeMercurial2.html')
+
+@app.route('/dashboard')
+def dash():
+    return render_template('maestradashboard.html')
+
+>>>>>>> 870238b192a38fae562784223b415ef73134d574
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # Controladores
@@ -142,7 +153,6 @@ def formulario_editar_categoria(id):
     # Obtener el disco por ID
     categoria = controlador_categoria.obtener_categoria_por_id(id)
     return render_template("editar_categoria.html", categoria=categoria)
-
 
 @app.route("/actualizar_categoria", methods=["POST"])
 def actualizar_categoria():
