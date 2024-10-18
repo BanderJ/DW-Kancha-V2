@@ -27,14 +27,17 @@
 
 .item {
     box-sizing: border-box;
-    padding: 10px;
+    padding: 15px;
     text-align: center;
     flex: 0 0 auto;
 }
 
 .item img {
-    max-width: 100%;
-    height: auto;
+    width: 100%;  /* Asegura que la imagen ocupe todo el ancho del contenedor */
+    max-height: 250px;  /* Controla la altura máxima para mantener proporción */
+    object-fit: cover;  /* Recorta la imagen si no cabe, manteniendo proporciones */
+    border-radius: 10px; /* Opcional: añade esquinas redondeadas */
+    margin-bottom: 10px;
 }
 
 .nav {

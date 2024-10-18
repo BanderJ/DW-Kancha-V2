@@ -1,123 +1,81 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const carousel = document.querySelector('.items');
-    const leftNav = document.querySelector('.nav.left');
-    const rightNav = document.querySelector('.nav.right');
-    const indicatorsContainer = document.querySelector('.indicators');
-    let items;
-    let totalItems;
-    let currentIndex = 0;
-    let itemsToShow = 3;
-
-    // Cargar productos desde localStorage
-    function loadProducts() {
-        const productos = JSON.parse(localStorage.getItem('productosFavoritos')) || [];
-        const contenedor = document.getElementById('losfavoritos');
-        contenedor.innerHTML = ''; // Limpiar contenedor
-
-        if (productos.length > 0) {
-            productos.forEach(producto => {
-                const divItem = document.createElement('div');
-                divItem.classList.add('item');
-                divItem.innerHTML = `
-                    <img id="imagenCarrito" src="${producto.img}" alt="${producto.nombre}">
-                    <p>${producto.nombre}</p>
-                    <p>${producto.precio} | <span>${producto.precioOferta}</span></p>
-                `;
-                contenedor.appendChild(divItem);
-            });
-        }
-
-        initializeCarousel();
+const productos = [
+    {
+      id: "#1",
+      imagen: `${STATIC_URL}img/foto (112).avif`,
+      nombre: "F50 Elite",
+      marca: "Adidas",
+      precio: 1709.90,
+      precioKancha: 1679.90,
+      deporte: "Fútbol",
+      genero: "Masculino",
+      color: "Blanco",
+      tipo: "Chimpunes"
+    },
+    {
+      id: "#2",
+      imagen: `${STATIC_URL}img/foto (27).avif`,
+      nombre: "KD17 'Sunrise'",
+      marca: "Puma",
+      precio: 309.00,
+      precioKancha: 289.00,
+      deporte: "Fútbol",
+      genero: "Masculino",
+      color: "Negro",
+      tipo: "Chimpunes"
+    },
+    {
+      id: "#3",
+      imagen: `${STATIC_URL}img/foto (30).avif`,
+      nombre: "KD1zxc7 'Sunrise'",
+      marca: "Puma",
+      precio: 309.00,
+      precioKancha: 289.00,
+      deporte: "Fútbol",
+      genero: "Masculino",
+      color: "Rosado",
+      tipo: "Chimpunes"
     }
-
-    function initializeCarousel() {
-        items = document.querySelectorAll('.item');
-        totalItems = items.length;
-        console.log(`Total items: ${totalItems}`);
-        updateItemsToShow();
-        createIndicators();
-        updateCarousel();
-        attachEventListeners();
+  ];
+  
+  const favoritosContainer = document.getElementById('losfavoritos');
+  
+  // Insertar los productos en el carrusel
+  productos.forEach(producto => {
+    const item = document.createElement('div');
+    item.classList.add('item');
+  
+    item.innerHTML = `
+      <img src="${producto.imagen}" alt="${producto.nombre}">
+      <h5>${producto.nombre}</h5>
+      <p>Marca: ${producto.marca}</p>
+      <p>Deporte: ${producto.deporte}</p>
+      <p>Género: ${producto.genero}</p>
+      <p>Color: ${producto.color}</p>
+      <p>Precio: <span class="price">S/${producto.precio}</span> 
+        <span class="kancha-price">S/${producto.precioKancha}</span></p>
+    `;
+    favoritosContainer.appendChild(item);
+  });
+  
+  // Control del carrusel
+  let currentPosition = 0;
+  
+  const updateCarousel = () => {
+    const items = document.querySelector('.items');
+    items.style.transform = `translateX(${-currentPosition * 100}%)`;
+  };
+  
+  document.getElementById('prevButton').addEventListener('click', () => {
+    if (currentPosition > 0) {
+      currentPosition--;
+      updateCarousel();
     }
-
-    function updateItemsToShow() {
-        const width = window.innerWidth;
-        if (totalItems === 1) {
-            itemsToShow = 1;
-        } else if (totalItems === 2) {
-            itemsToShow = 2;
-        } else if (width <= 767) {
-            itemsToShow = 1;
-        } else if (width <= 1200) {
-            itemsToShow = 2;
-        } else {
-            itemsToShow = 3;
-        }
-        updateItemsClass();
+  });
+  
+  document.getElementById('nextButton').addEventListener('click', () => {
+    if (currentPosition < productos.length - 1) {
+      currentPosition++;
+      updateCarousel();
     }
-
-    function updateItemsClass() {
-        if (totalItems === 1) {
-            carousel.classList.add('single-item');
-            carousel.classList.remove('two-items');
-        } else if (totalItems === 2) {
-            carousel.classList.add('two-items');
-            carousel.classList.remove('single-item');
-        } else {
-            carousel.classList.remove('single-item', 'two-items');
-        }
-    }
-
-    function createIndicators() {
-        indicatorsContainer.innerHTML = '';
-        const totalIndicators = Math.ceil(totalItems / itemsToShow);
-        for (let i = 0; i < totalIndicators; i++) {
-            const indicator = document.createElement('span');
-            indicator.classList.add('indicator');
-            if (i === 0) {
-                indicator.classList.add('active');
-            }
-            indicatorsContainer.appendChild(indicator);
-        }
-    }
-
-    function updateIndicators() {
-        const indicators = document.querySelectorAll('.indicator');
-        indicators.forEach(indicator => {
-            indicator.classList.remove('active');
-        });
-
-        const activeIndex = Math.floor(currentIndex / itemsToShow);
-        if (indicators[activeIndex]) {
-            indicators[activeIndex].classList.add('active');
-        }
-    }
-
-    function updateCarousel() {
-        const itemWidth = carousel.clientWidth / itemsToShow;
-        carousel.style.transform = `translateX(-${currentIndex * itemWidth}px)`;
-        updateIndicators();
-    }
-
-    function attachEventListeners() {
-        leftNav.addEventListener('click', () => {
-            currentIndex = (currentIndex === 0) ? totalItems - itemsToShow : currentIndex - 1;
-            if (currentIndex < 0) currentIndex = 0;
-            updateCarousel();
-        });
-
-        rightNav.addEventListener('click', () => {
-            currentIndex = (currentIndex >= totalItems - itemsToShow) ? 0 : currentIndex + 1;
-            if (currentIndex > totalItems - itemsToShow) currentIndex = totalItems - itemsToShow;
-            updateCarousel();
-        });
-
-        window.addEventListener('resize', () => {
-            updateItemsToShow();
-            updateCarousel();
-        });
-    }
-
-    // Cargar productos e inicializar el carrusel
-    loadProducts();
-});
+  });
+  

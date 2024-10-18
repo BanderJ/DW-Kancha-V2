@@ -27,17 +27,19 @@
 
   <div class="container-fluid px-0">
     <div class="carousel">
-      <button class="nav left">
+      <button id="prevButton" class="nav left">
         <img src="{{ url_for('static', filename='img/circle-arrow-left-solid.svg') }}" alt="Izquierda">
       </button>
       <div class="items" id="losfavoritos">
         <!-- Los productos favoritos se insertarán aquí desde JavaScript -->
       </div>
-      <button class="nav right">
+      <button id="nextButton" class="nav right">
         <img src="{{ url_for('static', filename='img/circle-arrow-right-solid.svg') }}" alt="Derecha">
       </button>
     </div>
     <div class="indicators"></div>
   </div>
-</div>
+<script>
+    const STATIC_URL = "{{ url_for('static', filename='') }}";
+  </script>
 {% endblock %}
