@@ -1,0 +1,33 @@
+{% extends "maestradashboard.html" %}
+
+{% block titulomantenimiento %}
+Agregar Modelo
+{% endblock %}
+
+{% block mantenimiento %}
+<section class="section container my-5">
+    <div class="columns">
+        <div class="column is-one-third">
+            <h3 class="is-size-3">Agregar Modelo</h3>
+            <form action="{{ url_for('guardar_modelo') }}" method="post">
+                <label for="nombre">Nombre:</label>
+                <input required type="text" class="input" placeholder="Nombre" name="nombre" id="nombre">
+                
+                <label for="idMarca">Marca:</label>
+                <div class="select">
+                    <select name="idMarca" id="idMarca" required>
+                        <option value="" disabled selected>Selecciona una marca</option>
+                        {% for marca in marcas %}
+                            <option value="{{ marca[0] }}">{{ marca[1] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <br><br>
+                <button type="submit" class="button is-success mt-2">Guardar</button>
+                <a href="{{ url_for('marca') }}" class="button is-primary mt-2">Volver</a>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
