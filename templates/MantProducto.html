@@ -1,6 +1,6 @@
 {% extends "maestradashboard.html" %}
-{% block titulo %} Productos {% endblock %}
-{% block contenido %}
+{% block titulomantenimiento %} Producto {% endblock %}
+{% block mantenimiento %}
 <section class="section">
     <div class="columns">
         <div class="column">
@@ -27,12 +27,12 @@
                         <td>{{ producto[4] }}</td> <!-- Nombre del modelo -->
                         <td>{{ producto[5] }}</td> <!-- Nombre de la talla -->
                         <td>
-                            <a href="{{ url_for('editar_producto', id=producto[0]) }}" class="button is-info">Editar</a>
+                            <a href="{{ url_for('editar_producto', id=producto[0]) }}" ><button class="btn bg-azul-k l-blanco-k">Editar</button></a>
                         </td>
                         <td>
                             <form action="{{ url_for('eliminar_producto') }}" method="POST">
                                 <input type="hidden" name="id" value="{{ producto[0] }}">
-                                <button class="button is-danger">Eliminar</button>
+                                <button class="btn bg-rojo-k l-blanco-k">Eliminar</button>
                             </form>
                         </td>
                     </tr>

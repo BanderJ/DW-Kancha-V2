@@ -30,6 +30,11 @@ def inicio():
 def seccionProductos():
     return render_template("SeccionProductos.html")
 
+@app.route("/producto/<int:id>")
+def mostrar_producto(id):
+    producto = controlador_productos.obtener_producto_por_id(id)  # Función que obtiene el producto de la base de datos
+    return render_template('producto_detalle.html', producto=producto)
+
 @app.route('/kancha-club')
 def kancha_club():
     return render_template('KanchaClub.html')
