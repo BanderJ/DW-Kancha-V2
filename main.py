@@ -2,6 +2,7 @@ from flask import Flask,render_template,request,jsonify, redirect
 import controlador_productos 
 import controlador_nivelusuario
 import controlador_categoria
+import controlador_productos
 from bd import conectarse
 from flask import session
 #Para generar claves en hash aleatorias
@@ -161,6 +162,7 @@ def categoria():
 def formulario_agregar_categoria():
     return render_template('agregar_categoria.html')
 
+
 @app.route("/guardar_categoria", methods=["POST"])
 def guardar_categoria():
     nombre = request.form["nombre"]
@@ -185,6 +187,51 @@ def actualizar_categoria():
     nombre = request.form["nombre"]
     controlador_categoria.actualizar_categoria(nombre, id)
     return redirect("/Categoria")
+
+@app.route("/formulario_productos")
+def formulario_producto():
+    productos = controlador_productos.obtener_productos()
+    return render_template("Mantproducto.html", productos=productos)
+
+@app.route("/agregar_producto")
+def formulario_agregar_producto():
+    modelos = controlador_productos.obtener_modelos()  # Obtenemos los modelos
+    tallas = controlador_productos.obtener_tallas()    # Obtenemos las tallas
+    return render_template("agregar_producto.html", modelos=modelos, tallas=tallas)
+
+@app.route("/guardar_producto", methods=["POST"])
+def guardar_producto():
+    nombre = request.form["nombre"]
+    precio = request.form["precio"]
+    stock = request.form["stock"]
+    idModelo = request.form["idModelo"]
+    idTalla = request.form["idTalla"]
+    controlador_productos.insertar_producto(nombre, precio, stock, idModelo, idTalla)
+    return redirect("/formulario_productos")
+
+@app.route("/eliminar_producto", methods=["POST"])
+def eliminar_producto():
+    controlador_productos.eliminar_producto(request.form["id"])
+    return redirect("/formulario_productos")
+
+@app.route("/editar_producto/<int:id>")
+def editar_producto(id):
+    producto = controlador_productos.obtener_producto_por_id(id)
+    modelos = controlador_productos.obtener_modelos()  # Obtenemos los modelos
+    tallas = controlador_productos.obtener_tallas()    # Obtenemos las tallas
+    return render_template("editar_producto.html", producto=producto, modelos=modelos, tallas=tallas)
+
+@app.route("/actualizar_producto", methods=["POST"])
+def actualizar_producto():
+    id = request.form["id"]
+    nombre = request.form["nombre"]
+    precio = request.form["precio"]
+    stock = request.form["stock"]
+    idModelo = request.form["idModelo"]
+    idTalla = request.form["idTalla"]
+    controlador_productos.actualizar_producto(nombre, precio, stock, idModelo, idTalla, id)
+    return redirect("/formulario_productos")
+
 
 if __name__ == "__main__":
     app.run(debug=True)
