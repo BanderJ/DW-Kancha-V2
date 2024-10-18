@@ -2,6 +2,7 @@ from flask import Flask,render_template,request,jsonify, redirect
 import controlador_productos 
 import controlador_nivelusuario
 import controlador_categoria
+import controlador_marca
 from bd import conectarse
 from flask import session
 #Para generar claves en hash aleatorias
@@ -189,6 +190,42 @@ def actualizar_categoria():
     nombre = request.form["nombre"]
     controlador_categoria.actualizar_categoria(nombre, id)
     return redirect("/Categoria")
+
+# Marcas
+@app.route('/Marca')
+def marca():
+    lista = controlador_marca.obtener_marcas()
+    return render_template('MantMarca.html', lista=lista)
+
+@app.route('/AgregarMarca')
+def formulario_agregar_marca():
+    return render_template('agregar_marca.html')
+
+@app.route("/guardar_marca", methods=["POST"])
+def guardar_marca():
+    nombre = request.form["nombre"]
+    controlador_marca.insertar_marca(nombre)
+    # De cualquier modo, y si todo fue bien, redireccionar
+    return redirect("/Marca")
+
+@app.route("/eliminar_marca", methods=["POST"])
+def eliminar_marca():
+    controlador_marca.eliminar_marca(request.form["id"])
+    return redirect("/Marca")
+
+@app.route("/formulario_editar_marca/<int:id>")
+def formulario_editar_marca(id):
+    # Obtener la marca por ID
+    marca = controlador_marca.obtener_marca_por_id(id)
+    return render_template("editar_marca.html", marca=marca)
+
+@app.route("/actualizar_marca", methods=["POST"])
+def actualizar_marca():
+    id = request.form["id"]
+    nombre = request.form["nombre"]
+    controlador_marca.actualizar_marca(nombre, id)
+    return redirect("/Marca")
+
 
 if __name__ == "__main__":
     app.run(debug=True)
