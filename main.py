@@ -3,6 +3,8 @@ import controlador_usuario
 import controlador_productos 
 import controlador_nivelusuario
 import controlador_categoria
+import controlador_marca
+import controlador_modelo
 from bd import conectarse
 from flask import session
 #Para generar claves en hash aleatorias
@@ -95,6 +97,10 @@ def validarInicioSesion():
 def redirigirEventosDeportivos():
     return render_template('EventosDeportivos.html')
 
+@app.route('/SobreNosotros')
+def redirigirSobreNosotros():
+    return render_template('SobreNosotros.html')
+
 @app.route('/Pago')
 def redirigirPago():
     return render_template('Pago(1).html')
@@ -186,6 +192,79 @@ def actualizar_categoria():
     nombre = request.form["nombre"]
     controlador_categoria.actualizar_categoria(nombre, id)
     return redirect("/Categoria")
+
+# Marcas
+@app.route('/Marca')
+def marca():
+    lista = controlador_marca.obtener_marcas()
+    return render_template('MantMarca.html', lista=lista)
+
+@app.route('/AgregarMarca')
+def formulario_agregar_marca():
+    return render_template('agregar_marca.html')
+
+@app.route("/guardar_marca", methods=["POST"])
+def guardar_marca():
+    nombre = request.form["nombre"]
+    controlador_marca.insertar_marca(nombre)
+    # De cualquier modo, y si todo fue bien, redireccionar
+    return redirect("/Marca")
+
+@app.route("/eliminar_marca", methods=["POST"])
+def eliminar_marca():
+    controlador_marca.eliminar_marca(request.form["id"])
+    return redirect("/Marca")
+
+@app.route("/formulario_editar_marca/<int:id>")
+def formulario_editar_marca(id):
+    # Obtener la marca por ID
+    marca = controlador_marca.obtener_marca_por_id(id)
+    return render_template("editar_marca.html", marca=marca)
+
+@app.route("/actualizar_marca", methods=["POST"])
+def actualizar_marca():
+    id = request.form["id"]
+    nombre = request.form["nombre"]
+    controlador_marca.actualizar_marca(nombre, id)
+    return redirect("/Marca")
+
+# Modelos
+@app.route('/Modelo')
+def modelo():
+    lista = controlador_modelo.obtener_modelos()
+    return render_template('MantModelo.html', lista=lista)
+
+@app.route('/AgregarModelo')
+def formulario_agregar_modelo():
+    marcas = controlador_marca.obtener_marcas()  # Obtener la lista de marcas para el formulario
+    return render_template('agregar_modelo.html', marcas=marcas)
+
+@app.route("/guardar_modelo", methods=["POST"])
+def guardar_modelo():
+    nombre = request.form["nombre"]
+    idMarca = request.form["idMarca"]  # Asegúrate de que este campo está en el formulario
+    controlador_modelo.insertar_modelo(nombre, idMarca)
+    return redirect("/Modelo")
+
+@app.route("/eliminar_modelo", methods=["POST"])
+def eliminar_modelo():
+    controlador_modelo.eliminar_modelo(request.form["id"])
+    return redirect("/Modelo")
+
+@app.route("/formulario_editar_modelo/<int:id>")
+def formulario_editar_modelo(id):
+    modelo = controlador_modelo.obtener_modelo_por_id(id)
+    marcas = controlador_marca.obtener_marcas()  # Obtener la lista de marcas para el formulario
+    return render_template("editar_modelo.html", modelo=modelo, marcas=marcas)
+
+@app.route("/actualizar_modelo", methods=["POST"])
+def actualizar_modelo():
+    id = request.form["id"]
+    nombre = request.form["nombre"]
+    idMarca = request.form["idMarca"]  # Asegúrate de que este campo está en el formulario
+    controlador_modelo.actualizar_modelo(nombre, idMarca, id)
+    return redirect("/Modelo")
+
 
 @app.route('/Contactanos')
 def contactanos():

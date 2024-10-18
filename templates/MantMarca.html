@@ -1,0 +1,48 @@
+{% extends "maestradashboard.html" %}
+
+{% block titulomantenimiento %}
+Marcas
+{% endblock %}
+
+{% block mantenimiento %}
+
+<section class="container my-5 section">
+    <div class="columns">
+        <div class="column">
+            <h3 class="is-size-3">Marcas</h3>
+            <a href="{{ url_for('formulario_agregar_marca') }}" class="button is-success">Agregar</a>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nombre</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for marca in lista %}
+                    <tr>
+                        <td>{{ marca[0] }}</td>
+                        <td>{{ marca[1] }}</td>
+                        <td>
+                            {# Pasar el id (lo que hay en marca[0]) #}
+                            <a href="{{ url_for('formulario_editar_marca', id=marca[0]) }}">
+                                <button class="btn bg-azul-k l-blanco-k">Editar</button>
+                            </a>
+                        </td>
+                        <td>
+                            <form action="{{ url_for('eliminar_marca') }}" method="POST">
+                                <input type="hidden" name="id" value="{{ marca[0] }}">
+                                <button class="btn bg-rojo-k l-blanco-k">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
