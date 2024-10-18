@@ -3,6 +3,7 @@ import controlador_productos
 import controlador_nivelusuario
 import controlador_categoria
 import controlador_marca
+import controlador_modelo
 from bd import conectarse
 from flask import session
 #Para generar claves en hash aleatorias
@@ -225,6 +226,43 @@ def actualizar_marca():
     nombre = request.form["nombre"]
     controlador_marca.actualizar_marca(nombre, id)
     return redirect("/Marca")
+
+# Modelos
+@app.route('/Modelo')
+def modelo():
+    lista = controlador_modelo.obtener_modelos()
+    return render_template('MantModelo.html', lista=lista)
+
+@app.route('/AgregarModelo')
+def formulario_agregar_modelo():
+    marcas = controlador_marca.obtener_marcas()  # Obtener la lista de marcas para el formulario
+    return render_template('agregar_modelo.html', marcas=marcas)
+
+@app.route("/guardar_modelo", methods=["POST"])
+def guardar_modelo():
+    nombre = request.form["nombre"]
+    idMarca = request.form["idMarca"]  # Asegúrate de que este campo está en el formulario
+    controlador_modelo.insertar_modelo(nombre, idMarca)
+    return redirect("/Modelo")
+
+@app.route("/eliminar_modelo", methods=["POST"])
+def eliminar_modelo():
+    controlador_modelo.eliminar_modelo(request.form["id"])
+    return redirect("/Modelo")
+
+@app.route("/formulario_editar_modelo/<int:id>")
+def formulario_editar_modelo(id):
+    modelo = controlador_modelo.obtener_modelo_por_id(id)
+    marcas = controlador_marca.obtener_marcas()  # Obtener la lista de marcas para el formulario
+    return render_template("editar_modelo.html", modelo=modelo, marcas=marcas)
+
+@app.route("/actualizar_modelo", methods=["POST"])
+def actualizar_modelo():
+    id = request.form["id"]
+    nombre = request.form["nombre"]
+    idMarca = request.form["idMarca"]  # Asegúrate de que este campo está en el formulario
+    controlador_modelo.actualizar_modelo(nombre, idMarca, id)
+    return redirect("/Modelo")
 
 
 if __name__ == "__main__":
