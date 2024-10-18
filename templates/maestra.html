@@ -190,7 +190,7 @@
         class="icon" alt="icono-perfil"></a>
     <a href="{{url_for('redirigirPedidos')}}"><span>Mis pedidos</span> <img
         src="{{url_for('static', filename='img/box-solid.svg')}}" class="icon" alt="icono-pedidos"></a>
-    <a href="../html/MisFavoritos.html"><span>Mis favoritos</span> <img
+    <a href="{{url_for('mostrarFavoritos')}}"><span>Mis favoritos</span> <img 
         src="{{url_for('static',filename='img/corazon.svg')}}" class="icon" alt="icono-favoritos"></a>
     <a href="{{url_for('soporteTecnico')}}"><span>Ayuda</span> <img
         src="{{url_for('static',filename='img/buscar.svg')}}" class="icon" alt="icono-ayuda"></a>

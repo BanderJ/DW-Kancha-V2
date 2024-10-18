@@ -51,6 +51,10 @@ def mostrarPerfil():
     datos = session.get("usuario", {"nombre":"Invitado","apellidos":"Invitado","correo":"example@email.com","numdoc":"11111111"})
     return render_template("MiPerfil.html", userData=datos)
 
+@app.route("/favoritos")
+def mostrarFavoritos():
+    return render_template("MisFavoritos.html")
+    
 @app.route('/login', methods=["POST"])
 def validarInicioSesion():
     datosUsuario = dict()
