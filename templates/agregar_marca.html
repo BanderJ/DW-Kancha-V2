@@ -1,0 +1,22 @@
+{% extends "maestradashboard.html" %}
+
+{% block titulomantenimiento %}
+Agregar Marca
+{% endblock %}
+
+{% block mantenimiento %}
+<section class="section container my-5">
+    <div class="columns">
+        <div class="column is-one-third">
+            <h3 class="is-size-3">Agregar Marca</h3>
+            <form action="{{ url_for('guardar_marca') }}" method="post">
+                <label for="nombre">Nombre:</label>
+                <input required type="text" class="input" placeholder="Nombre" name="nombre" id="nombre">
+                <br><br>
+                <button type="submit" class="btn bg-azul-k mt-2">Guardar</button>
+                <a href="{{ url_for('marca') }}" class="bg-azul-k">Volver</a>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

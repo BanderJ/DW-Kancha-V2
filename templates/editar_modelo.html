@@ -1,0 +1,36 @@
+{% extends "maestradashboard.html" %}
+
+{% block titulomantenimiento %}
+Editar Modelo
+{% endblock %}
+
+{% block mantenimiento %}
+<section class="section container my-5">
+    <div class="columns">
+        <div class="column">
+            <h3 class="is-size-3">Editar Modelo</h3>
+            <form action="{{ url_for('actualizar_modelo') }}" method="post">
+                {# Enviar el id en un campo oculto #}
+                <input type="hidden" name="id" value="{{ modelo[0] }}">
+                
+                <label for="nombre">Nombre:</label>
+                <input value="{{ modelo[1] }}" required type="text" class="input" placeholder="Nombre" name="nombre" id="nombre">
+                
+                <label for="idMarca">Marca:</label>
+                <div class="select">
+                    <select name="idMarca" id="idMarca" required>
+                        <option value="" disabled>Selecciona una marca</option>
+                        {% for marca in marcas %}
+                            <option value="{{ marca[0] }}" {% if modelo[2] == marca[0] %}selected{% endif %}>{{ marca[1] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <br><br>
+                <button type="submit" class="button is-success mt-2">Guardar</button>
+                <a href="{{ url_for('modelo') }}" class="button is-primary mt-2">Volver</a>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

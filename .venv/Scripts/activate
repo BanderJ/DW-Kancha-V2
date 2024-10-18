@@ -39,10 +39,17 @@ deactivate nondestructive
 if [ "${OSTYPE:-}" = "cygwin" ] || [ "${OSTYPE:-}" = "msys" ] ; then
     # transform D:\path\to\venv to /d/path/to/venv on MSYS
     # and to /cygdrive/d/path/to/venv on Cygwin
+<<<<<<< HEAD
     export VIRTUAL_ENV=$(cygpath "C:\ProyectosFlask\KANCHA\DW-Kancha-V2\.venv")
 else
     # use the path as-is
     export VIRTUAL_ENV="C:\ProyectosFlask\KANCHA\DW-Kancha-V2\.venv"
+=======
+    export VIRTUAL_ENV=$(cygpath "C:\Users\ACER\OneDrive\Documentos\Ciclo VI\DAW\Kancha\DW-Kancha-V2\.venv")
+else
+    # use the path as-is
+    export VIRTUAL_ENV="C:\Users\ACER\OneDrive\Documentos\Ciclo VI\DAW\Kancha\DW-Kancha-V2\.venv"
+>>>>>>> a40d422706843b1f38ba602770e19cfd94a0dbb8
 fi
 
 _OLD_VIRTUAL_PATH="$PATH"

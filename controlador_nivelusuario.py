@@ -35,6 +35,16 @@ def obtener_nivelusuario_por_id(id):
     conexion.close()
     return nivelusuario
 
+def obtener_nivelusuario_por_nombre(nombre):
+    conexion = obtener_conexion()
+    nivelusuario = None
+    with conexion.cursor() as cursor:
+        cursor.execute(
+            "SELECT * FROM nivelusuario WHERE nombre = %s", (nombre,))
+        nivelusuario = cursor.fetchone()
+    conexion.close()
+    return nivelusuario
+
 
 def actualizar_nivelusuario(nombre, puntos, id):
     conexion = obtener_conexion()

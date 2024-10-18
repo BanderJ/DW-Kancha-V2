@@ -1,0 +1,45 @@
+{% extends "maestradashboard.html" %}
+{% block titulomantenimiento %}
+Editar Usuario
+{% endblock %}
+{% block mantenimiento %}
+<section class="section container my-5">
+    <div class="columns">
+        <div class="column">
+            <h3 class="is-size-3">Editar Usuario</h3>
+            <form action="{{url_for('actualizar_usuario')}}" method="post">
+                {# Enviar el id en un campo oculto #}
+                <input type="hidden" name="id" value="{{usuario[0]}}">
+                <label for="nombre">Nombre:</label>
+                <input required type="text" value="{{usuario[1]}}" class="input" placeholder="Nombre" name="nombre" id="nombre">
+                <br><br>
+                <label for="numerodocumento">Número de Documento</label>
+                <input required type="number" value="{{usuario[2]}}" class="input" placeholder="Número de documento" name="numerodocumento" id="numerodocumento">
+                <br><br>
+                <label for="apePat">Apellido Paterno:</label>
+                <input required type="text" value="{{usuario[3]}}" class="input" placeholder="ApellidoPaterno" name="apePat" id="apePat">
+                <br><br>
+                <label for="apeMat">Apellido Materno:</label>
+                <input required type="text" value="{{usuario[4]}}" class="input" placeholder="Apellido Materno" name="apeMat" id="apeMat">
+                <br><br>
+                <label for="correo">Correo:</label>
+                <input required type="text" value="{{usuario[5]}}" class="input" placeholder="Correo" name="correo" id="correo">
+                <br><br>
+                <label for="password">Contraseña:</label>
+                <input required type="password" value="{{usuario[6]}}" class="input" placeholder="Contraseña" name="password" id="password">
+                <br><br>
+                <label for="nivel_usuario">Nivel de usuario</label>
+                <select name="nivel_usuario" id="nivel_usuario" class="input" required>
+                    <option value="{{usuario[7]}}" disabled selected>Seleccione un nivel de usuario</option>
+                    {% for nivel in niveles_usuario %}
+                        <option value="{{ nivel[1] }}">{{ nivel[1] }}</option>
+                    {% endfor %}
+                </select>
+                <br><br>
+                <button type="submit" class="button is-success mt-2">Guardar</button>
+                <a href="{{url_for('usuario')}}" class="button is-primary mt-2">Volver</a>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
