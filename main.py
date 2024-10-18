@@ -1,4 +1,5 @@
 from flask import Flask,render_template,request,jsonify, redirect
+import controlador_usuario
 import controlador_productos 
 import controlador_nivelusuario
 import controlador_categoria
@@ -185,6 +186,59 @@ def actualizar_categoria():
     nombre = request.form["nombre"]
     controlador_categoria.actualizar_categoria(nombre, id)
     return redirect("/Categoria")
+
+@app.route('/Contactanos')
+def contactanos():
+    return render_template("Contactanos.html")
+
+@app.route('/Usuario')
+def usuario():
+    lista = controlador_usuario.obtener_usuario()
+    return render_template('MantUsuario.html',lista=lista)
+
+@app.route('/AgregarUsuario')
+def formulario_agregar_usuario():
+    niveles_usuario = controlador_nivelusuario.obtener_nivelusuario()
+    return render_template('agregar_usuario.html', niveles_usuario = niveles_usuario)
+
+@app.route("/guardar_usuario", methods=["POST"])
+def guardar_usuario():
+    nombre = request.form["nombre"]
+    nroDoc = request.form["numerodocumento"]
+    apePat = request.form["apePat"]
+    apeMat = request.form["apeMat"]
+    correo = request.form["correo"]
+    password = request.form["password"]
+    tipoUsu = 1
+    nivelUsu = request.form["nivel_usuario"]
+    controlador_usuario.insertar_usuario(tipoUsu, nombre, nroDoc, apePat, apeMat, correo, password, controlador_nivelusuario.obtener_nivelusuario_por_nombre(nivelUsu)[0])
+    # De cualquier modo, y si todo fue bien, redireccionar
+    return redirect("/Usuario")
+
+@app.route("/eliminar_usuario", methods=["POST"])
+def eliminar_usuario():
+    controlador_usuario.eliminar_usuario(request.form["id"])
+    return redirect("/Usuario")
+
+@app.route("/formulario_editar_Usuario/<int:id>")
+def formulario_editar_usuario(id):
+    usuario = controlador_usuario.obtener_usuario_por_id(id)
+    niveles_usuario = controlador_nivelusuario.obtener_nivelusuario()
+    return render_template("editar_Usuario.html", usuario=usuario, niveles_usuario = niveles_usuario)
+
+@app.route("/actualizar_usuario", methods=["POST"])
+def actualizar_usuario():
+    id = request.form["id"]
+    nombre = request.form["nombre"]
+    nroDoc = request.form["numerodocumento"]
+    apePat = request.form["apePat"]
+    apeMat = request.form["apeMat"]
+    correo = request.form["correo"]
+    password = request.form["password"]
+    tipoUsu = 1
+    nivelUsu = request.form["nivel_usuario"]
+    controlador_usuario.actualizar_usuario(tipoUsu, nombre, nroDoc, apePat, apeMat, correo, password, controlador_nivelusuario.obtener_nivelusuario_por_nombre(nivelUsu)[0], id)
+    return redirect("/Usuario")
 
 if __name__ == "__main__":
     app.run(debug=True)
