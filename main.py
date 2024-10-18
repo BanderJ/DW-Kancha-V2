@@ -94,6 +94,10 @@ def validarInicioSesion():
 def redirigirEventosDeportivos():
     return render_template('EventosDeportivos.html')
 
+@app.route('/SobreNosotros')
+def redirigirSobreNosotros():
+    return render_template('SobreNosotros.html')
+
 @app.route('/Pago')
 def redirigirPago():
     return render_template('Pago(1).html')
