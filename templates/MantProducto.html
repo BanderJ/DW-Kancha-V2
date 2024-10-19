@@ -1,5 +1,5 @@
 {% extends "maestradashboard.html" %}
-{% block titulomantenimiento %} Producto {% endblock %}
+{% block titulomantenimiento %}Producto{% endblock %}
 {% block mantenimiento %}
 <section class="section">
     <div class="columns">
@@ -9,11 +9,15 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Nombre</th>
+                        <th>Modelo</th>
+                        <th>Colores</th>
+                        <th>Género</th>
+                        <th>Talla</th>
+                        <th>Tipo Producto</th>
+                        <th>Imagen Principal</th>
+                        <th>Imágenes Secundarias</th>
                         <th>Precio</th>
                         <th>Stock</th>
-                        <th>Modelo</th>
-                        <th>Talla</th>
                         <th>Editar</th>
                         <th>Eliminar</th>
                     </tr>
@@ -21,18 +25,26 @@
                 <tbody>
                     {% for producto in productos %}
                     <tr>
-                        <td>{{ producto[1] }}</td>
-                        <td>{{ producto[2] }}</td>
-                        <td>{{ producto[3] }}</td>
-                        <td>{{ producto[4] }}</td> <!-- Nombre del modelo -->
-                        <td>{{ producto[5] }}</td> <!-- Nombre de la talla -->
+                        <td>{{ producto[3] }}</td> <!-- Modelo -->
+                        <td>{{ producto[4] }}</td> <!-- Colores -->
+                        <td>{{ producto[5] }}</td> <!-- Género -->
+                        <td>{{ producto[6] }}</td> <!-- Talla -->
+                        <td>{{ producto[7] }}</td> <!-- Tipo de Producto -->
+                        <td><img src="{{ url_for('static', filename='img/' + producto[8]) }}" width="100"></td>
                         <td>
-                            <a href="{{ url_for('editar_producto', id=producto[0]) }}" ><button class="btn bg-azul-k l-blanco-k">Editar</button></a>
+                            <img src="{{ url_for('static', filename='img/' + producto[9]) }}" width="50">
+                            <img src="{{ url_for('static', filename='img/' + producto[10]) }}" width="50">
+                            <img src="{{ url_for('static', filename='img/' + producto[11]) }}" width="50">
+                        </td>
+                        <td>{{ producto[1] }}</td> <!-- Precio -->
+                        <td>{{ producto[2] }}</td> <!-- Stock -->
+                        <td>
+                            <a href="{{ url_for('editar_producto', id=producto[0]) }}" class="button is-warning">Editar</a>
                         </td>
                         <td>
                             <form action="{{ url_for('eliminar_producto') }}" method="POST">
                                 <input type="hidden" name="id" value="{{ producto[0] }}">
-                                <button class="btn bg-rojo-k l-blanco-k">Eliminar</button>
+                                <button class="button is-danger">Eliminar</button>
                             </form>
                         </td>
                     </tr>

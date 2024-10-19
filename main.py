@@ -1,4 +1,4 @@
-from flask import Flask,render_template,request,jsonify, redirect
+from flask import Flask,render_template,request,jsonify, redirect, flash
 import controlador_usuario
 import controlador_productos 
 import controlador_nivelusuario
@@ -39,13 +39,13 @@ def listadoProductos():
 
 @app.get('/productos')
 def seccionProductos():
-    productos = listadoProductos()
-    return render_template("SeccionProductos.html",listaProductos=productos)
+    productos = controlador_productos.obtener_productos()
+    generos = controlador_productos.obtener_generos()
+    categorias = controlador_productos.obtener_categorias()
+    colores = controlador_productos.obtener_colores()
+    marcas = controlador_marca.obtener_marcas()
+    return render_template("SeccionProductos.html",productos=productos,generos=generos,categorias=categorias,colores=colores,marcas=marcas)
 
-@app.route("/producto/<int:id>")
-def mostrar_producto(id):
-    producto = controlador_productos.obtener_producto_por_id(id)  # Función que obtiene el producto de la base de datos
-    return render_template('producto_detalle.html', producto=producto)
 
 @app.route('/kancha-club')
 def kancha_club():
@@ -338,50 +338,91 @@ def actualizar_usuario():
     controlador_usuario.actualizar_usuario(tipoUsu, nombre, nroDoc, apePat, apeMat, correo, password, controlador_nivelusuario.obtener_nivelusuario_por_nombre(nivelUsu)[0], id)
     return redirect("/Usuario")
 
+# PARTE RELACIONADA AL PRODUCTO:
+
+app.secret_key = "super_secret_key"
+
+# Mostrar productos
 @app.route("/formulario_productos")
 def formulario_producto():
     productos = controlador_productos.obtener_productos()
-    return render_template("Mantproducto.html", productos=productos)
+    return render_template("MantProducto.html", productos=productos)
 
+# Formulario para agregar productos
 @app.route("/agregar_producto")
 def formulario_agregar_producto():
-    modelos = controlador_productos.obtener_modelos()  # Obtenemos los modelos
-    tallas = controlador_productos.obtener_tallas()    # Obtenemos las tallas
-    return render_template("agregar_producto.html", modelos=modelos, tallas=tallas)
+    generos = controlador_productos.obtener_generos()
+    tipos = controlador_productos.obtener_tipos()
+    modelos = controlador_productos.obtener_modelos()
+    tallas = controlador_productos.obtener_tallas()
+    colores = controlador_productos.obtener_colores()
+    categorias = controlador_productos.obtener_categorias()
+    
+    generos = controlador_productos.obtener_generos()
+    tipos = controlador_productos.obtener_tipos()
+    return render_template("agregar_producto.html", modelos=modelos, tallas=tallas, colores=colores, categorias=categorias,generos=generos,tipos=tipos)
 
+# Guardar producto nuevo
 @app.route("/guardar_producto", methods=["POST"])
 def guardar_producto():
-    nombre = request.form["nombre"]
     precio = request.form["precio"]
     stock = request.form["stock"]
     idModelo = request.form["idModelo"]
     idTalla = request.form["idTalla"]
-    controlador_productos.insertar_producto(nombre, precio, stock, idModelo, idTalla)
+    genero = request.form["idGenero"]
+    tipo_producto = request.form["idTipo"]
+    imagenPrincipal = request.files["imagenPrincipal"]
+    imagenesSecundarias = request.files.getlist("imagenesSecundarias")
+    colores = request.form.getlist("colores")
+    categorias = request.form.getlist("categorias")
+
+    controlador_productos.insertar_producto(precio, stock, idModelo, idTalla, genero, tipo_producto, imagenPrincipal, imagenesSecundarias, colores, categorias)
+    flash("Producto agregado exitosamente.")
     return redirect("/formulario_productos")
 
+# Eliminar producto
 @app.route("/eliminar_producto", methods=["POST"])
 def eliminar_producto():
     controlador_productos.eliminar_producto(request.form["id"])
+    flash("Producto eliminado.")
     return redirect("/formulario_productos")
 
+# Editar producto
 @app.route("/editar_producto/<int:id>")
 def editar_producto(id):
     producto = controlador_productos.obtener_producto_por_id(id)
-    modelos = controlador_productos.obtener_modelos()  # Obtenemos los modelos
-    tallas = controlador_productos.obtener_tallas()    # Obtenemos las tallas
-    return render_template("editar_producto.html", producto=producto, modelos=modelos, tallas=tallas)
+    modelos = controlador_productos.obtener_modelos()
+    tallas = controlador_productos.obtener_tallas()
+    colores = controlador_productos.obtener_colores()
+    categorias = controlador_productos.obtener_categorias()
+    generos = controlador_productos.obtener_generos()
+    tipos = controlador_productos.obtener_tipos()
+    return render_template("editar_producto.html", producto=producto, modelos=modelos, tallas=tallas,colores=colores, categorias=categorias,generos=generos,tipos=tipos)
 
+# Actualizar producto
 @app.route("/actualizar_producto", methods=["POST"])
 def actualizar_producto():
     id = request.form["id"]
-    nombre = request.form["nombre"]
     precio = request.form["precio"]
     stock = request.form["stock"]
     idModelo = request.form["idModelo"]
     idTalla = request.form["idTalla"]
-    controlador_productos.actualizar_producto(nombre, precio, stock, idModelo, idTalla, id)
+    genero = request.form["idGenero"]
+    tipo_producto = request.form["idTipo"]
+    imagenPrincipal = request.files["imagenPrincipal"]
+    imagenesSecundarias = request.files.getlist("imagenesSecundarias")
+    colores = request.form.getlist("colores")
+    categorias = request.form.getlist("categorias")
+
+    controlador_productos.actualizar_producto(id, precio, stock, idModelo, idTalla, genero, tipo_producto, imagenPrincipal, imagenesSecundarias, colores, categorias)
+    flash("Producto actualizado.")
     return redirect("/formulario_productos")
 
+@app.route("/producto/<int:id>")
+def detalle_producto(id):
+    # Obtener el disco por ID
+    producto = controlador_productos.obtener_producto_por_id(id)
+    return render_template("AdidasJr3.html", producto=producto)
 
 if __name__ == "__main__":
     app.run(debug=True)

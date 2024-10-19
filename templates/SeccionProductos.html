@@ -66,6 +66,7 @@
                 <button id="closeFilters" class="btn btn-secondary d-md-none mb-2">Cerrar</button>
                 <button id="clearFilters" class="btn btn-danger mb-3">Eliminar filtros</button>
                 <div class="accordion" id="filtersAccordion">
+                    <!-- Filtro de Género -->
                     <div class="accordion-item">
                         <h5 class="filter-title accordion-header" id="headingGenero">
                             <button class="accordion-button" type="button" data-bs-toggle="collapse"
@@ -76,29 +77,18 @@
                         <div id="filterGenero" class="accordion-collapse collapse show" aria-labelledby="headingGenero"
                             data-bs-parent="#filtersAccordion">
                             <div class="accordion-body">
+                                {% for genero in generos %}
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="genero" value="Masculino"
-                                        id="generoMasculino">
-                                    <label class="form-check-label" for="generoMasculino">Masculino</label>
+                                    <input class="form-check-input" type="radio" name="genero" value="{{ genero[1] }}"
+                                        id="seccion_genero{{ genero[1] }}">
+                                    <label class="form-check-label" for="seccion_genero{{ genero[1] }}">{{ genero[1] }}</label>
                                 </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="genero" value="Femenino"
-                                        id="generoFemenino">
-                                    <label class="form-check-label" for="generoFemenino">Femenino</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="genero" value="Niños"
-                                        id="generoNino">
-                                    <label class="form-check-label" for="generoNino">Niño</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="genero" value="Niña"
-                                        id="generoNina">
-                                    <label class="form-check-label" for="generoNina">Niña</label>
-                                </div>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
+                
+                    <!-- Filtro de Deporte (Categorías dinámicas) -->
                     <div class="accordion-item">
                         <h5 class="filter-title accordion-header" id="headingDeporte">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -109,24 +99,18 @@
                         <div id="filterDeporte" class="accordion-collapse collapse" aria-labelledby="headingDeporte"
                             data-bs-parent="#filtersAccordion">
                             <div class="accordion-body">
+                                {% for categoria in categorias %}
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="deporte" value="Fútbol"
-                                        id="deporteFutbol">
-                                    <label class="form-check-label" for="deporteFutbol">Fútbol</label>
+                                    <input class="form-check-input" type="radio" name="deporte" value="{{ categoria[1] }}"
+                                        id="deporte{{ categoria[1] }}">
+                                    <label class="form-check-label" for="deporte{{ categoria[1] }}">{{ categoria[1] }}</label>
                                 </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="deporte" value="Voley"
-                                        id="deporteVoley">
-                                    <label class="form-check-label" for="deporteVoley">Voley</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="deporte" value="Básquet"
-                                        id="deporteBasquet">
-                                    <label class="form-check-label" for="deporteBasquet">Básquet</label>
-                                </div>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
+                
+                    <!-- Filtro de Precio -->
                     <div class="accordion-item">
                         <h5 class="filter-title accordion-header" id="headingPrecio">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -138,12 +122,13 @@
                             data-bs-parent="#filtersAccordion">
                             <div class="accordion-body">
                                 <label for="precioRange">Rango de precio:</label>
-                                <input type="range" class="form-range" min="100" max="2000" value="2000"
-                                    id="precioRange">
+                                <input type="range" class="form-range" min="100" max="2000" value="2000" id="precioRange">
                                 <span id="precioMinValue">100</span> - <span id="precioValue">2000</span>
                             </div>
                         </div>
                     </div>
+                
+                    <!-- Filtro de Color (dinámico) -->
                     <div class="accordion-item">
                         <h5 class="filter-title accordion-header" id="headingColor">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -154,29 +139,17 @@
                         <div id="filterColor" class="accordion-collapse collapse" aria-labelledby="headingColor"
                             data-bs-parent="#filtersAccordion">
                             <div class="accordion-body">
+                                {% for color in colores %}
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="color" value="Negro"
-                                        id="colorNegro">
-                                    <label class="form-check-label" for="colorNegro">Negro</label>
+                                    <input class="form-check-input" type="radio" name="color" value="{{ color[1] }}" id="color{{ color[1] }}">
+                                    <label class="form-check-label" for="color{{ color[1] }}">{{ color[1] }}</label>
                                 </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="color" value="Rosado"
-                                        id="colorRosado">
-                                    <label class="form-check-label" for="colorRosado">Rosado</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="color" value="Blanco"
-                                        id="colorBlanco">
-                                    <label class="form-check-label" for="colorBlanco">Blanco</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="color" value="Azul"
-                                        id="colorAzul">
-                                    <label class="form-check-label" for="colorAzul">Azul</label>
-                                </div>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
+                
+                    <!-- Filtro de Marca (dinámico) -->
                     <div class="accordion-item">
                         <h5 class="filter-title accordion-header" id="headingMarca">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -187,53 +160,41 @@
                         <div id="filterMarca" class="accordion-collapse collapse" aria-labelledby="headingMarca"
                             data-bs-parent="#filtersAccordion">
                             <div class="accordion-body">
+                                {% for marca in marcas %}
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="marca" value="Adidas"
-                                        id="marcaAdidas">
-                                    <label class="form-check-label" for="marcaAdidas">Adidas</label>
+                                    <input class="form-check-input" type="radio" name="marca" value="{{ marca[1] }}" id="marca{{ marca[1] }}">
+                                    <label class="form-check-label" for="marca{{ marca[1] }}">{{ marca[1] }}</label>
                                 </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="marca" value="Nike"
-                                        id="marcaNike">
-                                    <label class="form-check-label" for="marcaNike">Nike</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="marca" value="Puma"
-                                        id="marcaPuma">
-                                    <label class="form-check-label" for="marcaPuma">Puma</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="marca" value="Asics"
-                                        id="marcaAsics">
-                                    <label class="form-check-label" for="marcaAsics">Ascis</label>
-                                </div>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>                
             </div>
             <div class="col-md-9">
                 <div class="row" id="productContainer">
-                    {% for producto in listaProductos %}
+                    {% for producto in productos %}
                     <div class="col-4 p-0 px-1 extrac product-card col-md-4 col-lg-3 col-sm-6 col-6">
                         <div class="heart-container">
                             <img src="{{ url_for('static', filename='img/corazonVacio.svg') }}" class="heart-icon"
                                 alt="heart">
                         </div>
-                        <img class="imagen img-fluid pb-2"
-                            src="{{ url_for('static', filename='img/foto (103).avif') }}">
+                            <a href="{{url_for('detalle_producto', id=producto[0])}}">
+                                <img class="imagen img-fluid pb-2"
+                                src="{{ url_for('static', filename='img/' + producto[8]) }}">
+                            </a>
                         <div class="row">
                             <div class="col-12 mb-1">
-                                <p>{{ producto[0] }}</p>
+                                <p>{{ producto[7] }} {{producto[3]}}</p>
                             </div>
                             <div class="col-6 pe-0">
-                                <p class="text-start"><b>{{ producto[1]+50 }}</b></p>
+                                <p class="text-start"><b>S/ {{((producto[1] | float)*0.85)| round(2)}}</b></p>
                             </div>
                             <div class="col-6 ps-0">
-                                <p class="text-end"><b><s>{{ producto[1] }}</s></b></p>
+                                <p class="text-end"><b><s>S/ {{producto[1]}}</s></b></p>
                             </div>
                             <div class="col-8 pe-0 my-1">
-                                <p class="text-start l-rojo-k"><b>{{ producto[1] }}</b></p>
+                                <p class="text-start l-rojo-k"><b>S/ {{((producto[1] | float)*0.50 )| round(2)}}</b></p>
                             </div>
                             <div class="col-4 ps-0 d-flex justify-content-end my-1">
                                 <img class="klo" src="{{ url_for('static', filename='img/logo_kancha_club.svg') }}"
