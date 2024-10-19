@@ -26,9 +26,21 @@ app.secret_key = crearHashSecret()
 def inicio():
     return render_template("index.html")
 
+def listadoProductos():
+    try:
+        cursor = conectarse().cursor()
+        cursor.execute("select nombre,precio from producto")
+        registros = cursor.fetchall()
+        print(registros)
+
+        return registros
+    except Exception as e:
+        return []
+
 @app.get('/productos')
 def seccionProductos():
-    return render_template("SeccionProductos.html")
+    productos = listadoProductos()
+    return render_template("SeccionProductos.html",listaProductos=productos)
 
 @app.route("/producto/<int:id>")
 def mostrar_producto(id):
