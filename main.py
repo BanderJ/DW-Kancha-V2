@@ -8,7 +8,7 @@ import controlador_modelo
 import controlador_productos
 from bd import conectarse
 from flask import session
-#Para generar claves en hash aleatorias
+#Para generar claves en hash aleatoriassssss
 import hashlib
 import os
 
