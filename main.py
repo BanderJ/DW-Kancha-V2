@@ -24,7 +24,8 @@ app.secret_key = crearHashSecret()
 @app.route("/")
 @app.get('/Inicio')
 def inicio():
-    return render_template("index.html")
+    productos = controlador_productos.obtener_productos()
+    return render_template("index.html", productos =productos)
 
 def listadoProductos():
     try:
@@ -371,12 +372,13 @@ def guardar_producto():
     idTalla = request.form["idTalla"]
     genero = request.form["idGenero"]
     tipo_producto = request.form["idTipo"]
+    descripcion = request.form["descripcion"]
     imagenPrincipal = request.files["imagenPrincipal"]
     imagenesSecundarias = request.files.getlist("imagenesSecundarias")
     colores = request.form.getlist("colores")
     categorias = request.form.getlist("categorias")
 
-    controlador_productos.insertar_producto(precio, stock, idModelo, idTalla, genero, tipo_producto, imagenPrincipal, imagenesSecundarias, colores, categorias)
+    controlador_productos.insertar_producto(precio, stock, idModelo, idTalla, genero, tipo_producto, imagenPrincipal, imagenesSecundarias, colores, categorias,descripcion)
     flash("Producto agregado exitosamente.")
     return redirect("/formulario_productos")
 
@@ -409,12 +411,14 @@ def actualizar_producto():
     idTalla = request.form["idTalla"]
     genero = request.form["idGenero"]
     tipo_producto = request.form["idTipo"]
+
+    descripcion = request.form["descripcion"]
     imagenPrincipal = request.files["imagenPrincipal"]
     imagenesSecundarias = request.files.getlist("imagenesSecundarias")
     colores = request.form.getlist("colores")
     categorias = request.form.getlist("categorias")
 
-    controlador_productos.actualizar_producto(id, precio, stock, idModelo, idTalla, genero, tipo_producto, imagenPrincipal, imagenesSecundarias, colores, categorias)
+    controlador_productos.actualizar_producto(id, precio, stock, idModelo, idTalla, genero, tipo_producto, imagenPrincipal, imagenesSecundarias, colores, categorias, descripcion)
     flash("Producto actualizado.")
     return redirect("/formulario_productos")
 
@@ -422,7 +426,7 @@ def actualizar_producto():
 def detalle_producto(id):
     # Obtener el disco por ID
     producto = controlador_productos.obtener_producto_por_id(id)
-    return render_template("AdidasJr3.html", producto=producto)
+    return render_template("detalle_producto.html", producto=producto)
 
 if __name__ == "__main__":
     app.run(debug=True)

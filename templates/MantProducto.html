@@ -14,6 +14,7 @@
                         <th>Género</th>
                         <th>Talla</th>
                         <th>Tipo Producto</th>
+                        <th>Descripcion</th>
                         <th>Imagen Principal</th>
                         <th>Imágenes Secundarias</th>
                         <th>Precio</th>
@@ -30,6 +31,7 @@
                         <td>{{ producto[5] }}</td> <!-- Género -->
                         <td>{{ producto[6] }}</td> <!-- Talla -->
                         <td>{{ producto[7] }}</td> <!-- Tipo de Producto -->
+                        <td>{{ producto[12] }}</td> <!-- Descripcion -->
                         <td><img src="{{ url_for('static', filename='img/' + producto[8]) }}" width="100"></td>
                         <td>
                             <img src="{{ url_for('static', filename='img/' + producto[9]) }}" width="50">

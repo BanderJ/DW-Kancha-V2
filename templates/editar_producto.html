@@ -41,16 +41,20 @@
                     {% endfor %}
                 </select>
 
+                <label for="descripcion">Descripcion:</label>
+                <textarea id="descripcion" name="descripcion" rows="4" cols="50">{{ producto[12] }}</textarea><br><br>
+
+
                 <label for="imagenPrincipal">Cambiar Imagen Principal:</label>
                 <input type="file" name="imagenPrincipal" class="input">
-                <img src="{{ url_for('static', filename='img/' + producto[7]) }}" width="100">
+                <img src="{{ url_for('static', filename='img/' + producto[8]) }}" width="100">
 
                 <label for="imagenesSecundarias">Cambiar Imágenes Secundarias:</label>
                 <input type="file" name="imagenesSecundarias" class="input" multiple>
                 <div>
-                    <img src="{{ url_for('static', filename='img/' + producto[8]) }}" width="50">
                     <img src="{{ url_for('static', filename='img/' + producto[9]) }}" width="50">
                     <img src="{{ url_for('static', filename='img/' + producto[10]) }}" width="50">
+                    <img src="{{ url_for('static', filename='img/' + producto[11]) }}" width="50">
                 </div>
 
                 <label for="colores">Colores:</label>
