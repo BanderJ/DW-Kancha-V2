@@ -1,4 +1,4 @@
-from flask import Flask,render_template,request,jsonify, redirect, flash
+from flask import Flask,render_template,request,jsonify, redirect, flash, url_for
 import controlador_usuario
 import controlador_productos 
 import controlador_nivelusuario
@@ -130,7 +130,10 @@ def redirigirSobreNosotros():
 
 @app.route('/Pago')
 def redirigirPago():
-    return render_template('Pago(1).html')
+    carritoid= controlador_carrito.obtener_id_carrito(1)
+    lista= controlador_carrito.obtener_detalles_carrito(1)
+    total= controlador_carrito.obtener_total_carrito(1)
+    return render_template('Pago(1).html', lista=lista, total=total, id_carrito=carritoid)
 
 @app.route('/MisPedidos')
 def redirigirPedidos():
@@ -438,7 +441,7 @@ def actualizar_producto():
 def detalle_producto(id):
     producto = controlador_productos.obtener_producto_por_id(id)
     # Asegúrate de pasar 'subtotal' y 'total' con valores predeterminados
-    return render_template("detalle_producto.html", producto=producto, subtotal=0.00, total=0.00)
+    return render_template("detalle_producto.html", producto=producto)
 
 
 @app.route('/anadir_carrito', methods=['POST'])
@@ -456,13 +459,73 @@ def anadir_carrito():
     # Asegúrate de pasar 'subtotal' y 'total' con valores predeterminados para evitar errores
     return render_template("detalle_producto.html", producto=producto)
 
+# @app.route('/carrito')
+# def mostrar_carrito():
+#     id_usuario = 1  # ID de usuario fijo por ahora, se puede cambiar dinámicamente si tienes manejo de sesiones
+#     detalles_carrito= controlador_carrito.obtener_detalles_carrito(1)
+#     print(detalles_carrito)
+#     return render_template("maestra.html", detalles_carrito=detalles_carrito)
+
 @app.route('/carrito')
 def mostrar_carrito():
     id_usuario = 1  # ID de usuario fijo por ahora, se puede cambiar dinámicamente si tienes manejo de sesiones
-    detalles_carrito= controlador_carrito.obtener_detalles_carrito()
-    print(detalles_carrito)
-    return render_template("maestra.html", detalles_carrito=detalles_carrito)
+    detalles_carrito= controlador_carrito.obtener_detalles_carrito(1);
+    return render_template("carro.html", lista=detalles_carrito)
 
+@app.route('/eliminar_detalle_venta', methods=['POST'])
+def eliminar_detalle_venta():
+    id_det_vta = request.form.get('id_det_vta')
+    id_producto = request.form.get('id_producto')
+    id_carrito = request.form.get('id_carrito')
+    id_usuario = 1
+
+    # Llamar a la función para eliminar el detalle de venta
+    controlador_carrito.eliminar_detalle_venta_bd(id_det_vta, id_producto, id_carrito, id_usuario)
+
+    # Redirigir nuevamente a la página del carrito
+    return redirect(url_for('mostrar_carrito'))
+
+@app.route('/actualizar_cantidad_mas', methods=['POST'])
+def actualizar_cantidad_mas():
+    # Obtener los datos enviados desde el frontend
+    id_det_vta = request.form.get('id_det_vta')
+    id_producto = request.form.get('id_producto')
+    id_carrito = request.form.get('id_carrito')
+    id_usuario = 1
+    # Llamar a la función incrementarcantidad para actualizar en la base de datos
+    try:
+        controlador_carrito.incrementarcantidad(id_det_vta, id_producto, id_carrito, id_usuario)
+        return redirect(url_for('mostrar_carrito'))
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@app.route('/actualizar_cantidad_menos', methods=['POST'])
+def actualizar_cantidad_menos():
+    # Obtener los datos enviados desde el frontend
+    id_det_vta = request.form.get('id_det_vta')
+    id_producto = request.form.get('id_producto')
+    id_carrito = request.form.get('id_carrito')
+    id_usuario = 1
+    # Llamar a la función incrementarcantidad para actualizar en la base de datos
+    try:
+        controlador_carrito.disminuircantidad(id_det_vta, id_producto, id_carrito, id_usuario)
+        return redirect(url_for('mostrar_carrito'))
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/finalizarcompra', methods=['POST'])
+def finalizarCompra():
+    # Obtener los datos enviados desde el frontend
+    id_carrito = request.form['id_carrito']
+    id_ciudad = 1
+    direccion = request.form['direcc']
+    id_usuario = 1
+    # Llamar a la función incrementarcantidad para actualizar en la base de datos
+    try:
+        controlador_carrito.finalizarCompra_bd(id_carrito, id_ciudad, direccion, id_usuario)
+        return redirect(url_for('inicio'))
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)
