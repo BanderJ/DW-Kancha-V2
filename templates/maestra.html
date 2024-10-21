@@ -186,11 +186,11 @@
 
   <!-- Opciones de usuario -->
   <div class="user-dropdown-content" id="user-dropdown-content">
-    <a href="{{url_for('mostrarPerfil')}}"><span>Mi perfil</span> <img src="{{url_for('static', filename='img/usuario.svg')}}"
-        class="icon" alt="icono-perfil"></a>
+    <a href="{{url_for('mostrarPerfil')}}"><span>Mi perfil</span> <img
+        src="{{url_for('static', filename='img/usuario.svg')}}" class="icon" alt="icono-perfil"></a>
     <a href="{{url_for('redirigirPedidos')}}"><span>Mis pedidos</span> <img
         src="{{url_for('static', filename='img/box-solid.svg')}}" class="icon" alt="icono-pedidos"></a>
-    <a href="{{url_for('mostrarFavoritos')}}"><span>Mis favoritos</span> <img 
+    <a href="{{url_for('mostrarFavoritos')}}"><span>Mis favoritos</span> <img
         src="{{url_for('static',filename='img/corazon.svg')}}" class="icon" alt="icono-favoritos"></a>
     <a href="{{url_for('soporteTecnico')}}"><span>Ayuda</span> <img
         src="{{url_for('static',filename='img/buscar.svg')}}" class="icon" alt="icono-ayuda"></a>
@@ -201,31 +201,39 @@
 
 
   <!-- Carrito de compras -->
-  <div class="basket-dropdown" id="basket-dropdown">
-    <div class="d-flex justify-content-end">
-      <button id="close-basket">&times;</button>
-    </div>
-    <h6 class="text-center" id="shipping-price">Tu envío será completamente gratis</h6>
-    <div class="basket-progress-bar">
-      <div class="basket-progress" id="basket-progress"></div>
-    </div>
-    <div class="basket-header">
-      <h2>Carro de compras (<span id="item-count">0</span> artículos)</h2>
-    </div>
-    <div class="basket-items">
-      <!-- Items del carrito se insertarán aquí -->
-    
-      <!--  -->
-    </div>
-    <p id="empty-basket-message" class="text-center" style="display: none;">Tu carrito está vacío.</p>
-    <div class="basket-summary" id="cuentas">
-      <p>Subtotal: <span id="subtotal">S/0.00</span></p>
-      <p>Entrega: <span id="delivery">S/20.00</span></p>
-      <p>Total: <span id="total">S/0.00</span></p>
-      <a href="{{url_for('redirigirPago')}}"><button class="checkout-button btn btn-danger btn-block">Ir a
-          Pagar</button></a>
+  <div class="basket-dropdown" id="carrito">
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Producto</th>
+          <th scope="col">Modelo</th>
+          <th scope="col">Talla</th>
+          <th scope="col">Precio</th>
+          <th scope="col">Cantidad</th>
+          <th scope="col">Subtotal</th>
+          <th scope="col">Imagen</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for detalle in detalles_carrito %}
+        <tr>
+          <td>{{ detalle[1] }}</td> <!-- Descripción del producto -->
+          <td>{{ detalle[2] }}</td> <!-- Modelo del producto -->
+          <td>{{ detalle[3] }}</td> <!-- Talla del producto -->
+          <td>{{ detalle[4] }}</td> <!-- Precio unitario del producto -->
+          <td>{{ detalle[5] }}</td> <!-- Cantidad -->
+          <td>{{ detalle[4] * detalle[5] }}</td> <!-- Subtotal -->
+          <td><img src="{{ url_for('static', filename='img/' + detalle[6]) }}" alt="Imagen del producto" /></td>
+          <!-- Imagen del producto -->
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div>
     </div>
   </div>
+
 
 
   <!-- Bloque de contenido dinámico -->

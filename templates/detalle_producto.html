@@ -295,26 +295,21 @@
                                         <p class="l-rojo-k stock">Disponible</p>
                                     </div>
                                     <div class="col-8 p-0 px-1 mb-2 anap">
+                                        <form action="{{url_for('anadir_carrito')}}" method="post">
+                                            <input type="hidden" name="id_producto" value="{{producto[0]}}">
+                                            <input type="hidden" name="nombre" value="{{producto[7]}} {{producto[3]}}">
+                                            <input type="hidden" name="precio" value="{{producto[1]}}">
+                                            <input type="hidden" name="cantidad" value="1">
                                         <button
                                             class="btn bg-rojo-k l-blanco-k d-flex align-items-center justify-content-center py-0 py-lg-3"
-                                            id="anadir">Añadir al carrito</button>
+                                            id="anadir" type="submit"
+                                            >Añadir al carrito</button>
+                                        </form>
                                     </div>
                                     <div class="col-4 p-0 px-1 mb-2 favp">
                                         <button
                                             class="btn p-0 d-flex align-items-center justify-content-center py-0 py-lg-3"
-                                            id="favoritos" 
-                                            onclick="
-    const nuevoProducto = {
-        img: '../img/foto (97).avif',
-        nombre: 'NikeMercurial',
-        precio: 399.99,
-        precioOferta: 339.99
-    };
-    let productos = JSON.parse(localStorage.getItem('productosFavoritos')) || [];
-    productos.push(nuevoProducto);
-    localStorage.setItem('productosFavoritos', JSON.stringify(productos));
-    alert('Producto añadido a favoritos!');
-"
+                                            id="favoritos"                                            
                                             ><img class="img-fluid" src="../img/corazon.svg" alt=""></button>
                                     </div>
                                     <div class="col-12 p-0 mb-2 px-1">
@@ -421,18 +416,10 @@
             </div>
         </div>
 
-        <div id="usuario"></div>
-        <div id="carrito"></div>
-    </main>
-
-    <footer id="footer"></footer>
-
-    <script src="../js/bootstrap.bundle.min.js"></script>
-    <script src="../js/ProductoSelect.js"></script>
-    <script src="../js/headerfooter.js"></script>
-    <script src="../js/opcionesUser.js"></script>
-    <script src="../js/carrito.js"></script>
-    <script src="../js/example.js"></script>
 
     {% endblock %}
-</html>
+
+    {% block js %}
+    <script src="{{url_for('static',filename='js/ProductoSelect.js')}}"></script>
+
+    {% endblock %}

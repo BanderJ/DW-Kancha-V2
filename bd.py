@@ -5,6 +5,9 @@ import os
 # Cargar las variables de entorno desde el archivo .env
 load_dotenv(dotenv_path='.env')
 
+# Cargar las variables de entorno desde el archivo .env
+load_dotenv(dotenv_path='.env')
+
 def conectarse():
     # Imprimir las variables de entorno para verificar su contenido
     print("DB_HOST:", os.getenv('DB_HOST'))
