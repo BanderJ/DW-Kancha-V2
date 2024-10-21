@@ -221,9 +221,7 @@ def redirigirPago():
 @app.route('/MisPedidos')
 def redirigirPedidos():
     ventas=controlador_carrito.obtener_ventas_y_detalles(1)
-    img=controlador_carrito.obtener_imagen_compra_mayor(1)
-    print(ventas)
-    return render_template('MisPedidos.html', ventas=ventas, imgventa=img)
+    return render_template('MisPedidos.html', ventas=ventas)
 
 @app.route('/NikeMercurial')
 def NikeMercurial():
@@ -598,6 +596,7 @@ def actualizar_cantidad_menos():
         return redirect(url_for('mostrar_carrito'))
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 @app.route('/finalizarcompra', methods=['POST'])
 def finalizarCompra():

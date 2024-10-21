@@ -5,7 +5,6 @@ def insertar_detalle_venta(id_usuario, id_producto, cantidad, precio):
     db = conectarse()
     try:
         cursor = db.cursor()
-        
         # Llamar al procedimiento almacenado con los parámetros necesarios
         cursor.execute("""
             CALL InsertarDetalleVenta(%s, %s, %s, %s);
@@ -86,7 +85,23 @@ def incrementarcantidad(id_det_vta, id_producto, id_carrito, id_usuario):
     conexion = conectarse()
     try:
         with conexion.cursor() as cursor:
-            # Actualizar la cantidad del producto en el detalle de venta (incrementar en 1)
+            # Obtener el stock disponible del producto
+            cursor.execute("SELECT stock FROM producto WHERE idProducto = %s", (id_producto,))
+            stock_disponible = cursor.fetchone()[0]
+            
+            # Obtener la cantidad actual del producto en el detalle de venta
+            cursor.execute("""
+                SELECT cantidad FROM detalle_venta 
+                WHERE idDetVta = %s AND idProducto = %s AND idCarrito = %s;
+            """, (id_det_vta, id_producto, id_carrito))
+            cantidad_actual = cursor.fetchone()[0]
+
+            # Verificar si al incrementar la cantidad se supera el stock disponible
+            if cantidad_actual + 1 > stock_disponible:
+                print("No se puede incrementar la cantidad. Se ha alcanzado el límite de stock.")
+                return  # Salir sin hacer cambios
+
+            # Si la cantidad es válida, incrementar en 1
             cursor.execute("""
                 UPDATE detalle_venta 
                 INNER JOIN carrito ON detalle_venta.idCarrito = carrito.idCarrito 
@@ -106,28 +121,41 @@ def incrementarcantidad(id_det_vta, id_producto, id_carrito, id_usuario):
         conexion.close()
 
 
+
 def disminuircantidad(id_det_vta, id_producto, id_carrito, id_usuario):
     conexion = conectarse()
     try:
         with conexion.cursor() as cursor:
-            # Actualizar la cantidad del producto en el detalle de venta
+            # Obtener la cantidad actual del producto en el detalle de venta
             cursor.execute("""
-                UPDATE detalle_venta 
-                INNER JOIN carrito ON detalle_venta.idCarrito = carrito.idCarrito 
-                SET detalle_venta.cantidad = detalle_venta.cantidad - 1 
-                WHERE detalle_venta.idDetVta = %s AND detalle_venta.idProducto = %s AND detalle_venta.idCarrito = %s AND carrito.idUsuario = %s;
-            """, (id_det_vta, id_producto, id_carrito, id_usuario))
-            
-            # Llamar al procedimiento almacenado para actualizar el subtotal del carrito
-            cursor.execute("CALL actualizar_subtotal_carrito(%s);", (id_carrito,))
+                SELECT cantidad FROM detalle_venta 
+                WHERE idDetVta = %s AND idProducto = %s AND idCarrito = %s;
+            """, (id_det_vta, id_producto, id_carrito))
+            cantidad_actual = cursor.fetchone()[0]
 
-            # Confirmar los cambios en la base de datos
-            conexion.commit()
+            # Verificar si la cantidad es mayor a 1 antes de restar
+            if cantidad_actual > 1:
+                # Actualizar la cantidad del producto en el detalle de venta (disminuir en 1)
+                cursor.execute("""
+                    UPDATE detalle_venta 
+                    INNER JOIN carrito ON detalle_venta.idCarrito = carrito.idCarrito 
+                    SET detalle_venta.cantidad = detalle_venta.cantidad - 1 
+                    WHERE detalle_venta.idDetVta = %s AND detalle_venta.idProducto = %s AND detalle_venta.idCarrito = %s AND carrito.idUsuario = %s;
+                """, (id_det_vta, id_producto, id_carrito, id_usuario))
+                
+                # Llamar al procedimiento almacenado para actualizar el subtotal del carrito
+                cursor.execute("CALL actualizar_subtotal_carrito(%s);", (id_carrito,))
+
+                # Confirmar los cambios en la base de datos
+                conexion.commit()
+            else:
+                print("No se puede disminuir la cantidad. El valor mínimo es 1.")
     except Exception as e:
         conexion.rollback()
         print(f"Error al actualizar cantidad detalle de venta: {e}")
     finally:
         conexion.close()
+
 
 
 def obtener_total_carrito(id_usuario):
@@ -338,72 +366,72 @@ def obtener_ventas_y_detalles(id_usuario):
     return ventas
 
 
-def obtener_imagen_compra_mayor(id_usuario):
-    conexion = conectarse()
-    producto_mayor = None
-    try:
-        with conexion.cursor() as cursor:
-            # Obtener todas las ventas del usuario
-            cursor.execute("""
-                SELECT 
-                    Venta.idVenta, 
-                    Venta.fecha, 
-                    Venta.hora, 
-                    Venta.direccion
-                FROM 
-                    Venta
-                INNER JOIN Carrito ON Venta.idCarrito = Carrito.idCarrito
-                WHERE 
-                    Carrito.idUsuario = %s
-                ORDER BY Venta.fecha DESC, Venta.hora DESC;
-            """, (id_usuario,))
+# def obtener_imagen_compra_mayor(id_usuario):
+#     conexion = conectarse()
+#     producto_mayor = None
+#     try:
+#         with conexion.cursor() as cursor:
+#             # Obtener todas las ventas del usuario
+#             cursor.execute("""
+#                 SELECT 
+#                     Venta.idVenta, 
+#                     Venta.fecha, 
+#                     Venta.hora, 
+#                     Venta.direccion
+#                 FROM 
+#                     Venta
+#                 INNER JOIN Carrito ON Venta.idCarrito = Carrito.idCarrito
+#                 WHERE 
+#                     Carrito.idUsuario = %s
+#                 ORDER BY Venta.fecha DESC, Venta.hora DESC;
+#             """, (id_usuario,))
             
-            ventas_base = cursor.fetchall()
+#             ventas_base = cursor.fetchall()
 
-            for venta in ventas_base:
-                id_venta = venta[0]
+#             for venta in ventas_base:
+#                 id_venta = venta[0]
                 
-                # Obtener el producto con mayor cantidad en esta venta
-                cursor.execute("""
-                    SELECT 
-                        P.descripcion AS nombre,         -- Nombre del producto
-                        M.nombre AS modelo,              -- Nombre del modelo
-                        T.nombre AS talla,               -- Nombre de la talla
-                        P.precio AS precio,              -- Precio del producto
-                        DV.cantidad AS cantidad,         -- Cantidad comprada
-                        I.imagenPrincipal AS imagen      -- Imagen del producto
-                    FROM 
-                        Detalle_venta DV
-                    INNER JOIN Producto P ON DV.idProducto = P.idProducto
-                    INNER JOIN Modelo M ON P.idModelo = M.idModelo
-                    INNER JOIN Talla T ON P.idTalla = T.id
-                    INNER JOIN Imagen I ON P.idImagen = I.idImagen
-                    WHERE 
-                        DV.idCarrito = (
-                            SELECT idCarrito FROM Venta WHERE idVenta = %s
-                        )
-                    ORDER BY DV.cantidad DESC
-                    LIMIT 1;  -- Solo traemos el producto con mayor cantidad
-                """, (id_venta,))
+#                 # Obtener el producto con mayor cantidad en esta venta
+#                 cursor.execute("""
+#                     SELECT 
+#                         P.descripcion AS nombre,         -- Nombre del producto
+#                         M.nombre AS modelo,              -- Nombre del modelo
+#                         T.nombre AS talla,               -- Nombre de la talla
+#                         P.precio AS precio,              -- Precio del producto
+#                         DV.cantidad AS cantidad,         -- Cantidad comprada
+#                         I.imagenPrincipal AS imagen      -- Imagen del producto
+#                     FROM 
+#                         Detalle_venta DV
+#                     INNER JOIN Producto P ON DV.idProducto = P.idProducto
+#                     INNER JOIN Modelo M ON P.idModelo = M.idModelo
+#                     INNER JOIN Talla T ON P.idTalla = T.id
+#                     INNER JOIN Imagen I ON P.idImagen = I.idImagen
+#                     WHERE 
+#                         DV.idCarrito = (
+#                             SELECT idCarrito FROM Venta WHERE idVenta = %s
+#                         )
+#                     ORDER BY DV.cantidad DESC
+#                     LIMIT 1;  -- Solo traemos el producto con mayor cantidad
+#                 """, (id_venta,))
                 
-                producto = cursor.fetchone()
+#                 producto = cursor.fetchone()
 
-                # Si este producto tiene más cantidad que el actual producto_mayor
-                if producto and (producto_mayor is None or producto[4] > producto_mayor['cantidad']):
-                    producto_mayor = {
-                        'nombre': producto[0],
-                        'modelo': producto[1],
-                        'talla': producto[2],
-                        'precio': producto[3],
-                        'cantidad': producto[4],
-                        'imagen': producto[5]
-                    }
+#                 # Si este producto tiene más cantidad que el actual producto_mayor
+#                 if producto and (producto_mayor is None or producto[4] > producto_mayor['cantidad']):
+#                     producto_mayor = {
+#                         'nombre': producto[0],
+#                         'modelo': producto[1],
+#                         'talla': producto[2],
+#                         'precio': producto[3],
+#                         'cantidad': producto[4],
+#                         'imagen': producto[5]
+#                     }
     
-    except Exception as e:
-        print(f"Error al obtener el producto con mayor cantidad: {e}")
+#     except Exception as e:
+#         print(f"Error al obtener el producto con mayor cantidad: {e}")
     
-    finally:
-        conexion.close()
+#     finally:
+#         conexion.close()
     
-    return producto_mayor
+#     return producto_mayor
 
