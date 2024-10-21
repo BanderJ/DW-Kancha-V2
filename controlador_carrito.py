@@ -201,3 +201,209 @@ def obtener_id_carrito(id_usuario):
     finally:
         conexion.close()  # Cerrar la conexión
     return id_carrito
+
+
+
+# def obtener_modelos_venta(id_venta,id_usuario):
+#     conexion = conectarse()
+#     detalles = []
+#     try:
+#         with conexion.cursor() as cursor:
+#             cursor.execute(""" 
+#                SELECT
+#     M.nombre AS modeloNombre -- Nombre del modelo del producto
+# FROM Venta V
+# JOIN Carrito C ON V.idCarrito = C.idCarrito        -- Relacionamos la venta con el carrito
+# JOIN Detalle_venta DV ON C.idCarrito = DV.idCarrito -- Relacionamos el carrito con los detalles de venta
+# JOIN Producto P ON DV.idProducto = P.idProducto    -- Relacionamos los detalles de venta con los productos
+# JOIN Imagen I ON P.idImagen = I.idImagen           -- Relacionamos el producto con sus imágenes
+# JOIN Modelo M ON P.idModelo = M.idModelo           -- Relacionamos el producto con el modelo
+# JOIN Usuario U ON C.idUsuario = U.idUsuario        -- Relacionamos el carrito con el usuario
+# WHERE V.idVenta = %s                                -- Filtrar por ID de la venta
+# AND U.idUsuario = %s;                               -- Filtrar por ID del usuario
+#             """, (id_venta,id_usuario,))
+            
+#             detalles = cursor.fetchall()
+    
+#     except Exception as e:
+#         print(f"Error al obtener detalles del carrito: {e}")
+    
+#     finally:
+#         conexion.close()  # Cerrar la conexión
+#     return detalles
+
+# def obtener_id_ventas(id_usuario):
+#     conexion = conectarse()
+#     detalles = []
+#     try:
+#         with conexion.cursor() as cursor:
+#             cursor.execute(""" 
+#                SELECT
+#     M.nombre AS modeloNombre -- Nombre del modelo del producto
+# FROM Venta V
+# JOIN Carrito C ON V.idCarrito = C.idCarrito        -- Relacionamos la venta con el carrito
+# JOIN Detalle_venta DV ON C.idCarrito = DV.idCarrito -- Relacionamos el carrito con los detalles de venta
+# JOIN Producto P ON DV.idProducto = P.idProducto    -- Relacionamos los detalles de venta con los productos
+# JOIN Imagen I ON P.idImagen = I.idImagen           -- Relacionamos el producto con sus imágenes
+# JOIN Modelo M ON P.idModelo = M.idModelo           -- Relacionamos el producto con el modelo
+# JOIN Usuario U ON C.idUsuario = U.idUsuario        -- Relacionamos el carrito con el usuario
+# WHERE V.idVenta = %s                                -- Filtrar por ID de la venta
+# AND U.idUsuario = %s;                               -- Filtrar por ID del usuario
+#             """, (id_venta,id_usuario,))
+            
+#             detalles = cursor.fetchall()
+    
+#     except Exception as e:
+#         print(f"Error al obtener detalles del carrito: {e}")
+    
+#     finally:
+#         conexion.close()  # Cerrar la conexión
+#     return detalles
+
+def obtener_ventas_y_detalles(id_usuario):
+    conexion = conectarse()
+    ventas = []
+    try:
+        with conexion.cursor() as cursor:
+            # Obtener todas las ventas del usuario
+            cursor.execute("""
+                SELECT 
+                    Venta.idVenta, 
+                    Venta.fecha, 
+                    Venta.hora, 
+                    Venta.direccion
+                FROM 
+                    Venta
+                INNER JOIN Carrito ON Venta.idCarrito = Carrito.idCarrito
+                WHERE 
+                    Carrito.idUsuario = %s
+                ORDER BY Venta.fecha DESC, Venta.hora DESC;
+            """, (id_usuario,))
+            
+            ventas_base = cursor.fetchall()
+
+            for venta in ventas_base:
+                id_venta = venta[0]
+                
+                # Obtener los detalles de cada venta (productos)
+                cursor.execute("""
+                    SELECT 
+                        P.descripcion AS nombre,         -- Nombre del producto
+                        M.nombre AS modelo,              -- Nombre del modelo
+                        T.nombre AS talla,               -- Nombre de la talla
+                        P.precio AS precio,              -- Precio del producto
+                        DV.cantidad AS cantidad,         -- Cantidad comprada
+                        I.imagenPrincipal AS imagen      -- Imagen del producto
+                    FROM 
+                        Detalle_venta DV
+                    INNER JOIN Producto P ON DV.idProducto = P.idProducto
+                    INNER JOIN Modelo M ON P.idModelo = M.idModelo
+                    INNER JOIN Talla T ON P.idTalla = T.id
+                    INNER JOIN Imagen I ON P.idImagen = I.idImagen
+                    WHERE 
+                        DV.idCarrito = (
+                            SELECT idCarrito FROM Venta WHERE idVenta = %s
+                        );
+                """, (id_venta,))
+                
+                productos = cursor.fetchall()
+
+                # Convertir cada producto en un diccionario
+                productos_list = []
+                for producto in productos:
+                    productos_list.append({
+                        'nombre': producto[0],
+                        'modelo': producto[1],
+                        'talla': producto[2],
+                        'precio': producto[3],
+                        'cantidad': producto[4],
+                        'imagen': producto[5]
+                    })
+
+                # Agregar los detalles a la venta
+                ventas.append({
+                    'idVenta': venta[0],
+                    'fecha': venta[1],
+                    'hora': venta[2],
+                    'direccion': venta[3],
+                    'productos': productos_list
+                })
+    
+    except Exception as e:
+        print(f"Error al obtener ventas y detalles: {e}")
+    
+    finally:
+        conexion.close()
+    
+    return ventas
+
+
+def obtener_imagen_compra_mayor(id_usuario):
+    conexion = conectarse()
+    producto_mayor = None
+    try:
+        with conexion.cursor() as cursor:
+            # Obtener todas las ventas del usuario
+            cursor.execute("""
+                SELECT 
+                    Venta.idVenta, 
+                    Venta.fecha, 
+                    Venta.hora, 
+                    Venta.direccion
+                FROM 
+                    Venta
+                INNER JOIN Carrito ON Venta.idCarrito = Carrito.idCarrito
+                WHERE 
+                    Carrito.idUsuario = %s
+                ORDER BY Venta.fecha DESC, Venta.hora DESC;
+            """, (id_usuario,))
+            
+            ventas_base = cursor.fetchall()
+
+            for venta in ventas_base:
+                id_venta = venta[0]
+                
+                # Obtener el producto con mayor cantidad en esta venta
+                cursor.execute("""
+                    SELECT 
+                        P.descripcion AS nombre,         -- Nombre del producto
+                        M.nombre AS modelo,              -- Nombre del modelo
+                        T.nombre AS talla,               -- Nombre de la talla
+                        P.precio AS precio,              -- Precio del producto
+                        DV.cantidad AS cantidad,         -- Cantidad comprada
+                        I.imagenPrincipal AS imagen      -- Imagen del producto
+                    FROM 
+                        Detalle_venta DV
+                    INNER JOIN Producto P ON DV.idProducto = P.idProducto
+                    INNER JOIN Modelo M ON P.idModelo = M.idModelo
+                    INNER JOIN Talla T ON P.idTalla = T.id
+                    INNER JOIN Imagen I ON P.idImagen = I.idImagen
+                    WHERE 
+                        DV.idCarrito = (
+                            SELECT idCarrito FROM Venta WHERE idVenta = %s
+                        )
+                    ORDER BY DV.cantidad DESC
+                    LIMIT 1;  -- Solo traemos el producto con mayor cantidad
+                """, (id_venta,))
+                
+                producto = cursor.fetchone()
+
+                # Si este producto tiene más cantidad que el actual producto_mayor
+                if producto and (producto_mayor is None or producto[4] > producto_mayor['cantidad']):
+                    producto_mayor = {
+                        'nombre': producto[0],
+                        'modelo': producto[1],
+                        'talla': producto[2],
+                        'precio': producto[3],
+                        'cantidad': producto[4],
+                        'imagen': producto[5]
+                    }
+    
+    except Exception as e:
+        print(f"Error al obtener el producto con mayor cantidad: {e}")
+    
+    finally:
+        conexion.close()
+    
+    return producto_mayor
+

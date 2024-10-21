@@ -29,10 +29,7 @@ def inicio():
     # Pasa valores predeterminados para evitar errores en las plantillas que dependen de estas variables
     return render_template(
         "index.html", 
-        productos=productos, 
-        detalles=[],        # Carrito vacío
-        subtotal=0.00,      # Subtotal predeterminado
-        total=0.00          # Total predeterminado
+        productos=productos
     )
 
 def listadoProductos():
@@ -137,7 +134,10 @@ def redirigirPago():
 
 @app.route('/MisPedidos')
 def redirigirPedidos():
-    return render_template('MisPedidos.html')
+    ventas=controlador_carrito.obtener_ventas_y_detalles(1)
+    img=controlador_carrito.obtener_imagen_compra_mayor(1)
+    print(ventas)
+    return render_template('MisPedidos.html', ventas=ventas, imgventa=img)
 
 @app.route('/NikeMercurial')
 def NikeMercurial():
@@ -526,6 +526,8 @@ def finalizarCompra():
         return redirect(url_for('inicio'))
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
