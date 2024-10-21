@@ -459,7 +459,8 @@ def anadir_carrito():
 @app.route('/carrito')
 def mostrar_carrito():
     id_usuario = 1  # ID de usuario fijo por ahora, se puede cambiar dinámicamente si tienes manejo de sesiones
-    detalles_carrito= controlador_carrito.obtener_detalles_carrito(id_usuario)
+    detalles_carrito= controlador_carrito.obtener_detalles_carrito()
+    print(detalles_carrito)
     return render_template("maestra.html", detalles_carrito=detalles_carrito)
 
 
