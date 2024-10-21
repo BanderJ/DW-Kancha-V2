@@ -6,6 +6,7 @@ import controlador_categoria
 import controlador_marca
 import controlador_modelo
 import controlador_productos
+import controlador_carrito
 from bd import conectarse
 from flask import session
 #Para generar claves en hash aleatoriassssss
@@ -22,10 +23,17 @@ app.secret_key = crearHashSecret()
 
 # Enlaces html/templates
 @app.route("/")
-@app.get('/Inicio')
+@app.route("/Inicio")
 def inicio():
     productos = controlador_productos.obtener_productos()
-    return render_template("index.html", productos =productos)
+    # Pasa valores predeterminados para evitar errores en las plantillas que dependen de estas variables
+    return render_template(
+        "index.html", 
+        productos=productos, 
+        detalles=[],        # Carrito vacío
+        subtotal=0.00,      # Subtotal predeterminado
+        total=0.00          # Total predeterminado
+    )
 
 def listadoProductos():
     try:
@@ -136,6 +144,8 @@ def NikeMercurial():
 def dash():
     return render_template('maestradashboard.html')
     
+    
+
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # Controladores
 # Nivel de Usuario
@@ -422,11 +432,36 @@ def actualizar_producto():
     flash("Producto actualizado.")
     return redirect("/formulario_productos")
 
-@app.route("/producto/<int:id>")
+
+
+@app.route('/producto/<int:id>')
 def detalle_producto(id):
-    # Obtener el disco por ID
     producto = controlador_productos.obtener_producto_por_id(id)
+    # Asegúrate de pasar 'subtotal' y 'total' con valores predeterminados
+    return render_template("detalle_producto.html", producto=producto, subtotal=0.00, total=0.00)
+
+
+@app.route('/anadir_carrito', methods=['POST'])
+def anadir_carrito():
+    # Obtener los datos del formulario
+    id_producto = request.form.get('id_producto')
+    nombre = request.form.get('nombre')
+    precio = request.form.get('precio')
+    cantidad = request.form.get('cantidad')
+    id_usuario = 1  # ID del usuario será 1 siempre
+    # Llamar a la función de insertar detalle de venta
+    controlador_carrito.insertar_detalle_venta(id_usuario, id_producto, cantidad, precio)
+    # Obtener detalles del producto nuevamente para mostrar al usuario
+    producto = controlador_productos.obtener_producto_por_id(id_producto)
+    # Asegúrate de pasar 'subtotal' y 'total' con valores predeterminados para evitar errores
     return render_template("detalle_producto.html", producto=producto)
+
+@app.route('/carrito')
+def mostrar_carrito():
+    id_usuario = 1  # ID de usuario fijo por ahora, se puede cambiar dinámicamente si tienes manejo de sesiones
+    detalles_carrito= controlador_carrito.obtener_detalles_carrito(id_usuario)
+    return render_template("maestra.html", detalles_carrito=detalles_carrito)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
