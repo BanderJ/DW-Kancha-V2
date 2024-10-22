@@ -1,4 +1,4 @@
-from flask import Flask,render_template,request,jsonify, redirect, flash, url_for
+from flask import Flask,render_template,request,jsonify, redirect, flash, url_for, session
 from authlib.integrations.flask_client import OAuth
 from flask_sqlalchemy import SQLAlchemy
 import controlador_usuario
@@ -11,7 +11,6 @@ import controlador_productos
 import controlador_carrito
 import controlador_ubicacion
 from bd import conectarse
-from flask import session
 #Para generar claves en hash aleatoriassssss
 import hashlib
 import os
@@ -22,7 +21,7 @@ import controlador_ubicacion
 from datetime import datetime
 
 def crearHashSecret():
-    datos_aleatorios = os.urandom(16)
+    datos_aleatorios = os.urandom(16) 
     hash_objeto = hashlib.sha256(datos_aleatorios)
     return hash_objeto.hexdigest()
 
@@ -676,31 +675,96 @@ def eliminar_detalle_venta():
 
 @app.route('/actualizar_cantidad_mas', methods=['POST'])
 def actualizar_cantidad_mas():
-    # Obtener los datos enviados desde el frontend
     id_det_vta = request.form.get('id_det_vta')
     id_producto = request.form.get('id_producto')
     id_carrito = request.form.get('id_carrito')
     id_usuario = session.get("usuario", {}).get("idUsuario", None)
-    # Llamar a la función incrementarcantidad para actualizar en la base de datos
-    try:
-        controlador_carrito.incrementarcantidad(id_det_vta, id_producto, id_carrito, id_usuario)
-        return redirect(url_for('mostrar_carrito'))
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+
+    resultado = controlador_carrito.incrementarcantidad(id_det_vta, id_producto, id_carrito, id_usuario)
+
+    if "error" in resultado:
+        return jsonify({"error": resultado["error"]}), 400
+    else:
+        return jsonify({
+            "nueva_cantidad": resultado["nueva_cantidad"],
+            "nuevo_subtotal": resultado["nuevo_subtotal"]
+        }), 200
 
 @app.route('/actualizar_cantidad_menos', methods=['POST'])
 def actualizar_cantidad_menos():
-    # Obtener los datos enviados desde el frontend
     id_det_vta = request.form.get('id_det_vta')
     id_producto = request.form.get('id_producto')
     id_carrito = request.form.get('id_carrito')
     id_usuario = session.get("usuario", {}).get("idUsuario", None)
-    # Llamar a la función incrementarcantidad para actualizar en la base de datos
+
+    resultado = controlador_carrito.disminuircantidad(id_det_vta, id_producto, id_carrito, id_usuario)
+
+    if "error" in resultado:
+        return jsonify({"error": resultado["error"]}), 400
+    else:
+        return jsonify({
+            "nueva_cantidad": resultado["nueva_cantidad"],
+            "nuevo_subtotal": resultado["nuevo_subtotal"]
+        }), 200
+
+@app.route('/actualizar_cantidad', methods=['POST'])
+def actualizar_cantidad():
+    id_producto = request.form.get('id_producto')
+    id_carrito = request.form.get('id_carrito')
+    accion = request.form.get('accion')  # 'mas' o 'menos'
+
+    # Lógica para obtener la cantidad actual y stock disponible
+    conexion = conectarse()
     try:
-        controlador_carrito.disminuircantidad(id_det_vta, id_producto, id_carrito, id_usuario)
-        return redirect(url_for('mostrar_carrito'))
+        with conexion.cursor() as cursor:
+            # Obtener la cantidad actual del detalle de venta
+            cursor.execute("SELECT cantidad FROM detalle_venta WHERE idProducto = %s AND idCarrito = %s", (id_producto, id_carrito))
+            cantidad_actual = cursor.fetchone()[0]
+
+            # Obtener el stock disponible del producto
+            cursor.execute("SELECT stock FROM producto WHERE idProducto = %s", (id_producto,))
+            stock_disponible = cursor.fetchone()[0]
+
+            # Verificar la acción
+            if accion == 'mas':
+                if cantidad_actual < stock_disponible:
+                    nueva_cantidad = cantidad_actual + 1
+                else:
+                    return jsonify({'error': 'No se puede agregar más. Stock insuficiente.'}), 400
+            elif accion == 'menos':
+                if cantidad_actual > 1:
+                    nueva_cantidad = cantidad_actual - 1
+                else:
+                    return jsonify({'error': 'La cantidad mínima es 1.'}), 400
+            else:
+                return jsonify({'error': 'Acción no válida.'}), 400
+
+            # Actualizar la cantidad en la base de datos
+            cursor.execute("""
+                UPDATE detalle_venta 
+                SET cantidad = %s 
+                WHERE idProducto = %s AND idCarrito = %s
+            """, (nueva_cantidad, id_producto, id_carrito))
+
+            # Recalcular el subtotal del carrito
+            cursor.execute("CALL actualizar_subtotal_carrito(%s)", (id_carrito,))
+            conexion.commit()
+
+            # Devolver la nueva cantidad y el precio del producto para actualizar el frontend
+            cursor.execute("SELECT precio FROM producto WHERE idProducto = %s", (id_producto,))
+            precio_unitario = cursor.fetchone()[0]
+
+            return jsonify({
+                'nueva_cantidad': nueva_cantidad,
+                'precio_unitario': precio_unitario
+            })
+
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        conexion.rollback()
+        return jsonify({'error': str(e)}), 500
+
+    finally:
+        conexion.close()
 
 
 @app.route('/finalizarcompra', methods=['POST'])
