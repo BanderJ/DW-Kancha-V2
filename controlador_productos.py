@@ -14,7 +14,6 @@ def insertar_producto(precio, stock, idModelo, idTalla, genero, tipo_producto, i
         # Guardar las imágenes
         imagen_principal_nombre = guardar_imagen(imagenPrincipal)
         imagen_secundarias_nombres = [guardar_imagen(imagen) for imagen in imagenSecundarias]
-
         with conexion.cursor() as cursor:
             # Insertar en la tabla Imagen
             cursor.execute(

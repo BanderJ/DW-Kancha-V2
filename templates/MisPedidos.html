@@ -1,24 +1,35 @@
-{% extends "maestra.html" %}
-{% block titulo %}Mis Pedidos{% endblock %}
-{% block link %}
+{% extends "maestra.html" %} {% block titulo %}Mis Compras{% endblock %} {%
+block link %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/titulo.css') }}" />
-{% endblock %}
-{% block contenido %}
+<style>
+    #imagenproducto{
+        width: 50%;
+        height: auto;
+    }
+    #imagen{
+        text-align: right;        
+    }
+</style>
+{% endblock %} {% block contenido %}
 <main class="mt-4">
     <div class="row m-0 py-2">
         <div class="col p-0"></div>
         <div class="col-xl-9 col-lg-9 col-md-9 col-sm-10 col-10 d-flex align-items-center p-0 justify-content-sm-start">
-            <a class="d-flex align-items-center me-2 regresar" href="Productos.html">
-                <button class="btn bg-rojo-k me-2 d-flex"><img class="img-fluid" src="../img/fr.svg"
-                        alt=""></button><label class="l-rojo-k" for="regresar">Regresar</label>
+            <a class="d-flex align-items-center me-2 regresar" href="">
+                <button class="btn bg-rojo-k me-2 d-flex">
+                    <img class="img-fluid" src="{{ url_for('static', filename='img/fr.svg') }}" alt="" /></button><label
+                    class="l-rojo-k" for="regresar">Regresar</label>
             </a>
             <nav data-mdb-navbar-init class="navbar navbar-expand-lg p-0 ms-2 d-sm-block d-none">
                 <div class="container-fluid">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb m-0">
-                            <li class="breadcrumb-item"><a class="l-gris-k" href="index.html">Inicio</a></li>
-                            <li class="breadcrumb-item active" aria-current="page"><a class="l-gris-k" href="#">Mis
-                                    pedidos</a></li>
+                            <li class="breadcrumb-item">
+                                <a class="l-gris-k" href="">Inicio</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">
+                                <a class="l-gris-k" href="#">Mis Compras</a>
+                            </li>
                         </ol>
                     </nav>
                 </div>
@@ -31,65 +42,38 @@
         <div class="col-9">
             <div class="mb-5">
                 <p class="titulo2 text-center">
-                    Mis pedidos
-                    <img src="../img/SVG/usuario.svg" alt="" class="imgTitulo">
+                    Mis Compras
+                    <img src="{{ url_for('static', filename='img/SVG/usuario.svg') }}" alt="" class="imgTitulo" />
                 </p>
             </div>
             <div class="container d-flex flex-column justify-content-center">
-                <div class="row mb-5">
-                    <a style="text-decoration: none; color: black;" href="Seguimiento(1).html">
-                        <p class="h4">Pedido N°213123213</p>
-                        <div class="row border">
-                            <div class="col">
-                                <h2>Contenido</h2>
-                                <p>Adidas1, Camiseta2</p>
-                                <br><br>
-                                <h4>Fecha: 04/06/2024</h4>
-                            </div>
-                            <div class="col-4 d-flex flex-column align-self-center">
-                                <img src="../img/foto (26).avif" class="imgTitulo2 mx-auto d-block">
-                                <h3 class="text-center">Estado: <i>Pediente</i></h3>
-                            </div>
+                <!-- Iterar sobre todas las ventas -->
+                {% for venta in ventas %}
+                <div class="row mb-5 border">
+                    <p class="h4">Pedido N°{{ venta.idVenta }}</p>
+                    <div id="venta_{{ venta.idVenta }}" class="col">
+                        <div class="col">
+                            <h2>Contenido</h2>
+                            <p>
+                                <!-- Iterar sobre los productos de cada venta -->
+                                {% for producto in venta.productos %} {{ producto.modelo }}{% if
+                                not loop.last %}, {% endif %} {% endfor %}
+                            </p>
+                            <h4>Fecha: {{ venta.fecha }}</h4>
                         </div>
-                    </a>
+                    </div>
+                    <div class="col" id="imagen">
+                        {% for producto in venta.productos %}
+                        {% if loop.first %}
+                        <img id="imagenproducto" class="img-fluid" src="{{ url_for('static', filename='img/' + producto.imagen) }}" alt="">
+                        {% endif %}
+                        {% endfor %}
+                    </div>
                 </div>
-
-                <div class="row mb-5">
-                    <a style="text-decoration: none; color: black;" href="Seguimiento(3).html">
-                        <p class="h4">Pedido N°213123213</p>
-                        <div class="row border">
-                            <div class="col">
-                                <h2>Contenido</h2>
-                                <p>Adidas1, Camiseta2</p>
-                                <br><br>
-                                <h4>Fecha: 04/06/2024</h4>
-                            </div>
-                            <div class="col-4 d-flex flex-column align-self-center">
-                                <img src="../img/foto (26).avif" class="imgTitulo2 mx-auto d-block">
-                                <h3 class="text-center">Estado: <i>Entregado</i></h3>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="row mb-5">
-                    <a style="text-decoration: none; color: black;" href="Seguimiento(3).html">
-                        <p class="h4">Pedido N°2134223213</p>
-                        <div class="row border">
-                            <div class="col">
-                                <h2>Contenido</h2>
-                                <p>Adidas1, Camiseta2, Medias1</p>
-                                <br><br>
-                                <h4>Fecha: 05/11/2022</h4>
-                            </div>
-                            <div class="col-4 d-flex flex-column align-self-center">
-                                <img src="../img/foto (109).avif" class="imgTitulo2 mx-auto d-block">
-                                <h3 class="text-center">Estado: <i>Entregado</i></h3>
-                            </div>
-                        </div>
-                    </a>
-                </div>
+                {% endfor %}
             </div>
         </div>
         <div class="col p-0"></div>
+    </div>
 </main>
 {% endblock %}

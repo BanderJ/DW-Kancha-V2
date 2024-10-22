@@ -1,4 +1,6 @@
-from flask import Flask,render_template,request,jsonify, redirect, flash
+from flask import Flask,render_template,request,jsonify, redirect, flash, url_for
+from authlib.integrations.flask_client import OAuth
+from flask_sqlalchemy import SQLAlchemy
 import controlador_usuario
 import controlador_productos 
 import controlador_nivelusuario
@@ -6,7 +8,6 @@ import controlador_categoria
 import controlador_marca
 import controlador_modelo
 import controlador_productos
-import controlador_favoritos
 from bd import conectarse
 from flask import session
 #Para generar claves en hash aleatoriassssss
@@ -20,17 +21,104 @@ def crearHashSecret():
 
 app = Flask(__name__)
 app.secret_key = crearHashSecret()
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/dawa_kancha'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+bdsita = SQLAlchemy(app)
+
+# Definir la clase Usuario basada en la tabla de tu base de datos
+class Usuario(bdsita.Model):
+    __tablename__ = 'usuarios'  # Asegúrate de que este nombre coincida con el de tu tabla en MySQL
+
+    idUsuario = bdsita.Column(bdsita.Integer, primary_key=True)
+    idTipoUsuario = bdsita.Column(bdsita.Integer, default=1)
+    nombre = bdsita.Column(bdsita.String(100), nullable=False)
+    numDoc = bdsita.Column(bdsita.String(20), nullable=False)
+    apePat = bdsita.Column(bdsita.String(50), nullable=False)
+    apeMat = bdsita.Column(bdsita.String(50), nullable=False)
+    correo = bdsita.Column(bdsita.String(100), nullable=False, unique=True)
+    password = bdsita.Column(bdsita.String(200), nullable=False)
+    telefono = bdsita.Column(bdsita.String(20))
+    fechaNacimiento = bdsita.Column(bdsita.Date)
+    sexo = bdsita.Column(bdsita.String(1), nullable=False)  # 'F', 'M' o 'N'
+    idNivelUsuario = bdsita.Column(bdsita.Integer, default=1)
+
+oauth = OAuth(app)
+google = oauth.register(
+    name='google',
+    client_id='TU_CLIENT_ID',
+    client_secret='TU_CLIENT_SECRET',
+    access_token_url='https://accounts.google.com/o/oauth2/token',
+    access_token_params=None,
+    authorize_url='https://accounts.google.com/o/oauth2/auth',
+    authorize_params=None,
+    api_base_url='https://www.googleapis.com/oauth2/v1/',
+    client_kwargs={'scope': 'openid profile email'},
+)
+
+# Ruta para iniciar el proceso de login con Google
+@app.route('/loginGoogle')
+def loginGoogle():
+    redirect_uri = url_for('authorizeGoogle', _external=True)
+    return google.authorize_redirect(redirect_uri)
+
+# Ruta de autorización de Google, donde obtenemos el token y la información del usuario
+@app.route('/authorizeGoogle')
+def authorizeGoogle():
+    token = google.authorize_access_token()
+    user_info = google.get('userinfo').json()
+
+    # Extraer la información relevante del usuario autenticado por Google
+    nombre = user_info.get('given_name', '')
+    apePat = user_info.get('family_name', '')
+    correo = user_info.get('email', '')
+    
+    # Valores predeterminados
+    idTipoUsuario = 1
+    idNivelUsuario = 1
+    password = ''  # No tenemos password de Google, se puede manejar con OAuth tokens
+    numDoc = ''
+    apeMat = ''
+    telefono = ''
+    fechaNacimiento = datetime.date(1900, 1, 1)  # Ajusta si obtienes este dato de otra forma
+    sexo = 'N'  # Dato no especificado
+
+    # Crear el nuevo usuario en la base de datos
+    nuevo_usuario = Usuario(
+        idTipoUsuario=idTipoUsuario,
+        nombre=nombre,
+        numDoc=numDoc,
+        apePat=apePat,
+        apeMat=apeMat,
+        correo=correo,
+        password=password,
+        telefono=telefono,
+        fechaNacimiento=fechaNacimiento,
+        sexo=sexo,
+        idNivelUsuario=idNivelUsuario
+    )
+
+    # Insertar en la base de datos
+    bdsita.session.add(nuevo_usuario)
+    bdsita.session.commit()
+
+    # Redirigir a la ruta raíz
+    return redirect(url_for('inicio'))
 
 # Enlaces html/templates
 @app.route("/")
-@app.get('/Inicio')
+@app.route("/Inicio")
 def inicio():
     productos = controlador_productos.obtener_productos()
-    return render_template("index.html", productos =productos)
+    # Pasa valores predeterminados para evitar errores en las plantillas que dependen de estas variables
+    return render_template(
+        "index.html", 
+        productos=productos
+    )
 
 def listadoProductos():
     try:
-        cursor = conectarse().cursor()
+        cursor = bdsita().cursor()
         cursor.execute("select nombre,precio from producto")
         registros = cursor.fetchall()
         print(registros)
@@ -177,11 +265,16 @@ def redirigirSobreNosotros():
 
 @app.route('/Pago')
 def redirigirPago():
-    return render_template('Pago(1).html')
+    carritoid= controlador_carrito.obtener_id_carrito(1)
+    lista= controlador_carrito.obtener_detalles_carrito(1)
+    total= controlador_carrito.obtener_total_carrito(1)
+    departamentos=controlador_ubicacion.obtener_departamentos()
+    return render_template('Pago(1).html', lista=lista, total=total, id_carrito=carritoid, departamentos=departamentos)
 
 @app.route('/MisPedidos')
 def redirigirPedidos():
-    return render_template('MisPedidos.html')
+    ventas=controlador_carrito.obtener_ventas_y_detalles(1)
+    return render_template('MisPedidos.html', ventas=ventas)
 
 @app.route('/NikeMercurial')
 def NikeMercurial():
@@ -191,6 +284,8 @@ def NikeMercurial():
 def dash():
     return render_template('maestradashboard.html')
     
+    
+
 # ------------------------------------------------------------------------------------------------------------------------------------------
 # Controladores
 # Nivel de Usuario
@@ -477,31 +572,13 @@ def actualizar_producto():
     flash("Producto actualizado.")
     return redirect("/formulario_productos")
 
-@app.route("/producto/<int:id>")
+
+
+@app.route('/producto/<int:id>')
 def detalle_producto(id):
-    # Obtener el usuario desde la sesión
-    usuario = session.get("usuario", None)
-
-    # Obtener el producto por ID
+    # Obtener el disco por ID
     producto = controlador_productos.obtener_producto_por_id(id)
-
-    # Si no hay usuario, renderizar sin favoritos
-    if usuario is None:
-        return render_template("detalle_producto.html", producto=producto)
-
-    # Obtener favoritos del usuario
-    idUsuario = usuario.get("idUsuario")
-    favoritos = controlador_favoritos.obtener_favoritos(idUsuario)
-    ids_favoritos = {fav[0] for fav in favoritos}  # Conjunto de IDs de favoritos
-
-    # Renderizar con datos del usuario y sus favoritos
-    return render_template(
-        "detalle_producto.html", 
-        producto=producto, 
-        favoritos=ids_favoritos, 
-        usuario=usuario
-    )
-
+    return render_template("detalle_producto.html", producto=producto)
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -1,24 +1,2 @@
-.tabla {
-    width: 100%;
-    margin-top: 20px;
-    border-collapse: collapse;
-}
-.tabla thead {
-    background-color: #f8f9fa;
-}
-.tabla th, .tabla td {
-    padding: 15px;
-    text-align: center;
-    border: 1px solid #dee2e6;
-}
-.tabla th {
-    font-weight: bold;
-}
-.tabla tbody tr:hover {
-    background-color: #f1f1f1;
-}
-.imagen-producto {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-}
+
+
