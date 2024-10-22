@@ -13,6 +13,7 @@ from flask import session
 #Para generar claves en hash aleatoriassssss
 import hashlib
 import os
+import controlador_favoritos
 
 def crearHashSecret():
     datos_aleatorios = os.urandom(16)
@@ -573,12 +574,32 @@ def actualizar_producto():
     return redirect("/formulario_productos")
 
 
-
-@app.route('/producto/<int:id>')
+@app.route("/producto/<int:id>")
 def detalle_producto(id):
-    # Obtener el disco por ID
+    usuario = session.get("usuario", None)
+
     producto = controlador_productos.obtener_producto_por_id(id)
-    return render_template("detalle_producto.html", producto=producto)
+
+    if usuario is None:
+        return render_template("detalle_producto.html", producto=producto)
+
+    idUsuario = usuario.get("idUsuario")
+    favoritos = controlador_favoritos.obtener_favoritos(idUsuario)
+    ids_favoritos = {fav[0] for fav in favoritos}  
+
+    return render_template(
+        "detalle_producto.html", 
+        producto=producto, 
+        favoritos=ids_favoritos, 
+        usuario=usuario
+    )
+
+
+# @app.route('/producto/<int:id>')
+# def detalle_producto(id):
+#     # Obtener el disco por ID
+#     producto = controlador_productos.obtener_producto_por_id(id)
+#     return render_template("detalle_producto.html", producto=producto)
 
 if __name__ == "__main__":
     app.run(debug=True)

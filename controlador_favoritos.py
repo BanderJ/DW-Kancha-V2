@@ -1,7 +1,5 @@
 from bd import conectarse
 
-cliente = 1
-
 def obtener_favoritos(cliente):
     conexion = conectarse()
     favoritos = []
