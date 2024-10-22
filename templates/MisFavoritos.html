@@ -26,9 +26,9 @@
       </nav>
     </div>
   </div>
-
+  {% if favoritos %}
+  
   <h4 class="titulo2 text-center mb-5">Mis Favoritos</h4>
-
   <div class="container-fluid px-0">
     <div class="carousel">
       <button id="prevButton" class="nav left">
@@ -78,6 +78,14 @@
     </div>
     <div class="indicators"></div>
   </div>
+  {% else %}
+  <div style="text-align: center; height: 20vw; margin-top: 10vw;">
+    <h4>Aun no hay favoritos agregados
+    </h4>
+  </div>
+  {% endif %}
+
+
   <script>
     const corazonLleno = "{{ url_for('static', filename='img/corazonLleno.svg') }}";
     const corazonVacio = "{{ url_for('static', filename='img/corazonVacio.svg') }}";
