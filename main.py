@@ -643,8 +643,11 @@ def anadir_carrito():
 
 @app.route('/carrito')
 def mostrar_carrito():
-    id_usuario = 1  # ID de usuario fijo por ahora, se puede cambiar dinámicamente si tienes manejo de sesiones
-    detalles_carrito= controlador_carrito.obtener_detalles_carrito(1);
+    idUsuario = session.get("usuario", {}).get("idUsuario", None)
+    
+    if idUsuario is None:
+        return redirect('/IniciarSesion')  
+    detalles_carrito= controlador_carrito.obtener_detalles_carrito(idUsuario);
     return render_template("carro.html", lista=detalles_carrito)
 
 @app.route('/eliminar_detalle_venta', methods=['POST'])
@@ -652,7 +655,7 @@ def eliminar_detalle_venta():
     id_det_vta = request.form.get('id_det_vta')
     id_producto = request.form.get('id_producto')
     id_carrito = request.form.get('id_carrito')
-    id_usuario = 1
+    id_usuario = session.get("usuario", {}).get("idUsuario", None)
 
     # Llamar a la función para eliminar el detalle de venta
     controlador_carrito.eliminar_detalle_venta_bd(id_det_vta, id_producto, id_carrito, id_usuario)
@@ -666,7 +669,7 @@ def actualizar_cantidad_mas():
     id_det_vta = request.form.get('id_det_vta')
     id_producto = request.form.get('id_producto')
     id_carrito = request.form.get('id_carrito')
-    id_usuario = 1
+    id_usuario = session.get("usuario", {}).get("idUsuario", None)
     # Llamar a la función incrementarcantidad para actualizar en la base de datos
     try:
         controlador_carrito.incrementarcantidad(id_det_vta, id_producto, id_carrito, id_usuario)
@@ -680,7 +683,7 @@ def actualizar_cantidad_menos():
     id_det_vta = request.form.get('id_det_vta')
     id_producto = request.form.get('id_producto')
     id_carrito = request.form.get('id_carrito')
-    id_usuario = 1
+    id_usuario = session.get("usuario", {}).get("idUsuario", None)
     # Llamar a la función incrementarcantidad para actualizar en la base de datos
     try:
         controlador_carrito.disminuircantidad(id_det_vta, id_producto, id_carrito, id_usuario)
@@ -695,7 +698,7 @@ def finalizarCompra():
     id_carrito = request.form['id_carrito']
     id_ciudad = request.form['id_distrito']
     direccion = request.form['direcc']
-    id_usuario = 1
+    id_usuario = session.get("usuario", {}).get("idUsuario", None)
     # Llamar a la función incrementarcantidad para actualizar en la base de datos
     try:
         controlador_carrito.finalizarCompra_bd(id_carrito, id_ciudad, direccion, id_usuario)
