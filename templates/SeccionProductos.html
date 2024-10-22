@@ -185,7 +185,7 @@
                                  alt="heart">
                         </div>
                             <a href="{{url_for('detalle_producto', id=producto[0])}}">
-                                        {% if usuario %}
+                                          {% if usuario %}
                                         {% if producto[0] in favoritos %}
                                             <button class="btn p-0 d-flex align-items-center justify-content-center py-0 py-lg-3"
                                                     cliente-id="{{ usuario['idUsuario'] }}"
