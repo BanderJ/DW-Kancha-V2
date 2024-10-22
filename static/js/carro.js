@@ -1,62 +1,44 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const formsMas = document.querySelectorAll("form[action*='actualizar_cantidad_mas']");
-    const formsMenos = document.querySelectorAll("form[action*='actualizar_cantidad_menos']");
-  
-    // Añadir evento de submit para el botón de "incrementar" cantidad
-    formsMas.forEach(form => {
-      form.addEventListener("submit", function (event) {
-        event.preventDefault();
-        actualizarCantidad(form, 'mas');
-      });
+function actualizarCantidad(idProducto, idProducto, idCarrito, accion) {
+    const cantidadSpan = document.getElementById(`cantidad-${idProducto}`);
+    const subtotalSpan = document.getElementById(`subtotal-${idProducto}`);
+    const cantidadActual = parseInt(cantidadSpan.textContent);
+
+    // Crear el FormData para enviar al servidor
+    const formData = new FormData();
+    formData.append('id_producto', idProducto);
+    formData.append('id_carrito', idCarrito);
+    formData.append('accion', accion);  // 'mas' o 'menos'
+
+    fetch('/actualizar_cantidad', {  // Ajusta el endpoint
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            // Mostrar modal con mensaje de error si hay
+            mostrarModalError(data.error);
+        } else {
+            // Actualizar la cantidad y el subtotal en el frontend
+            cantidadSpan.textContent = data.nueva_cantidad;
+            subtotalSpan.textContent = (data.precio_unitario * data.nueva_cantidad).toFixed(2);
+            actualizarTotalCarrito();
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function mostrarModalError(mensaje) {
+    const modalErrorBody = document.getElementById('modalErrorCantidadBody');
+    modalErrorBody.textContent = mensaje;
+    const modal = new bootstrap.Modal(document.getElementById('modalErrorCantidad'));
+    modal.show();
+}
+
+function actualizarTotalCarrito() {
+    let total = 0;
+    document.querySelectorAll('span[id^="subtotal-"]').forEach(subtotalSpan => {
+        total += parseFloat(subtotalSpan.textContent);
     });
-  
-    // Añadir evento de submit para el botón de "disminuir" cantidad
-    formsMenos.forEach(form => {
-      form.addEventListener("submit", function (event) {
-        event.preventDefault();
-        actualizarCantidad(form, 'menos');
-      });
-    });
-  
-    // Función para manejar la actualización de la cantidad
-    function actualizarCantidad(form, tipo) {
-      const formData = new FormData(form);
-      const url = form.action;
-  
-      // Llamada a la API para actualizar la cantidad
-      fetch(url, {
-        method: "POST",
-        body: formData,
-      })
-        .then(response => response.json())
-        .then(result => {
-          if (result.error) {
-            // Mostrar el modal de error con el mensaje recibido
-            mostrarModalError(result.error);
-          } else {
-            // Actualizamos la cantidad en el DOM
-            const cantidadElem = tipo === 'mas' ? form.previousElementSibling : form.nextElementSibling;
-            cantidadElem.textContent = result.nueva_cantidad;
-  
-            // Actualizar subtotal si es necesario
-            const precioElem = form.closest('tr').querySelector('.precio');
-            const subtotalElem = form.closest('tr').querySelector('.subtotal');
-            const nuevoSubtotal = result.nueva_cantidad * parseFloat(precioElem.textContent);
-            subtotalElem.textContent = nuevoSubtotal.toFixed(2); // Actualiza el subtotal
-          }
-        })
-        .catch(error => {
-          console.error("Error al actualizar la cantidad:", error);
-        });
-    }
-  
-    // Función para mostrar el modal con el mensaje de error
-    function mostrarModalError(mensaje) {
-      const modalBody = document.getElementById("modalErrorCantidadBody");
-      modalBody.textContent = mensaje; // Insertar el mensaje en el modal
-  
-      const modal = new bootstrap.Modal(document.getElementById("modalErrorCantidad"));
-      modal.show(); // Mostrar el modal
-    }
-  });
-  
+    document.getElementById('total-carrito').textContent = total.toFixed(2);
+}

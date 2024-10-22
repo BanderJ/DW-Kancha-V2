@@ -683,24 +683,15 @@ def actualizar_cantidad_mas():
     id_carrito = request.form.get('id_carrito')
     id_usuario = session.get("usuario", {}).get("idUsuario", None)
 
-    try:
-        # Obtener el stock disponible para este producto
-        stock_disponible = controlador_carrito.obtener_stock_producto(id_producto)
+    resultado = controlador_carrito.incrementarcantidad(id_det_vta, id_producto, id_carrito, id_usuario)
 
-        # Obtener la cantidad actual
-        cantidad_actual = controlador_carrito.obtener_cantidad_actual(id_det_vta)
-
-        # Verificar si al incrementar se supera el stock disponible
-        if cantidad_actual + 1 > stock_disponible:
-            return jsonify({"error": "La cantidad no puede exceder el stock disponible."}), 400
-
-        # Incrementar cantidad en la base de datos
-        controlador_carrito.incrementarcantidad(id_det_vta, id_producto, id_carrito, id_usuario)
-
-        # Devolver la nueva cantidad
-        return jsonify({"nueva_cantidad": cantidad_actual + 1}), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    if "error" in resultado:
+        return jsonify({"error": resultado["error"]}), 400
+    else:
+        return jsonify({
+            "nueva_cantidad": resultado["nueva_cantidad"],
+            "nuevo_subtotal": resultado["nuevo_subtotal"]
+        }), 200
 
 @app.route('/actualizar_cantidad_menos', methods=['POST'])
 def actualizar_cantidad_menos():
@@ -709,21 +700,74 @@ def actualizar_cantidad_menos():
     id_carrito = request.form.get('id_carrito')
     id_usuario = session.get("usuario", {}).get("idUsuario", None)
 
+    resultado = controlador_carrito.disminuircantidad(id_det_vta, id_producto, id_carrito, id_usuario)
+
+    if "error" in resultado:
+        return jsonify({"error": resultado["error"]}), 400
+    else:
+        return jsonify({
+            "nueva_cantidad": resultado["nueva_cantidad"],
+            "nuevo_subtotal": resultado["nuevo_subtotal"]
+        }), 200
+
+@app.route('/actualizar_cantidad', methods=['POST'])
+def actualizar_cantidad():
+    id_producto = request.form.get('id_producto')
+    id_carrito = request.form.get('id_carrito')
+    accion = request.form.get('accion')  # 'mas' o 'menos'
+
+    # Lógica para obtener la cantidad actual y stock disponible
+    conexion = conectarse()
     try:
-        # Obtener la cantidad actual
-        cantidad_actual = controlador_carrito.obtener_cantidad_actual(id_det_vta)
+        with conexion.cursor() as cursor:
+            # Obtener la cantidad actual del detalle de venta
+            cursor.execute("SELECT cantidad FROM detalle_venta WHERE idProducto = %s AND idCarrito = %s", (id_producto, id_carrito))
+            cantidad_actual = cursor.fetchone()[0]
 
-        # Verificar si al disminuir la cantidad es menor que 1
-        if cantidad_actual - 1 < 1:
-            return jsonify({"error": "La cantidad no puede ser menor a 1."}), 400
+            # Obtener el stock disponible del producto
+            cursor.execute("SELECT stock FROM producto WHERE idProducto = %s", (id_producto,))
+            stock_disponible = cursor.fetchone()[0]
 
-        # Disminuir cantidad en la base de datos
-        controlador_carrito.disminuircantidad(id_det_vta, id_producto, id_carrito, id_usuario)
+            # Verificar la acción
+            if accion == 'mas':
+                if cantidad_actual < stock_disponible:
+                    nueva_cantidad = cantidad_actual + 1
+                else:
+                    return jsonify({'error': 'No se puede agregar más. Stock insuficiente.'}), 400
+            elif accion == 'menos':
+                if cantidad_actual > 1:
+                    nueva_cantidad = cantidad_actual - 1
+                else:
+                    return jsonify({'error': 'La cantidad mínima es 1.'}), 400
+            else:
+                return jsonify({'error': 'Acción no válida.'}), 400
 
-        # Devolver la nueva cantidad
-        return jsonify({"nueva_cantidad": cantidad_actual - 1}), 200
+            # Actualizar la cantidad en la base de datos
+            cursor.execute("""
+                UPDATE detalle_venta 
+                SET cantidad = %s 
+                WHERE idProducto = %s AND idCarrito = %s
+            """, (nueva_cantidad, id_producto, id_carrito))
+
+            # Recalcular el subtotal del carrito
+            cursor.execute("CALL actualizar_subtotal_carrito(%s)", (id_carrito,))
+            conexion.commit()
+
+            # Devolver la nueva cantidad y el precio del producto para actualizar el frontend
+            cursor.execute("SELECT precio FROM producto WHERE idProducto = %s", (id_producto,))
+            precio_unitario = cursor.fetchone()[0]
+
+            return jsonify({
+                'nueva_cantidad': nueva_cantidad,
+                'precio_unitario': precio_unitario
+            })
+
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        conexion.rollback()
+        return jsonify({'error': str(e)}), 500
+
+    finally:
+        conexion.close()
 
 
 @app.route('/finalizarcompra', methods=['POST'])

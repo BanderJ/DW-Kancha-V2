@@ -51,37 +51,40 @@
         <th style="width: 5%"></th>
       </tr>
     </thead>
+
     <tbody>
       {% for detalle in lista %}
-      <tr>
-        <td>{{detalle[2]}} Talla:{{detalle[3]}}</td>
+      <tr id="producto-{{detalle[9]}}">
+        <td>{{ detalle[2] }} Talla:{{ detalle[3] }}</td>
         <td>
           <div class="d-flex justify-content-center align-items-center">
-            <form
-              action="{{ url_for('actualizar_cantidad_menos') }}"
-              method="POST"
+            <!-- Botón para disminuir cantidad -->
+            <button
+              id="menos-{{detalle[9]}}"
+              onclick="actualizarCantidad('{{detalle[9]}}', '{{detalle[9]}}', '{{detalle[8]}}', 'menos')"
+              class="btn btn-sm"
+              style="color: white; background-color: rgb(255, 29, 37)"
             >
-              <input type="hidden" name="id_det_vta" value="{{detalle[0]}}" />
-              <input type="hidden" name="id_producto" value="{{detalle[9]}}" />
-              <input type="hidden" name="id_carrito" value="{{detalle[8]}}" />
-              <button id="menos" class="btn btn-sm" style="color: white; background-color: rgb(255, 29, 37);">-</button>
-            </form>
-            <span id="cantidad-{{detalle[0]}}" class="mx-2"
-              >{{detalle[5]}}</span
+              -
+            </button>
+
+            <!-- Span para mostrar cantidad actual -->
+            <span id="cantidad-{{detalle[9]}}" class="mx-2"
+              >{{ detalle[5] }}</span
             >
-            <form
-              action="{{ url_for('actualizar_cantidad_mas') }}"
-              method="POST"
+
+            <!-- Botón para aumentar cantidad -->
+            <button
+              id="mas-{{detalle[9]}}"
+              onclick="actualizarCantidad('{{detalle[9]}}', '{{detalle[9]}}', '{{detalle[8]}}', 'mas')"
+              class="btn btn-sm"
+              style="color: white; background-color: rgb(255, 29, 37)"
             >
-              <input type="hidden" name="id_det_vta" value="{{detalle[0]}}" />
-              <input type="hidden" name="id_producto" value="{{detalle[9]}}" />
-              <input type="hidden" name="id_carrito" value="{{detalle[8]}}" />
-              <button id="mas" class="btn btn-sm" style="color: white; background-color: rgb(255, 29, 37);">+</button>
-            </form>
+              +
+            </button>
           </div>
         </td>
-        <td>{{detalle[4]}}</td>
-        <!-- Asegúrate de tener las imágenes en un tamaño adecuado -->
+        <td>{{ detalle[4] }}</td>
         <td>
           <img
             id="imgcarrito"
@@ -90,8 +93,12 @@
             style="max-width: 100px; height: auto"
           />
         </td>
-        <!-- Aquí hacemos la operación de multiplicación directamente en Jinja -->
-        <td>{{ detalle[4] * detalle[5] }}</td>
+        <!-- Subtotal, se actualizará dinámicamente -->
+        <td>
+          <span id="subtotal-{{detalle[9]}}"
+            >{{ detalle[4] * detalle[5] }}</span
+          >
+        </td>
         <td>
           <form action="{{ url_for('eliminar_detalle_venta') }}" method="POST">
             <input type="hidden" name="id_det_vta" value="{{detalle[0]}}" />
