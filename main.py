@@ -14,6 +14,9 @@ from flask import session
 import hashlib
 import os
 import controlador_favoritos
+import datetime
+import controlador_carrito
+import controlador_ubicacion
 
 def crearHashSecret():
     datos_aleatorios = os.urandom(16)
