@@ -1,4 +1,4 @@
-from flask import Flask,render_template,request,jsonify, redirect, flash, url_for
+from flask import Flask,render_template,request,jsonify, redirect, flash, url_for, session
 from authlib.integrations.flask_client import OAuth
 from flask_sqlalchemy import SQLAlchemy
 import controlador_usuario
@@ -11,7 +11,6 @@ import controlador_productos
 import controlador_carrito
 import controlador_ubicacion
 from bd import conectarse
-from flask import session
 #Para generar claves en hash aleatoriassssss
 import hashlib
 import os
@@ -22,7 +21,7 @@ import controlador_ubicacion
 from datetime import datetime
 
 def crearHashSecret():
-    datos_aleatorios = os.urandom(16)
+    datos_aleatorios = os.urandom(16) 
     hash_objeto = hashlib.sha256(datos_aleatorios)
     return hash_objeto.hexdigest()
 
