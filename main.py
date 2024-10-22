@@ -8,6 +8,8 @@ import controlador_categoria
 import controlador_marca
 import controlador_modelo
 import controlador_productos
+import controlador_carrito
+import controlador_ubicacion
 from bd import conectarse
 from flask import session
 #Para generar claves en hash aleatoriassssss
@@ -612,11 +614,102 @@ def detalle_producto(id):
     )
 
 
+
 # @app.route('/producto/<int:id>')
 # def detalle_producto(id):
 #     # Obtener el disco por ID
 #     producto = controlador_productos.obtener_producto_por_id(id)
 #     return render_template("detalle_producto.html", producto=producto)
+
+
+@app.route('/anadir_carrito', methods=['POST'])
+def anadir_carrito():
+    # Obtener los datos del formulario
+    id_producto = request.form.get('id_producto')
+    nombre = request.form.get('nombre')
+    precio = request.form.get('precio')
+    cantidad = request.form.get('cantidad')
+    id_usuario = 1  # ID del usuario será 1 siempre
+    # Llamar a la función de insertar detalle de venta
+    controlador_carrito.insertar_detalle_venta(id_usuario, id_producto, cantidad, precio)
+    # Obtener detalles del producto nuevamente para mostrar al usuario
+    producto = controlador_productos.obtener_producto_por_id(id_producto)
+    # Asegúrate de pasar 'subtotal' y 'total' con valores predeterminados para evitar errores
+    return render_template("detalle_producto.html", producto=producto)
+
+
+@app.route('/carrito')
+def mostrar_carrito():
+    id_usuario = 1  # ID de usuario fijo por ahora, se puede cambiar dinámicamente si tienes manejo de sesiones
+    detalles_carrito= controlador_carrito.obtener_detalles_carrito(1);
+    return render_template("carro.html", lista=detalles_carrito)
+
+@app.route('/eliminar_detalle_venta', methods=['POST'])
+def eliminar_detalle_venta():
+    id_det_vta = request.form.get('id_det_vta')
+    id_producto = request.form.get('id_producto')
+    id_carrito = request.form.get('id_carrito')
+    id_usuario = 1
+
+    # Llamar a la función para eliminar el detalle de venta
+    controlador_carrito.eliminar_detalle_venta_bd(id_det_vta, id_producto, id_carrito, id_usuario)
+
+    # Redirigir nuevamente a la página del carrito
+    return redirect(url_for('mostrar_carrito'))
+
+@app.route('/actualizar_cantidad_mas', methods=['POST'])
+def actualizar_cantidad_mas():
+    # Obtener los datos enviados desde el frontend
+    id_det_vta = request.form.get('id_det_vta')
+    id_producto = request.form.get('id_producto')
+    id_carrito = request.form.get('id_carrito')
+    id_usuario = 1
+    # Llamar a la función incrementarcantidad para actualizar en la base de datos
+    try:
+        controlador_carrito.incrementarcantidad(id_det_vta, id_producto, id_carrito, id_usuario)
+        return redirect(url_for('mostrar_carrito'))
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/actualizar_cantidad_menos', methods=['POST'])
+def actualizar_cantidad_menos():
+    # Obtener los datos enviados desde el frontend
+    id_det_vta = request.form.get('id_det_vta')
+    id_producto = request.form.get('id_producto')
+    id_carrito = request.form.get('id_carrito')
+    id_usuario = 1
+    # Llamar a la función incrementarcantidad para actualizar en la base de datos
+    try:
+        controlador_carrito.disminuircantidad(id_det_vta, id_producto, id_carrito, id_usuario)
+        return redirect(url_for('mostrar_carrito'))
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/finalizarcompra', methods=['POST'])
+def finalizarCompra():
+    # Obtener los datos enviados desde el frontend
+    id_carrito = request.form['id_carrito']
+    id_ciudad = request.form['id_distrito']
+    direccion = request.form['direcc']
+    id_usuario = 1
+    # Llamar a la función incrementarcantidad para actualizar en la base de datos
+    try:
+        controlador_carrito.finalizarCompra_bd(id_carrito, id_ciudad, direccion, id_usuario)
+        return redirect(url_for('inicio'))
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/get_provincias/<int:departamento_id>')
+def get_provincias(departamento_id):
+    provincias = controlador_ubicacion.obtener_provincia_por_departamento(departamento_id)
+    return jsonify(provincias)
+
+@app.route('/get_distritos/<int:provincia_id>')
+def get_distritos(provincia_id):
+    distritos = controlador_ubicacion.obtener_distritos_por_provincia(provincia_id)
+    return jsonify(distritos)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
