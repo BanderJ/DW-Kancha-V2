@@ -1,2 +1,8 @@
-
-
+tbody td {
+    vertical-align: middle; /* Alineación vertical */
+    text-align: center; /* Alineación horizontal */
+  }
+  .d-flex {
+    justify-content: center; /* Alinea horizontalmente el contenido flex */
+    align-items: center; /* Alinea verticalmente el contenido flex */
+  }

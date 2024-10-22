@@ -678,29 +678,50 @@ def eliminar_detalle_venta():
 
 @app.route('/actualizar_cantidad_mas', methods=['POST'])
 def actualizar_cantidad_mas():
-    # Obtener los datos enviados desde el frontend
     id_det_vta = request.form.get('id_det_vta')
     id_producto = request.form.get('id_producto')
     id_carrito = request.form.get('id_carrito')
     id_usuario = session.get("usuario", {}).get("idUsuario", None)
-    # Llamar a la función incrementarcantidad para actualizar en la base de datos
+
     try:
+        # Obtener el stock disponible para este producto
+        stock_disponible = controlador_carrito.obtener_stock_producto(id_producto)
+
+        # Obtener la cantidad actual
+        cantidad_actual = controlador_carrito.obtener_cantidad_actual(id_det_vta)
+
+        # Verificar si al incrementar se supera el stock disponible
+        if cantidad_actual + 1 > stock_disponible:
+            return jsonify({"error": "La cantidad no puede exceder el stock disponible."}), 400
+
+        # Incrementar cantidad en la base de datos
         controlador_carrito.incrementarcantidad(id_det_vta, id_producto, id_carrito, id_usuario)
-        return redirect(url_for('mostrar_carrito'))
+
+        # Devolver la nueva cantidad
+        return jsonify({"nueva_cantidad": cantidad_actual + 1}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 @app.route('/actualizar_cantidad_menos', methods=['POST'])
 def actualizar_cantidad_menos():
-    # Obtener los datos enviados desde el frontend
     id_det_vta = request.form.get('id_det_vta')
     id_producto = request.form.get('id_producto')
     id_carrito = request.form.get('id_carrito')
     id_usuario = session.get("usuario", {}).get("idUsuario", None)
-    # Llamar a la función incrementarcantidad para actualizar en la base de datos
+
     try:
+        # Obtener la cantidad actual
+        cantidad_actual = controlador_carrito.obtener_cantidad_actual(id_det_vta)
+
+        # Verificar si al disminuir la cantidad es menor que 1
+        if cantidad_actual - 1 < 1:
+            return jsonify({"error": "La cantidad no puede ser menor a 1."}), 400
+
+        # Disminuir cantidad en la base de datos
         controlador_carrito.disminuircantidad(id_det_vta, id_producto, id_carrito, id_usuario)
-        return redirect(url_for('mostrar_carrito'))
+
+        # Devolver la nueva cantidad
+        return jsonify({"nueva_cantidad": cantidad_actual - 1}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
