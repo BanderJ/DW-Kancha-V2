@@ -645,7 +645,7 @@ def anadir_carrito():
     nombre = request.form.get('nombre')
     precio = request.form.get('precio')
     cantidad = request.form.get('cantidad')
-    id_usuario = 1  # ID del usuario será 1 siempre
+    id_usuario = session.get("usuario", {}).get("idUsuario", None)
     # Llamar a la función de insertar detalle de venta
     controlador_carrito.insertar_detalle_venta(id_usuario, id_producto, cantidad, precio)
     # Obtener detalles del producto nuevamente para mostrar al usuario
