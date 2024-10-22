@@ -215,7 +215,7 @@ def registrarUsuario():
 
 @app.route("/perfil")
 def mostrarPerfil():
-    datos = session.get("usuario", {"nombre":"Invitado","apellidos":"Invitado","correo":"example@email.com","numdoc":"11111111"})
+    datos = session.get("usuario", {"nombre":"Invitado","apellidos":"Invitado","correo":"example@email.com","numdoc":"11111111","fechaNac":"20/10/2000","sexo":"M","telefono":"999777666"})
     fecha_nac = datetime.strptime(datos["fechaNac"], "%a, %d %b %Y %H:%M:%S %Z")
     formato_fecha = fecha_nac.strftime("%d/%m/%Y")
     print(datos)
