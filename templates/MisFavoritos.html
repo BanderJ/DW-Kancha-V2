@@ -31,9 +31,6 @@
   <h4 class="titulo2 text-center mb-5">Mis Favoritos</h4>
   <div class="container-fluid px-0">
     <div class="carousel">
-      <button id="prevButton" class="nav left">
-        <img src="{{ url_for('static', filename='img/circle-arrow-left-solid.svg') }}" alt="Izquierda">
-      </button>
       <div class="col-md-9">
         <div class="row" id="productContainer">
           {% for favorito in favoritos %}
@@ -72,9 +69,6 @@
           {% endfor %}
         </div>
       </div>
-      <button id="nextButton" class="nav right">
-        <img src="{{ url_for('static', filename='img/circle-arrow-right-solid.svg') }}" alt="Derecha">
-      </button>
     </div>
     <div class="indicators"></div>
   </div>
