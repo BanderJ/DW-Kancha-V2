@@ -5,17 +5,27 @@ Marcas
 {% endblock %}
 
 {% block mantenimiento %}
-
-<section class="container my-5 section">
+<section class="section">
     <div class="columns">
         <div class="column">
             <h3 class="is-size-3">Marcas</h3>
             <a href="{{ url_for('formulario_agregar_marca') }}" class="button is-success">Agregar</a>
+            <!-- Mensajes de éxito o error -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div>
+                        {% for category, message in messages %}
+                            <div class="notification is-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
             <table class="table">
                 <thead>
                     <tr>
                         <th>Id</th>
                         <th>Nombre</th>
+                        <th>Imagen</th>
                         <th>Editar</th>
                         <th>Eliminar</th>
                     </tr>
@@ -26,7 +36,9 @@ Marcas
                         <td>{{ marca[0] }}</td>
                         <td>{{ marca[1] }}</td>
                         <td>
-                            {# Pasar el id (lo que hay en marca[0]) #}
+                            <img src="{{ url_for('static', filename='img/' + marca[2]) }}" width="50" alt="Imagen de {{ marca[1] }}">
+                        </td>
+                        <td>
                             <a href="{{ url_for('formulario_editar_marca', id=marca[0]) }}">
                                 <button class="btn bg-azul-k l-blanco-k">Editar</button>
                             </a>
@@ -34,7 +46,7 @@ Marcas
                         <td>
                             <form action="{{ url_for('eliminar_marca') }}" method="POST">
                                 <input type="hidden" name="id" value="{{ marca[0] }}">
-                                <button class="btn bg-rojo-k l-blanco-k">Eliminar</button>
+                                <button class="btn btn-danger">Eliminar</button>
                             </form>
                         </td>
                     </tr>
@@ -44,5 +56,4 @@ Marcas
         </div>
     </div>
 </section>
-
 {% endblock %}
