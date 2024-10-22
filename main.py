@@ -9,6 +9,7 @@ import controlador_marca
 import controlador_modelo
 import controlador_productos
 import controlador_carrito
+import controlador_ubicacion
 import datetime
 from bd import conectarse
 from flask import session
@@ -216,7 +217,8 @@ def redirigirPago():
     carritoid= controlador_carrito.obtener_id_carrito(1)
     lista= controlador_carrito.obtener_detalles_carrito(1)
     total= controlador_carrito.obtener_total_carrito(1)
-    return render_template('Pago(1).html', lista=lista, total=total, id_carrito=carritoid)
+    departamentos=controlador_ubicacion.obtener_departamentos()
+    return render_template('Pago(1).html', lista=lista, total=total, id_carrito=carritoid, departamentos=departamentos)
 
 @app.route('/MisPedidos')
 def redirigirPedidos():
@@ -582,7 +584,7 @@ def actualizar_cantidad_mas():
         return redirect(url_for('mostrar_carrito'))
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
+
 @app.route('/actualizar_cantidad_menos', methods=['POST'])
 def actualizar_cantidad_menos():
     # Obtener los datos enviados desde el frontend
@@ -602,7 +604,7 @@ def actualizar_cantidad_menos():
 def finalizarCompra():
     # Obtener los datos enviados desde el frontend
     id_carrito = request.form['id_carrito']
-    id_ciudad = 1
+    id_ciudad = request.form['id_distrito']
     direccion = request.form['direcc']
     id_usuario = 1
     # Llamar a la función incrementarcantidad para actualizar en la base de datos
@@ -612,6 +614,15 @@ def finalizarCompra():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route('/get_provincias/<int:departamento_id>')
+def get_provincias(departamento_id):
+    provincias = controlador_ubicacion.obtener_provincia_por_departamento(departamento_id)
+    return jsonify(provincias)
+
+@app.route('/get_distritos/<int:provincia_id>')
+def get_distritos(provincia_id):
+    distritos = controlador_ubicacion.obtener_distritos_por_provincia(provincia_id)
+    return jsonify(distritos)
 
 
 if __name__ == "__main__":

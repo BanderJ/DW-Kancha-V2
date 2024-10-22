@@ -9,7 +9,7 @@ def insertar_detalle_venta(id_usuario, id_producto, cantidad, precio):
         cursor.execute("""
             CALL InsertarDetalleVenta(%s, %s, %s, %s);
         """, (id_usuario, id_producto, cantidad, precio))
-        
+
         # Confirmar los cambios en la base de datos
         db.commit()
         print("Inserción exitosa")

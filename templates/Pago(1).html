@@ -1,8 +1,10 @@
-{% extends "maestra.html" %} {% block titulo %}Pago{% endblock %} {% block link
-%}
+{% extends "maestra.html" %} 
+{% block titulo %}Pago{% endblock %} 
+{% block link %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/Pago.css') }}" />
 <link rel="stylesheet" href="{{ url_for('static', filename='css/titulo.css') }}" />
-{% endblock %} {% block contenido %}
+{% endblock %} 
+{% block contenido %}
 <main class="mt-4">
     <div class="row m-0 py-2">
         <div class="col p-0"></div>
@@ -40,7 +42,7 @@
                     <img src="{{ url_for('static', filename='img/usuario.svg') }}" alt="" class="imgTitulo" />
                 </p>
             </div>
-
+            
             <div class="mb-5">
                 <div class="row">
                     <div class="col">
@@ -77,19 +79,13 @@
                         <form action="{{ url_for('finalizarCompra')}}" method="POST">
                             <input type="hidden" name="id_carrito" value="{{id_carrito}}">
                             <div class="accordion-item">
-                                <h2
-                                    class="acordionEncabezado accordion-header d-flex justify-content-between align-items-center">
+                                <h2 class="acordionEncabezado accordion-header d-flex justify-content-between align-items-center">
                                     <span id="acordiontitle">Contacto</span>
-                                    <img src="{{ url_for('static', filename='img/edit-white.svg') }}" alt="toggle"
-                                        class="toggle-img d-none" id="toggleOne" data-bs-toggle="collapse"
-                                        data-bs-target="#collapseOne" aria-expanded="true"
-                                        aria-controls="collapseOne" />
+                                    <img src="{{ url_for('static', filename='img/edit-white.svg') }}" alt="toggle" class="toggle-img d-none" id="toggleOne" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" />
                                 </h2>
-                                <div id="collapseOne" class="accordion-collapse collapse show"
-                                    data-bs-parent="#accordionExample">
+                                <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
                                         <div class="row">
-                                            
                                             <div class="col-12">
                                                 <label for="correo">Correo</label><br />
                                                 <input style="width: 100%" type="text" name="correo" id="correo" />
@@ -103,21 +99,18 @@
                                             </div>
                                             <div class="col">
                                                 <label for="apellidos">Apellidos</label> <br />
-                                                <input style="width: 100%" type="text" name="apellidos"
-                                                    id="apellidos" />
+                                                <input style="width: 100%" type="text" name="apellidos" id="apellidos" />
                                             </div>
                                         </div>
                                         <br />
                                         <div class="row">
                                             <div class="col">
                                                 <label for="dni">Documento de identidad</label> <br />
-                                                <input inputmode="numeric" style="width: 100%" type="text" name="dni"
-                                                    id="dni" />
+                                                <input inputmode="numeric" style="width: 100%" type="text" name="dni" id="dni" />
                                             </div>
                                             <div class="col">
                                                 <label for="movil">Movil</label> <br />
-                                                <input inputmode="numeric" style="width: 100%" type="text" name="movil"
-                                                    id="movil" />
+                                                <input inputmode="numeric" style="width: 100%" type="text" name="movil" id="movil" />
                                             </div>
                                         </div>
                                         <br />
@@ -131,37 +124,42 @@
                                     </div>
                                 </div>
                             </div>
+
                             <!-- Segundo paso: Envío -->
                             <div class="accordion-item">
-                                <h2
-                                    class="acordionEncabezado accordion-header d-flex justify-content-between align-items-center">
+                                <h2 class="acordionEncabezado accordion-header d-flex justify-content-between align-items-center">
                                     <span id="acordiontitle">Envio</span>
-                                    <img src="{{ url_for('static', filename='img/edit-white.svg') }}" alt="toggle"
-                                        class="toggle-img d-none" id="toggleTwo" data-bs-toggle="collapse"
-                                        data-bs-target="#collapseTwo" aria-expanded="false"
-                                        aria-controls="collapseTwo" />
+                                    <img src="{{ url_for('static', filename='img/edit-white.svg') }}" alt="toggle" class="toggle-img d-none" id="toggleTwo" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" />
                                 </h2>
-                                <div id="collapseTwo" class="accordion-collapse collapse"
-                                    data-bs-parent="#accordionExample">
+                                <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
                                         <div class="row">
-                                            <div class="col-12">
-                                                <label for="depart">Departamento</label><br />
-                                                <input style="width: 100%" type="text" name="depart" id="depart" />
+                                            <div class="col-lg-6 col-md-6 col-sm-12 dataAddress">
+                                                <label class="form-label">Departamento:</label>
+                                                <select class="form-select" id="id_departamento" name="id_departamento" aria-label="Default select example" onchange="loadProvincias()">
+                                                    <option selected>--Seleccione su departamento--</option>
+                                                    {% for departamento in departamentos %}
+                                                        <option value="{{departamento[0]}}">{{departamento[1]}}</option>
+                                                    {% endfor %}
+                                                </select>
                                             </div>
                                         </div>
                                         <br />
                                         <div class="row">
-                                            <div class="col-12">
-                                                <label for="prov">Provincia</label><br />
-                                                <input style="width: 100%" type="text" name="prov" id="prov" />
+                                            <div class="col-lg-6 col-md-6 col-sm-12 dataAddress">
+                                                <label class="form-label">Provincia:</label>
+                                                <select class="form-select" id="id_provincia" name="id_provincia" aria-label="Default select example" onchange="loadDistritos()">
+                                                    <option selected>--Seleccione su provincia--</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <br />
                                         <div class="row">
-                                            <div class="col-12">
-                                                <label for="dist">Distrito</label><br />
-                                                <input style="width: 100%" type="text" name="dist" id="dist" />
+                                            <div class="col-lg-6 col-md-6 col-sm-12 dataAddress">
+                                                <label class="form-label">Distrito:</label>
+                                                <select class="form-select" id="id_distrito" name="id_distrito" aria-label="Default select example">
+                                                    <option selected>--Seleccione su distrito--</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <br />
@@ -182,18 +180,14 @@
                                     </div>
                                 </div>
                             </div>
+
                             <!-- Tercer paso: Pago -->
                             <div class="accordion-item">
-                                <h2
-                                    class="acordionEncabezado accordion-header d-flex justify-content-between align-items-center">
+                                <h2 class="acordionEncabezado accordion-header d-flex justify-content-between align-items-center">
                                     <span id="acordiontitle">Pago</span>
-                                    <img src="{{ url_for('static', filename='img/edit-white.svg') }}" alt="toggle"
-                                        class="toggle-img d-none" id="toggleThree" data-bs-toggle="collapse"
-                                        data-bs-target="#collapseThree" aria-expanded="false"
-                                        aria-controls="collapseThree" />
+                                    <img src="{{ url_for('static', filename='img/edit-white.svg') }}" alt="toggle" class="toggle-img d-none" id="toggleThree" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" />
                                 </h2>
-                                <div id="collapseThree" class="accordion-collapse collapse"
-                                    data-bs-parent="#accordionExample">
+                                <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
                                         <div class="row">
                                             <div class="col">
@@ -296,69 +290,87 @@
         <div class="col p-0"></div>
     </div>
 </main>
-{% endblock %} {% block js %}
+{% endblock %} 
+
+{% block js %}
 <script src="{{ url_for('static', filename='js/scriptPago.js') }}"></script>
-<!-- <script>
-   document.addEventListener("DOMContentLoaded", function () {
-    let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+<script>
+    function clearOptions(selectElement, defaultText) {
+        selectElement.innerHTML = `<option selected>${defaultText}</option>`;
+    }
 
-    const resumenCarritoEl = document.getElementById("resumen-carrito");
-    const totalCompraEl = document.getElementById("total-compra");
+    function loadProvincias() {
+        var departamento_id = document.getElementById("id_departamento").value;
 
-    const costoEnvio = 20.0; // Costo de envío
-    const umbralEnvioGratis = 500.0; // Umbral para envío gratis
-    let totalCompra = 0;
-
-    // Función para renderizar los productos del carrito en el resumen de compra
-    function renderizarResumenCarrito() {
-        resumenCarritoEl.innerHTML = ""; // Limpiar el contenido previo
-
-        // Verificar si el carrito está vacío
-        if (carrito.length === 0) {
-            resumenCarritoEl.innerHTML = "<p>No hay productos en el carrito.</p>";
-            totalCompraEl.innerText = "0.00";
+        if (!departamento_id) {
+            console.warn("Por favor, selecciona un departamento válido.");
             return;
         }
 
-        // Iterar sobre los productos en el carrito
-        carrito.forEach((producto) => {
-            const productoHTML = `
-                <div class="tarjetaprod m-2 row d-flex border">
-                    <div class="col">
-                        <img class="imgdetalle" src="${producto.imagen}" alt="${producto.nombre}" />
-                    </div>
-                    <div class="col">
-                        <p>${producto.nombre}</p>
-                        <p>Talla: ${producto.talla}</p>
-                        <p class="precio text-end"><b>S/${producto.precio.toFixed(2)}</b></p>
-                    </div>
-                    <p id="cantidad" style="background-color: rgb(10, 5, 5);">${producto.cantidad}</p>
-                </div>
-            `;
-            resumenCarritoEl.insertAdjacentHTML("beforeend", productoHTML);
+        fetch(`/get_provincias/${departamento_id}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Error en la solicitud");
+            }
+            return response.json();
+        })
+        .then(data => {
+            var id_provincia = document.getElementById("id_provincia");
+            var id_distrito = document.getElementById("id_distrito");
 
-            // Actualizar el total de la compra
-            totalCompra += producto.precio * producto.cantidad;
+            clearOptions(id_provincia, '--Seleccione su provincia--');
+            clearOptions(id_distrito, '--Seleccione su distrito--');
+
+            if (data.length === 0) {
+                console.warn("No se encontraron provincias para este departamento.");
+            } else {
+                data.forEach(function(provincia) {
+                    var option = document.createElement("option");
+                    option.value = provincia[0];  
+                    option.text = provincia[1];   
+                    id_provincia.appendChild(option);
+                });
+            }
+        })
+        .catch(error => {
+            console.error("Hubo un problema con la solicitud de provincias:", error);
         });
-
-        // Si el total es menor a 500, agregar el costo de envío
-        if (totalCompra < umbralEnvioGratis) {
-            totalCompra += costoEnvio;
-        }
-        // Mostrar el total en el HTML
-        totalCompraEl.innerText = `S/${totalCompra.toFixed(2)}`;
     }
 
-    // Llamar a la función para renderizar el carrito
-    renderizarResumenCarrito();
+    function loadDistritos() {
+        var provincia_id = document.getElementById("id_provincia").value;
 
-    // Vaciado del carrito al hacer clic en "Finalizar"
-    const finalizarBtn = document.getElementById("btn3");
-    finalizarBtn.addEventListener("click", function () {
-        // Limpiar el carrito del localStorage
-        localStorage.removeItem("carrito");
-    });
-});
-</script> -->
+        if (!provincia_id) {
+            console.warn("Por favor, selecciona una provincia válida.");
+            return;
+        }
 
+        fetch(`/get_distritos/${provincia_id}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Error en la solicitud");
+            }
+            return response.json();
+        })
+        .then(data => {
+            var id_distrito = document.getElementById("id_distrito");
+
+            clearOptions(id_distrito, '--Seleccione su distrito--');
+
+            if (data.length === 0) {
+                console.warn("No se encontraron distritos para esta provincia.");
+            } else {
+                data.forEach(function(distrito) {
+                    var option = document.createElement("option");
+                    option.value = distrito[0];  
+                    option.text = distrito[1];   
+                    id_distrito.appendChild(option);
+                });
+            }
+        })
+        .catch(error => {
+            console.error("Hubo un problema con la solicitud de distritos:", error);
+        });
+    }
+</script>
 {% endblock %}
