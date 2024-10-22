@@ -4,6 +4,8 @@
 
 {% block link %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/MisFavoritos.css') }}" />
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/SeccionProductos.css') }}">
+
 {% endblock %}
 
 {% block contenido %}
@@ -11,7 +13,9 @@
   <div class="row m-0 py-2">
     <div class="col-xl-9 mx-auto d-flex align-items-center p-0">
       <a href="{{ url_for('seccionProductos') }}" class="d-flex align-items-center me-2 regresar">
-        <button class="btn bg-rojo-k me-2"><img class="img-fluid" src="{{ url_for('static', filename='img/fr.svg') }}" alt=""></button>
+        <button class="btn bg-rojo-k me-2">
+          <img class="img-fluid" src="{{ url_for('static', filename='img/fr.svg') }}" alt="">
+        </button>
         <label class="l-rojo-k">Regresar</label>
       </a>
       <nav aria-label="breadcrumb">
@@ -30,8 +34,43 @@
       <button id="prevButton" class="nav left">
         <img src="{{ url_for('static', filename='img/circle-arrow-left-solid.svg') }}" alt="Izquierda">
       </button>
-      <div class="items" id="losfavoritos">
-        <!-- Los productos favoritos se insertarán aquí desde JavaScript -->
+      <div class="col-md-9">
+        <div class="row" id="productContainer">
+          {% for favorito in favoritos %}
+          <div class="col-4 p-0 px-1 extrac product-card col-md-4 col-lg-3 col-sm-6 col-6">
+              <div class="heart-container">
+                  <img src="{{ url_for('static', filename='img/corazonLleno.svg') }}" 
+                       class="heart-icon" 
+                       data-id="{{ favorito[0] }}"
+                       cliente-id="{{favorito[5]}}" 
+                       data-corazon-lleno="{{ url_for('static', filename='img/corazonLleno.svg') }}" 
+                       data-corazon-vacio="{{ url_for('static', filename='img/corazonVacio.svg') }}" 
+                       onclick="toggleFavorite(this)" 
+                       alt="heart">
+              </div>
+              <a href="{{ url_for('detalle_producto', id=favorito[0]) }}">
+                  <img class="imagen img-fluid pb-2" src="{{ url_for('static', filename='img/' + favorito[3]) }}" alt="Producto">
+              </a>
+              <div class="row">
+                  <div class="col-12 mb-1">
+                      <p>{{ favorito[4] }} {{ favorito[1] }}</p>
+                  </div>
+                  <div class="col-6 pe-0">
+                      <p class="text-start"><b>S/ {{ ((favorito[2] | float) * 0.85) | round(2) }}</b></p>
+                  </div>
+                  <div class="col-6 ps-0">
+                      <p class="text-end"><b><s>S/ {{ favorito[2] }}</s></b></p>
+                  </div>
+                  <div class="col-8 pe-0 my-1">
+                      <p class="text-start l-rojo-k"><b>S/ {{ ((favorito[2] | float) * 0.50) | round(2) }}</b></p>
+                  </div>
+                  <div class="col-4 ps-0 d-flex justify-content-end my-1">
+                      <img class="klo" src="{{ url_for('static', filename='img/logo_kancha_club.svg') }}" alt="Logo pequeño">
+                  </div>
+              </div>
+          </div>
+          {% endfor %}
+        </div>
       </div>
       <button id="nextButton" class="nav right">
         <img src="{{ url_for('static', filename='img/circle-arrow-right-solid.svg') }}" alt="Derecha">
@@ -39,7 +78,10 @@
     </div>
     <div class="indicators"></div>
   </div>
-<script>
-    const STATIC_URL = "{{ url_for('static', filename='') }}";
+  <script>
+    const corazonLleno = "{{ url_for('static', filename='img/corazonLleno.svg') }}";
+    const corazonVacio = "{{ url_for('static', filename='img/corazonVacio.svg') }}";
   </script>
+  <script src="{{ url_for('static', filename='SeccionProductos.js') }}"></script>
+</div>
 {% endblock %}

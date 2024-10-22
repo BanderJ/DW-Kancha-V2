@@ -1,81 +1,83 @@
-const productos = [
-    {
-      id: "#1",
-      imagen: `${STATIC_URL}img/foto (112).avif`,
-      nombre: "F50 Elite",
-      marca: "Adidas",
-      precio: 1709.90,
-      precioKancha: 1679.90,
-      deporte: "Fútbol",
-      genero: "Masculino",
-      color: "Blanco",
-      tipo: "Chimpunes"
-    },
-    {
-      id: "#2",
-      imagen: `${STATIC_URL}img/foto (27).avif`,
-      nombre: "KD17 'Sunrise'",
-      marca: "Puma",
-      precio: 309.00,
-      precioKancha: 289.00,
-      deporte: "Fútbol",
-      genero: "Masculino",
-      color: "Negro",
-      tipo: "Chimpunes"
-    },
-    {
-      id: "#3",
-      imagen: `${STATIC_URL}img/foto (30).avif`,
-      nombre: "KD1zxc7 'Sunrise'",
-      marca: "Puma",
-      precio: 309.00,
-      precioKancha: 289.00,
-      deporte: "Fútbol",
-      genero: "Masculino",
-      color: "Rosado",
-      tipo: "Chimpunes"
+function toggleFavorite(icon) {
+    const idProducto = icon.dataset.id; // Accede al id del producto
+    const idCliente = icon.getAttribute('cliente-id'); // Cambiar 'element' a 'icon'
+    console.log("ID del Cliente:", idCliente); // Imprimir el idCliente
+    console.log(idCliente); // Imprimir idCliente nuevamente
+
+    const corazonLleno = icon.dataset.corazonLleno;
+    const corazonVacio = icon.dataset.corazonVacio;
+
+    if (icon.src.includes('corazonLleno.svg')) {
+        // Cambiar a corazón vacío y eliminar de favoritos
+        icon.src = corazonVacio;
+
+        fetch('/eliminar_favorito', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ idCliente, idProducto })
+        })
+        .then(response => response.json())
+        .then(data => console.log(data.message))
+        .catch(error => console.error('Error al eliminar de favoritos:', error));
+    } else {
+        // Cambiar a corazón lleno y agregar a favoritos
+        icon.src = corazonLleno;
+
+        fetch('/agregar_favorito', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ idCliente, idProducto })
+        })
+        .then(response => response.json())
+        .then(data => console.log(data.message))
+        .catch(error => console.error('Error al agregar a favoritos:', error));
     }
-  ];
-  
-  const favoritosContainer = document.getElementById('losfavoritos');
-  
-  // Insertar los productos en el carrusel
-  productos.forEach(producto => {
-    const item = document.createElement('div');
-    item.classList.add('item');
-  
-    item.innerHTML = `
-      <img src="${producto.imagen}" alt="${producto.nombre}">
-      <h5>${producto.nombre}</h5>
-      <p>Marca: ${producto.marca}</p>
-      <p>Deporte: ${producto.deporte}</p>
-      <p>Género: ${producto.genero}</p>
-      <p>Color: ${producto.color}</p>
-      <p>Precio: <span class="price">S/${producto.precio}</span> 
-        <span class="kancha-price">S/${producto.precioKancha}</span></p>
-    `;
-    favoritosContainer.appendChild(item);
-  });
-  
-  // Control del carrusel
-  let currentPosition = 0;
-  
-  const updateCarousel = () => {
-    const items = document.querySelector('.items');
-    items.style.transform = `translateX(${-currentPosition * 100}%)`;
-  };
-  
-  document.getElementById('prevButton').addEventListener('click', () => {
-    if (currentPosition > 0) {
-      currentPosition--;
-      updateCarousel();
+}
+
+function toggleFavoritedp(icon) {
+    const idProducto = icon.dataset.id; // Obtener el id del producto desde el atributo data-id
+    const idCliente = icon.getAttribute('cliente-id'); // Obtener el id del cliente
+    console.log("ID del Cliente:", idCliente);
+    console.log("ID del Producto:", idProducto); // Mostrar el id del producto en la consola
+
+    // Accede a la imagen dentro del botón
+    const img = icon.querySelector('img'); // Asegúrate de que haya una imagen en el botón
+    const corazonLleno = img.dataset.corazonLleno; // URL del corazón lleno
+    const corazonVacio = img.dataset.corazonVacio; // URL del corazón vacío
+
+    if (img.src.includes('corazonLleno.svg')) {
+        // Cambiar a corazón vacío y eliminar de favoritos
+        img.src = corazonVacio;
+
+        fetch('/eliminar_favorito', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ idCliente, idProducto }) // Enviar los datos en formato JSON
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la red');
+            }
+            return response.json();
+        })
+        .then(data => console.log(data.message))
+        .catch(error => console.error('Error al eliminar de favoritos:', error));
+    } else {
+        // Cambiar a corazón lleno y agregar a favoritos
+        img.src = corazonLleno;
+
+        fetch('/agregar_favorito', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ idCliente, idProducto }) // Enviar los datos en formato JSON
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la red');
+            }
+            return response.json();
+        })
+        .then(data => console.log(data.message))
+        .catch(error => console.error('Error al agregar a favoritos:', error));
     }
-  });
-  
-  document.getElementById('nextButton').addEventListener('click', () => {
-    if (currentPosition < productos.length - 1) {
-      currentPosition++;
-      updateCarousel();
-    }
-  });
-  
+}

@@ -194,7 +194,7 @@
         src="{{url_for('static',filename='img/corazon.svg')}}" class="icon" alt="icono-favoritos"></a>
     <a href="{{url_for('soporteTecnico')}}"><span>Ayuda</span> <img
         src="{{url_for('static',filename='img/buscar.svg')}}" class="icon" alt="icono-ayuda"></a>
-    <a href="#cerrar-sesion"><span>Cerrar sesión</span> <img
+    <a href="{{ url_for('cerrarSesion')}}"><span>Cerrar sesión</span> <img
         src="{{url_for('static',filename='img/circle-arrow-right-solid.svg')}}" class="icon"
         alt="icono-cerrar-sesion"></a>
   </div>
@@ -396,7 +396,6 @@
   <script src="{{ url_for('static', filename='js/opcionesUser.js') }}"></script>
   <script src="{{ url_for('static', filename='js/carrito.js') }}"></script>
   <script src="{{ url_for('static', filename='js/scriptFavoritos.js') }}"></script>
-
 
   {% block js %}
 

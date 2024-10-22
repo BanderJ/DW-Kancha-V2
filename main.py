@@ -6,6 +6,7 @@ import controlador_categoria
 import controlador_marca
 import controlador_modelo
 import controlador_productos
+import controlador_favoritos
 from bd import conectarse
 from flask import session
 #Para generar claves en hash aleatoriassssss
@@ -38,15 +39,64 @@ def listadoProductos():
     except Exception as e:
         return []
 
+# @app.get('/productos')
+# def seccionProductos():
+#     idUsuario = session.get("usuario", {}).get("idUsuario", None)
+#     productos = controlador_productos.obtener_productos()
+#     generos = controlador_productos.obtener_generos()
+#     categorias = controlador_productos.obtener_categorias()
+#     colores = controlador_productos.obtener_colores()
+#     marcas = controlador_marca.obtener_marcas()
+#     if idUsuario is None 
+#     favoritos = controlador_favoritos.obtener_favoritos(idUsuario)
+#     ids_favoritos = {fav[0] for fav in favoritos}
+#     return render_template("SeccionProductos.html",productos=productos,generos=generos,categorias=categorias,colores=colores,marcas=marcas, favoritos = ids_favoritos)
+
 @app.get('/productos')
 def seccionProductos():
+    idUsuario = session.get("usuario", {}).get("idUsuario", None)
+    
     productos = controlador_productos.obtener_productos()
     generos = controlador_productos.obtener_generos()
     categorias = controlador_productos.obtener_categorias()
     colores = controlador_productos.obtener_colores()
     marcas = controlador_marca.obtener_marcas()
-    return render_template("SeccionProductos.html",productos=productos,generos=generos,categorias=categorias,colores=colores,marcas=marcas)
 
+    if idUsuario is None:
+        return render_template("SeccionProductos.html", productos=productos,generos=generos,categorias=categorias,colores=colores,marcas=marcas)
+    else:
+        favoritos = controlador_favoritos.obtener_favoritos(idUsuario)
+        ids_favoritos = {fav[0] for fav in favoritos}
+        return render_template("SeccionProductos.html", productos=productos,generos=generos,categorias=categorias,colores=colores,marcas=marcas, favoritos=ids_favoritos)
+
+@app.route('/favoritos')
+def mostrarFavoritos():
+ 
+    idUsuario = session.get("usuario", {}).get("idUsuario", None)
+    
+    if idUsuario is None:
+        return redirect('/IniciarSesion')  
+    
+    favoritos = controlador_favoritos.obtener_favoritos(idUsuario)
+    return render_template("MisFavoritos.html", favoritos=favoritos, idUsuario = idUsuario)
+
+@app.route('/agregar_favorito', methods=['POST'])
+def agregar_favorito():
+    idUsuario = session.get("usuario", {}).get("idUsuario", None)
+    data = request.get_json()
+    idCliente = idUsuario
+    idProducto = data['idProducto']
+    controlador_favoritos.insertar_favoritos(idCliente, idProducto)
+    return jsonify({'message': 'Producto agregado a favoritos'})
+
+@app.route('/eliminar_favorito', methods=['POST'])
+def eliminar_favorito():
+    idUsuario = session.get("usuario", {}).get("idUsuario", None)
+    data = request.get_json()
+    idCliente = idUsuario
+    idProducto = data['idProducto']
+    controlador_favoritos.eliminar_favoritos(idCliente, idProducto)
+    return jsonify({'message': 'Producto eliminado de favoritos'})
 
 @app.route('/kancha-club')
 def kancha_club():
@@ -71,11 +121,8 @@ def registrarUsuario():
 @app.route("/perfil")
 def mostrarPerfil():
     datos = session.get("usuario", {"nombre":"Invitado","apellidos":"Invitado","correo":"example@email.com","numdoc":"11111111"})
+    print(datos)
     return render_template("MiPerfil.html", userData=datos)
-
-@app.route("/favoritos")
-def mostrarFavoritos():
-    return render_template("MisFavoritos.html")
     
 @app.route('/login', methods=["POST"])
 def validarInicioSesion():
@@ -87,14 +134,16 @@ def validarInicioSesion():
         print(contraseña)
         
         cursor = conectarse().cursor()
-        cursor.execute("SELECT nombre, apePat, apeMat, correo, numdoc FROM usuario WHERE correo=%s AND password=%s", (email, contraseña,))
+        cursor.execute("SELECT idUsuario, nombre, apePat, apeMat, correo, numdoc FROM usuario WHERE correo=%s AND password=%s", (email, contraseña,))
         registro = cursor.fetchone()
 
+
         if registro:  # Verificar si se encontró un registro
-            datosUsuario["nombre"] = registro[0]
-            datosUsuario["apellidos"] = f"{registro[1]} {registro[2]}"
-            datosUsuario["correo"] = registro[3]
-            datosUsuario["numdoc"] = registro[4]
+            datosUsuario["idUsuario"] = registro[0]
+            datosUsuario["nombre"] = registro[1]
+            datosUsuario["apellidos"] = f"{registro[2]} {registro[3]}"
+            datosUsuario["correo"] = registro[4]
+            datosUsuario["numdoc"] = registro[5]
             datosUsuario["mensaje"] = "Usuario logueado exitosamente"
             datosUsuario["status"] = 1
             session["usuario"] = datosUsuario
@@ -111,6 +160,12 @@ def validarInicioSesion():
         datosUsuario["error"] = f"Ha ocurrido un error => {repr(e)}"
         datosUsuario["status"] = -1
         return jsonify(datosUsuario)
+    
+@app.route('/logout')
+def cerrarSesion():
+    # Eliminar la sesión actual
+    session.pop('usuario', None)  # Elimina el usuario de la sesión
+    return redirect('/IniciarSesion')
 
 @app.route('/EventosDeportivos')
 def redirigirEventosDeportivos():
@@ -424,9 +479,47 @@ def actualizar_producto():
 
 @app.route("/producto/<int:id>")
 def detalle_producto(id):
-    # Obtener el disco por ID
+    # Obtener el usuario desde la sesión
+    usuario = session.get("usuario", None)
+
+    # Obtener el producto por ID
     producto = controlador_productos.obtener_producto_por_id(id)
-    return render_template("detalle_producto.html", producto=producto)
+
+    # Si no hay usuario, renderizar sin favoritos
+    if usuario is None:
+        return render_template("detalle_producto.html", producto=producto)
+
+    # Obtener favoritos del usuario
+    idUsuario = usuario.get("idUsuario")
+    favoritos = controlador_favoritos.obtener_favoritos(idUsuario)
+    ids_favoritos = {fav[0] for fav in favoritos}  # Conjunto de IDs de favoritos
+
+    # Renderizar con datos del usuario y sus favoritos
+    return render_template(
+        "detalle_producto.html", 
+        producto=producto, 
+        favoritos=ids_favoritos, 
+        usuario=usuario
+    )
+
 
 if __name__ == "__main__":
     app.run(debug=True)
+    
+    
+#     @app.get('/productos')
+# def seccionProductos():
+#     idUsuario = session.get("usuario", {}).get("idUsuario", None)
+    
+#     productos = controlador_productos.obtener_productos()
+#     generos = controlador_productos.obtener_generos()
+#     categorias = controlador_productos.obtener_categorias()
+#     colores = controlador_productos.obtener_colores()
+#     marcas = controlador_marca.obtener_marcas()
+
+#     if idUsuario is None:
+#         return render_template("SeccionProductos.html", productos=productos,generos=generos,categorias=categorias,colores=colores,marcas=marcas)
+#     else:
+#         favoritos = controlador_favoritos.obtener_favoritos(idUsuario)
+#         ids_favoritos = {fav[0] for fav in favoritos}
+#         return render_template("SeccionProductos.html", productos=productos,generos=generos,categorias=categorias,colores=colores,marcas=marcas, favoritos=ids_favoritos)

@@ -176,8 +176,13 @@
                     {% for producto in productos %}
                     <div class="col-4 p-0 px-1 extrac product-card col-md-4 col-lg-3 col-sm-6 col-6">
                         <div class="heart-container">
-                            <img src="{{ url_for('static', filename='img/corazonVacio.svg') }}" class="heart-icon"
-                                alt="heart">
+                            <img src="{{ url_for('static', filename='img/corazonLleno.svg') if producto[0] in favoritos else url_for('static', filename='img/corazonVacio.svg') }}" 
+                                 class="heart-icon" 
+                                 data-id="{{producto[0]}}" 
+                                 data-corazon-lleno="{{ url_for('static', filename='img/corazonLleno.svg') }}" 
+                                 data-corazon-vacio="{{ url_for('static', filename='img/corazonVacio.svg') }}" 
+                                 onclick="toggleFavorite(this)" 
+                                 alt="heart">
                         </div>
                             <a href="{{url_for('detalle_producto', id=producto[0])}}">
                                 <img class="imagen img-fluid pb-2"
@@ -223,10 +228,7 @@
         <div class="col p-0"></div>
     </div>
 
-
-
     <script src="{{url_for('static',filename='SeccionProductos.js')}}"></script>
-
 
 </main>
 {% endblock %}
