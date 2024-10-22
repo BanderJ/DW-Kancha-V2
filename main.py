@@ -218,7 +218,7 @@ def mostrarPerfil():
     datos = session.get("usuario", {"nombre":"Invitado","apellidos":"Invitado","correo":"example@email.com","numdoc":"11111111","fechaNac":"10/10/2000","sexo":"M","telefono":"999777666"})
     if datos["nombre"] != "Invitado":
         # Solo formatear la fecha si hay sesión del usuario
-        fecha_nac = datetime.strptime(datos["fechaNac"], "%d/%m/%Y")  # Cambiado a formato adecuado
+        fecha_nac = datetime.strptime(datos["fechaNac"], "%a, %d %b %Y %H:%M:%S %Z")
         formato_fecha = fecha_nac.strftime("%d/%m/%Y")
     else:
         # Devolver la fecha en su formato original si no hay sesión
