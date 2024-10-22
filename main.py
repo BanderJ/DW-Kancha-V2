@@ -19,6 +19,7 @@ import controlador_favoritos
 import datetime
 import controlador_carrito
 import controlador_ubicacion
+from datetime import datetime
 
 def crearHashSecret():
     datos_aleatorios = os.urandom(16)
@@ -215,10 +216,12 @@ def registrarUsuario():
 @app.route("/perfil")
 def mostrarPerfil():
     datos = session.get("usuario", {"nombre":"Invitado","apellidos":"Invitado","correo":"example@email.com","numdoc":"11111111"})
+    fecha_nac = datetime.strptime(datos["fechaNac"], "%a, %d %b %Y %H:%M:%S %Z")
+    formato_fecha = fecha_nac.strftime("%d/%m/%Y")
     print(datos)
-    return render_template("MiPerfil.html", userData=datos)
+    return render_template("MiPerfil.html", userData=datos,nacimiento=formato_fecha)
     
-@app.route('/login', methods=["POST"])
+@app.route('/login', methods=["POST"])  
 def validarInicioSesion():
     datosUsuario = dict()
     try:
@@ -228,7 +231,7 @@ def validarInicioSesion():
         print(contraseña)
         
         cursor = conectarse().cursor()
-        cursor.execute("SELECT idUsuario, nombre, apePat, apeMat, correo, numdoc FROM usuario WHERE correo=%s AND password=%s", (email, contraseña,))
+        cursor.execute("SELECT idUsuario, nombre, apePat, apeMat, correo, numdoc,fechaNacimiento,sexo,telefono FROM usuario WHERE correo=%s AND password=%s", (email, contraseña,))
         registro = cursor.fetchone()
 
 
@@ -238,6 +241,9 @@ def validarInicioSesion():
             datosUsuario["apellidos"] = f"{registro[2]} {registro[3]}"
             datosUsuario["correo"] = registro[4]
             datosUsuario["numdoc"] = registro[5]
+            datosUsuario["fechaNac"]=registro[6]
+            datosUsuario["sexo"]=registro[7]
+            datosUsuario["telefono"]=registro[8]
             datosUsuario["mensaje"] = "Usuario logueado exitosamente"
             datosUsuario["status"] = 1
             session["usuario"] = datosUsuario
