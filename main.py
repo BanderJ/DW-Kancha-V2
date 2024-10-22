@@ -641,17 +641,15 @@ def detalle_producto(id):
 @app.route('/anadir_carrito', methods=['POST'])
 def anadir_carrito():
     # Obtener los datos del formulario
+
     id_producto = request.form.get('id_producto')
     nombre = request.form.get('nombre')
     precio = request.form.get('precio')
     cantidad = request.form.get('cantidad')
     id_usuario = session.get("usuario", {}).get("idUsuario", None)
-    # Llamar a la función de insertar detalle de venta
     controlador_carrito.insertar_detalle_venta(id_usuario, id_producto, cantidad, precio)
-    # Obtener detalles del producto nuevamente para mostrar al usuario
     producto = controlador_productos.obtener_producto_por_id(id_producto)
-    # Asegúrate de pasar 'subtotal' y 'total' con valores predeterminados para evitar errores
-    return render_template("detalle_producto.html", producto=producto)
+    return redirect(f'/producto/{id_producto}?')
 
 
 @app.route('/carrito')

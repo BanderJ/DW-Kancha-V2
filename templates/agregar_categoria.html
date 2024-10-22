@@ -1,20 +1,42 @@
 {% extends "maestradashboard.html" %}
+
 {% block titulomantenimiento %}
 Agregar Categoria
 {% endblock %}
+
+
+
 {% block mantenimiento %}
-<section class="section container my-5">
-    <div class="columns">
-        <div class="column is-one-third">
-            <h3 class="is-size-3">Agregar Categoria</h3>
-            <form action="{{url_for('guardar_categoria')}}" method="post">
-                <label for="nombre">Nombre:</label>
-                <input required type="text" class="input" placeholder="Nombre" name="nombre" id="nombre">
-                <br><br>
-                <button type="submit" class="btn bg-azul-k mt-2">Guardar</button>
-                <a href="{{url_for('categoria')}}" class="bg-azul-k">Volver</a>
-            </form>
+    <!-- Enlace al archivo CSS del modal -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='modal.css') }}">
+
+    <section class="section container my-5">
+        <div class="columns">
+            <div class="column is-one-third">
+                <h3 class="is-size-3">Agregar Categoria</h3>
+
+                <!-- Formulario para agregar una categoría -->
+                <form action="{{ url_for('guardar_categoria') }}" method="post" id="categoriaForm">
+                    <label for="nombre">Nombre:</label>
+                    <input required type="text" class="input" placeholder="Nombre" name="nombre" id="nombre">
+                    <br><br>
+
+                    <button type="submit" class="btn bg-azul-k mt-2">Guardar</button>
+                    <a href="{{ url_for('categoria') }}" class="bg-azul-k">Volver</a>
+                </form>
+            </div>
         </div>
-    </div>
-</section>
+
+        <!-- Estructura del Modal -->
+        <div id="customModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <h2>Acción Realizada</h2>
+                <p>¡Elemento agregado exitosamente!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Enlace al archivo JavaScript -->
+    <script src="{{ url_for('static', filename='modal.js') }}"></script>
 {% endblock %}
