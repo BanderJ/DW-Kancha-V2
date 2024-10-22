@@ -281,9 +281,10 @@ def redirigirSobreNosotros():
 
 @app.route('/Pago')
 def redirigirPago():
-    carritoid= controlador_carrito.obtener_id_carrito(1)
-    lista= controlador_carrito.obtener_detalles_carrito(1)
-    total= controlador_carrito.obtener_total_carrito(1)
+    id_usuario=session.get("usuario", {}).get("idUsuario", None)
+    carritoid= controlador_carrito.obtener_id_carrito(id_usuario)
+    lista= controlador_carrito.obtener_detalles_carrito(id_usuario)
+    total= controlador_carrito.obtener_total_carrito(id_usuario)
     departamentos=controlador_ubicacion.obtener_departamentos()
     return render_template('Pago(1).html', lista=lista, total=total, id_carrito=carritoid, departamentos=departamentos)
 
