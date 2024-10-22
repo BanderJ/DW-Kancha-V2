@@ -1,22 +1,21 @@
 // Selección de elementos
-const modal = document.getElementById('customModal');
-const closeModalButton = document.querySelector('.close-btn');
+const modal = document.getElementById('confirmationModal');
+const openModalButton = document.getElementById('openModalButton');
+const confirmButton = document.getElementById('confirmButton');
+const cancelButton = document.getElementById('cancelButton');
 
-// Lógica para abrir el modal después del envío del formulario
-document.getElementById('categoriaForm').addEventListener('submit', function (event) {
-  event.preventDefault(); // Evita el envío normal del formulario para mostrar el modal
-
-  // Aquí puedes realizar un fetch o llamada AJAX para enviar el formulario si lo deseas
-  modal.style.display = 'block'; // Mostrar el modal
-
-  // Simulación del envío con éxito (opcional: reemplazar con lógica real)
-  setTimeout(() => {
-    this.submit(); // Envía el formulario después de mostrar el modal
-  }, 2000);
+// Mostrar el modal al hacer clic en el botón "Guardar"
+openModalButton.addEventListener('click', () => {
+  modal.style.display = 'block';
 });
 
-// Cerrar el modal al hacer clic en la "X"
-closeModalButton.addEventListener('click', () => {
+// Confirmar acción y enviar el formulario
+confirmButton.addEventListener('click', () => {
+  document.getElementById('categoriaForm').submit(); // Envía el formulario
+});
+
+// Cancelar la acción y cerrar el modal
+cancelButton.addEventListener('click', () => {
   modal.style.display = 'none';
 });
 
