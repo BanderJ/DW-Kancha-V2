@@ -288,7 +288,7 @@ def redirigirPedidos():
     idUsuario = session.get("usuario", {}).get("idUsuario", None)
     if idUsuario is None:
         return redirect('/IniciarSesion')
-    ventas=controlador_carrito.obtener_ventas_y_detalles(idUusuario)
+    ventas=controlador_carrito.obtener_ventas_y_detalles(idUsuario)
     return render_template('MisPedidos.html', ventas=ventas)
 
 @app.route('/NikeMercurial')
