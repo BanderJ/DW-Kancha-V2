@@ -5,18 +5,28 @@ Agregar Marca
 {% endblock %}
 
 {% block mantenimiento %}
-<section class="section container my-5">
+
     <div class="columns">
+        <a href="{{ url_for('marca') }}" class="button is-light is-fullwidth" >Volver</a>
         <div class="column is-one-third">
-            <h3 class="is-size-3">Agregar Marca</h3>
-            <form action="{{ url_for('guardar_marca') }}" method="post">
+            <form action="{{ url_for('guardar_marca') }}" method="post" enctype="multipart/form-data">
                 <label for="nombre">Nombre:</label>
                 <input required type="text" class="input" placeholder="Nombre" name="nombre" id="nombre">
                 <br><br>
-                <button type="submit" class="btn bg-azul-k mt-2">Guardar</button>
-                <a href="{{ url_for('marca') }}" class="bg-azul-k">Volver</a>
+
+                <label for="imagen">Imagen:</label>
+                <input required type="file" class="input" name="imagen" id="imagen">
+                <div id="cargaImagen" class="progress" style="display:none;">Cargando...</div>
+                <br><br>
+
+                <!-- Contenedor para los botones -->
+                <div class="columns">
+                    <div class="column is-half">
+                        <button type="submit" class="button is-success is-fullwidth">Guardar</button>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
-</section>
+
 {% endblock %}
