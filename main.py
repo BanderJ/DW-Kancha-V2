@@ -377,18 +377,33 @@ def formulario_agregar_marca():
 @app.route("/guardar_marca", methods=["POST"])
 def guardar_marca():
     nombre = request.form["nombre"]
-    controlador_marca.insertar_marca(nombre)
-    # De cualquier modo, y si todo fue bien, redireccionar
+    imagen = request.files.get("imagen")  # Asegúrate de que tu formulario tenga un campo para la imagen
+
+    # Verifica si se subió una imagen
+    if imagen:
+        controlador_marca.insertar_marca(nombre, imagen)  # Pasa la imagen a la función
+        flash(f'Marca "{nombre}" registrada correctamente.', 'success')
+    else:
+        flash('No se pudo registrar la marca porque no se subió una imagen.', 'error')
+
     return redirect("/Marca")
 
 @app.route("/eliminar_marca", methods=["POST"])
 def eliminar_marca():
-    controlador_marca.eliminar_marca(request.form["id"])
+    id_marca = request.form["id"]
+    marca = controlador_marca.obtener_marca_por_id(id_marca)
+    nombre_marca = marca[1] if marca else "Marca desconocida"
+    exito = controlador_marca.eliminar_marca(id_marca)
+    
+    if not exito:
+        flash(f'La marca "{nombre_marca}" no se puede ser eliminada. Ya existen productos asociados', 'success')
+    else:
+        flash(f'Marca "{nombre_marca}" eliminada correctamente.', 'success')
+
     return redirect("/Marca")
 
 @app.route("/formulario_editar_marca/<int:id>")
 def formulario_editar_marca(id):
-    # Obtener la marca por ID
     marca = controlador_marca.obtener_marca_por_id(id)
     return render_template("editar_marca.html", marca=marca)
 
@@ -396,7 +411,9 @@ def formulario_editar_marca(id):
 def actualizar_marca():
     id = request.form["id"]
     nombre = request.form["nombre"]
-    controlador_marca.actualizar_marca(nombre, id)
+    imagen = request.files.get("imagen")  # Asegúrate de que tu formulario tenga un campo para la imagen
+    controlador_marca.actualizar_marca(nombre, imagen, id)
+    flash(f'Marca "{nombre}" actualizada correctamente.', 'success')
     return redirect("/Marca")
 
 # Modelos
