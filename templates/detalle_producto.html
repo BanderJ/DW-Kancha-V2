@@ -307,22 +307,39 @@
                                         </form>
                                     </div>
                                     <div class="col-4 p-0 px-1 mb-2 favp">
-                                        <button
-                                            class="btn p-0 d-flex align-items-center justify-content-center py-0 py-lg-3"
-                                            id="favoritos" 
-                                            onclick="
-    const nuevoProducto = {
-        img: '../img/foto (97).avif',
-        nombre: 'NikeMercurial',
-        precio: 399.99,
-        precioOferta: 339.99
-    };
-    let productos = JSON.parse(localStorage.getItem('productosFavoritos')) || [];
-    productos.push(nuevoProducto);
-    localStorage.setItem('productosFavoritos', JSON.stringify(productos));
-    alert('Producto añadido a favoritos!');
-"
-                                            ><img class="img-fluid" src="../img/corazon.svg" alt=""></button>
+ {% if usuario %}
+                                        {% if producto[0] in favoritos %}
+                                            <!-- Producto ya está en favoritos -->
+                                            <button class="btn p-0 d-flex align-items-center justify-content-center py-0 py-lg-3"
+                                                    cliente-id="{{ usuario['idUsuario'] }}"
+                                                    data-id="{{ producto[0] }}"
+                                                    onclick="toggleFavoritedp(this)">
+                                                <img class="img-fluid"
+                                                     src="{{ url_for('static', filename='img/corazonLleno.svg') }}"
+                                                     data-corazon-lleno="{{ url_for('static', filename='img/corazonLleno.svg') }}"
+                                                     data-corazon-vacio="{{ url_for('static', filename='img/corazonVacio.svg') }}"
+                                                     alt="heart">
+                                            </button>
+                                        {% else %}
+                                            <!-- Producto no está en favoritos -->
+                                            <button class="btn p-0 d-flex align-items-center justify-content-center py-0 py-lg-3"
+                                                    cliente-id="{{ usuario['idUsuario'] }}"
+                                                    data-id="{{ producto[0] }}"
+                                                    onclick="toggleFavoritedp(this)">
+                                                <img class="img-fluid"
+                                                     src="{{ url_for('static', filename='img/corazonVacio.svg') }}"
+                                                     data-corazon-lleno="{{ url_for('static', filename='img/corazonLleno.svg') }}"
+                                                     data-corazon-vacio="{{ url_for('static', filename='img/corazonVacio.svg') }}"
+                                                     alt="heart">
+                                            </button>
+                                        {% endif %}
+                                    {% else %}
+                                        <!-- Usuario no ha iniciado sesión -->
+                                        <button class="btn p-0 d-flex align-items-center justify-content-center py-0 py-lg-3" disabled>
+                                            <img class="img-fluid" src="{{ url_for('static', filename='img/corazonVacio.svg') }}" alt="heart">
+                                        </button>
+                                        <p class="text-muted" style="font-size: 0.75rem;">Inicia sesión para agregar a favoritos.</p>
+                                    {% endif %}
                                     </div>
                                     <div class="col-12 p-0 mb-2 px-1">
                                         <button type="button"

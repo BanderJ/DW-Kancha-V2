@@ -18,6 +18,7 @@ import controlador_favoritos
 import datetime
 import controlador_carrito
 import controlador_ubicacion
+from datetime import datetime
 
 def crearHashSecret():
     datos_aleatorios = os.urandom(16) 
@@ -213,11 +214,16 @@ def registrarUsuario():
 
 @app.route("/perfil")
 def mostrarPerfil():
-    datos = session.get("usuario", {"nombre":"Invitado","apellidos":"Invitado","correo":"example@email.com","numdoc":"11111111"})
-    print(datos)
-    return render_template("MiPerfil.html", userData=datos)
+    datos = session.get("usuario", {"nombre":"Invitado","apellidos":"Invitado"})
+    if datos["nombre"] != "Invitado":
+        # Solo formatear la fecha si hay sesión del usuario
+        fecha_nac = datetime.strptime(datos["fechaNac"], "%a, %d %b %Y %H:%M:%S %Z")
+        formato_fecha = fecha_nac.strftime("%d/%m/%Y")
+        return render_template("MiPerfil.html", userData=datos,nacimiento=formato_fecha)
+    else:
+        return redirect("/IniciarSesion")
     
-@app.route('/login', methods=["POST"])
+@app.route('/login', methods=["POST"])  
 def validarInicioSesion():
     datosUsuario = dict()
     try:
@@ -227,7 +233,7 @@ def validarInicioSesion():
         print(contraseña)
         
         cursor = conectarse().cursor()
-        cursor.execute("SELECT idUsuario, nombre, apePat, apeMat, correo, numdoc FROM usuario WHERE correo=%s AND password=%s", (email, contraseña,))
+        cursor.execute("SELECT idUsuario, nombre, apePat, apeMat, correo, numdoc,fechaNacimiento,sexo,telefono FROM usuario WHERE correo=%s AND password=%s", (email, contraseña,))
         registro = cursor.fetchone()
 
 
@@ -237,6 +243,9 @@ def validarInicioSesion():
             datosUsuario["apellidos"] = f"{registro[2]} {registro[3]}"
             datosUsuario["correo"] = registro[4]
             datosUsuario["numdoc"] = registro[5]
+            datosUsuario["fechaNac"]=registro[6]
+            datosUsuario["sexo"]=registro[7]
+            datosUsuario["telefono"]=registro[8]
             datosUsuario["mensaje"] = "Usuario logueado exitosamente"
             datosUsuario["status"] = 1
             session["usuario"] = datosUsuario
@@ -270,15 +279,19 @@ def redirigirSobreNosotros():
 
 @app.route('/Pago')
 def redirigirPago():
-    carritoid= controlador_carrito.obtener_id_carrito(1)
-    lista= controlador_carrito.obtener_detalles_carrito(1)
-    total= controlador_carrito.obtener_total_carrito(1)
+    id_usuario=session.get("usuario", {}).get("idUsuario", None)
+    carritoid= controlador_carrito.obtener_id_carrito(id_usuario)
+    lista= controlador_carrito.obtener_detalles_carrito(id_usuario)
+    total= controlador_carrito.obtener_total_carrito(id_usuario)
     departamentos=controlador_ubicacion.obtener_departamentos()
     return render_template('Pago(1).html', lista=lista, total=total, id_carrito=carritoid, departamentos=departamentos)
 
 @app.route('/MisPedidos')
 def redirigirPedidos():
-    ventas=controlador_carrito.obtener_ventas_y_detalles(1)
+    idUsuario = session.get("usuario", {}).get("idUsuario", None)
+    if idUsuario is None:
+        return redirect('/IniciarSesion')
+    ventas=controlador_carrito.obtener_ventas_y_detalles(idUsuario)
     return render_template('MisPedidos.html', ventas=ventas)
 
 @app.route('/NikeMercurial')
@@ -631,7 +644,7 @@ def anadir_carrito():
     nombre = request.form.get('nombre')
     precio = request.form.get('precio')
     cantidad = request.form.get('cantidad')
-    id_usuario = 1  # ID del usuario será 1 siempre
+    id_usuario = session.get("usuario", {}).get("idUsuario", None)
     # Llamar a la función de insertar detalle de venta
     controlador_carrito.insertar_detalle_venta(id_usuario, id_producto, cantidad, precio)
     # Obtener detalles del producto nuevamente para mostrar al usuario
@@ -642,8 +655,11 @@ def anadir_carrito():
 
 @app.route('/carrito')
 def mostrar_carrito():
-    id_usuario = 1  # ID de usuario fijo por ahora, se puede cambiar dinámicamente si tienes manejo de sesiones
-    detalles_carrito= controlador_carrito.obtener_detalles_carrito(1);
+    idUsuario = session.get("usuario", {}).get("idUsuario", None)
+    
+    if idUsuario is None:
+        return redirect('/IniciarSesion')  
+    detalles_carrito= controlador_carrito.obtener_detalles_carrito(idUsuario);
     return render_template("carro.html", lista=detalles_carrito)
 
 @app.route('/eliminar_detalle_venta', methods=['POST'])
@@ -651,7 +667,7 @@ def eliminar_detalle_venta():
     id_det_vta = request.form.get('id_det_vta')
     id_producto = request.form.get('id_producto')
     id_carrito = request.form.get('id_carrito')
-    id_usuario = 1
+    id_usuario = session.get("usuario", {}).get("idUsuario", None)
 
     # Llamar a la función para eliminar el detalle de venta
     controlador_carrito.eliminar_detalle_venta_bd(id_det_vta, id_producto, id_carrito, id_usuario)
@@ -661,29 +677,50 @@ def eliminar_detalle_venta():
 
 @app.route('/actualizar_cantidad_mas', methods=['POST'])
 def actualizar_cantidad_mas():
-    # Obtener los datos enviados desde el frontend
     id_det_vta = request.form.get('id_det_vta')
     id_producto = request.form.get('id_producto')
     id_carrito = request.form.get('id_carrito')
-    id_usuario = 1
-    # Llamar a la función incrementarcantidad para actualizar en la base de datos
+    id_usuario = session.get("usuario", {}).get("idUsuario", None)
+
     try:
+        # Obtener el stock disponible para este producto
+        stock_disponible = controlador_carrito.obtener_stock_producto(id_producto)
+
+        # Obtener la cantidad actual
+        cantidad_actual = controlador_carrito.obtener_cantidad_actual(id_det_vta)
+
+        # Verificar si al incrementar se supera el stock disponible
+        if cantidad_actual + 1 > stock_disponible:
+            return jsonify({"error": "La cantidad no puede exceder el stock disponible."}), 400
+
+        # Incrementar cantidad en la base de datos
         controlador_carrito.incrementarcantidad(id_det_vta, id_producto, id_carrito, id_usuario)
-        return redirect(url_for('mostrar_carrito'))
+
+        # Devolver la nueva cantidad
+        return jsonify({"nueva_cantidad": cantidad_actual + 1}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 @app.route('/actualizar_cantidad_menos', methods=['POST'])
 def actualizar_cantidad_menos():
-    # Obtener los datos enviados desde el frontend
     id_det_vta = request.form.get('id_det_vta')
     id_producto = request.form.get('id_producto')
     id_carrito = request.form.get('id_carrito')
-    id_usuario = 1
-    # Llamar a la función incrementarcantidad para actualizar en la base de datos
+    id_usuario = session.get("usuario", {}).get("idUsuario", None)
+
     try:
+        # Obtener la cantidad actual
+        cantidad_actual = controlador_carrito.obtener_cantidad_actual(id_det_vta)
+
+        # Verificar si al disminuir la cantidad es menor que 1
+        if cantidad_actual - 1 < 1:
+            return jsonify({"error": "La cantidad no puede ser menor a 1."}), 400
+
+        # Disminuir cantidad en la base de datos
         controlador_carrito.disminuircantidad(id_det_vta, id_producto, id_carrito, id_usuario)
-        return redirect(url_for('mostrar_carrito'))
+
+        # Devolver la nueva cantidad
+        return jsonify({"nueva_cantidad": cantidad_actual - 1}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -694,7 +731,7 @@ def finalizarCompra():
     id_carrito = request.form['id_carrito']
     id_ciudad = request.form['id_distrito']
     direccion = request.form['direcc']
-    id_usuario = 1
+    id_usuario = session.get("usuario", {}).get("idUsuario", None)
     # Llamar a la función incrementarcantidad para actualizar en la base de datos
     try:
         controlador_carrito.finalizarCompra_bd(id_carrito, id_ciudad, direccion, id_usuario)

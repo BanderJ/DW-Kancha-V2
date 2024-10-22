@@ -40,6 +40,7 @@ block link %}
     <div class="row">
         <div class="col p-0"></div>
         <div class="col-9">
+            {% if ventas %}
             <div class="mb-5">
                 <p class="titulo2 text-center">
                     Mis Compras
@@ -72,6 +73,12 @@ block link %}
                 </div>
                 {% endfor %}
             </div>
+            {% else %}
+            <div style="text-align: center; height: 20vw; margin-top: 10vw;">
+                <h4>Aun no ha realizado ninguna compra
+                </h4>
+              </div>
+            {% endif %}
         </div>
         <div class="col p-0"></div>
     </div>

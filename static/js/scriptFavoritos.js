@@ -30,6 +30,7 @@ function toggleFavorite(icon) {
         .then(data => console.log(data.message))
         .catch(error => console.error('Error al agregar a favoritos:', error));
     }
+
 }
 
 function toggleFavoritedp(icon) {
@@ -76,4 +77,5 @@ function toggleFavoritedp(icon) {
         .then(data => console.log(data.message))
         .catch(error => console.error('Error al agregar a favoritos:', error));
     }
+
 }

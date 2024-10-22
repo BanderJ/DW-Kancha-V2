@@ -1,0 +1,5 @@
+pip install flask authlib requests Flask-SQLAlchemy pymysql python-dotenv
+
+py -3 -m venv .venv
+
+.venv\Scripts\activate

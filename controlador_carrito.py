@@ -435,3 +435,32 @@ def obtener_ventas_y_detalles(id_usuario):
     
 #     return producto_mayor
 
+
+def obtener_stock_producto(id_producto):
+    conexion = conectarse()
+    stock_disponible = 0
+    try:
+        with conexion.cursor() as cursor:
+            cursor.execute("SELECT stock FROM producto WHERE idProducto = %s", (id_producto,))
+            stock_disponible = cursor.fetchone()[0]
+    except Exception as e:
+        print(f"Error al obtener stock del producto: {e}")
+    finally:
+        conexion.close()
+    return stock_disponible
+
+def obtener_cantidad_actual(id_det_vta):
+    conexion = conectarse()
+    cantidad_actual = 0
+    try:
+        with conexion.cursor() as cursor:
+            cursor.execute("""
+                SELECT cantidad FROM detalle_venta 
+                WHERE idDetVta = %s;
+            """, (id_det_vta,))
+            cantidad_actual = cursor.fetchone()[0]
+    except Exception as e:
+        print(f"Error al obtener la cantidad actual del detalle de venta: {e}")
+    finally:
+        conexion.close()
+    return cantidad_actual
