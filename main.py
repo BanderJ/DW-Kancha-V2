@@ -215,14 +215,14 @@ def registrarUsuario():
 
 @app.route("/perfil")
 def mostrarPerfil():
-    datos = session.get("usuario", {"nombre":"Invitado"})
+    datos = session.get("usuario", {"nombre":"Invitado","apellidos":"Invitado"})
     if datos["nombre"] != "Invitado":
         # Solo formatear la fecha si hay sesión del usuario
         fecha_nac = datetime.strptime(datos["fechaNac"], "%a, %d %b %Y %H:%M:%S %Z")
         formato_fecha = fecha_nac.strftime("%d/%m/%Y")
+        return render_template("MiPerfil.html", userData=datos,nacimiento=formato_fecha)
     else:
-        redirect('/IniciarSesion')
-    return render_template("MiPerfil.html", userData=datos,nacimiento=formato_fecha)
+        return redirect("/IniciarSesion")
     
 @app.route('/login', methods=["POST"])  
 def validarInicioSesion():
