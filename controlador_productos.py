@@ -154,10 +154,11 @@ def obtenerConColorDiferentePorID(id):
             JOIN imagen i ON p.idImagen = i.idImagen
             WHERE p.idModelo = (SELECT idModelo FROM producto WHERE idProducto = %s)
             AND p.idGenero = (SELECT idGenero FROM producto WHERE idProducto = %s)
+            AND p.idTalla = (SELECT idTalla FROM producto WHERE idProducto = %s)
             AND p.idTipo = (SELECT idTipo FROM producto WHERE idProducto = %s)
             AND p.idProducto != %s -- Excluye el producto actual
             LIMIT 3;
-        """, (id, id, id, id))
+        """, (id, id, id, id, id))
         producto = cursor.fetchall()
     conexion.close()
     return producto
