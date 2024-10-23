@@ -211,3 +211,12 @@ button img {
 .legalpie a:hover {
     color: rgb(20, 12, 12);
 }
+
+#admin_temp {
+    opacity: 0; 
+    transition: opacity 0.3s ease; 
+}
+
+#admin_temp:hover {
+    opacity: 1; 
+}
