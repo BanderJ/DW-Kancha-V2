@@ -982,11 +982,12 @@ def resumenCompra():
         cursor = db.cursor()
 
         query = """
-       SELECT cr.idCarrito, usu.idUsuario, pr.idProducto, 
+            SELECT cr.idCarrito, usu.idUsuario, pr.idProducto, 
                CONCAT(usu.nombre, ' ', usu.apePat) AS nombre_completo,
                usu.numDoc, vt.direccion, vt.fecha, cr.descuento, 
-               cr.subtotal, md.nombre AS modelo, tp.nombre AS tipo_producto, 
-               mc.nombre AS marca, dv.cantidad, pr.precio
+               SUM(dv.cantidad * pr.precio) AS subtotal, -- Cálculo del subtotal corregido
+               md.nombre AS modelo, tp.nombre AS tipo_producto,
+               mc.nombre AS marca, dv.cantidad, pr.precio, vt.idVenta
         FROM carrito cr
         INNER JOIN usuario usu ON cr.idUsuario = usu.idUsuario
         INNER JOIN detalle_venta dv ON cr.idCarrito = dv.idCarrito
@@ -995,7 +996,13 @@ def resumenCompra():
         INNER JOIN modelo md ON pr.idModelo = md.idModelo
         INNER JOIN tipo_producto tp ON pr.idTipo = tp.idTipo
         INNER JOIN marca mc ON md.idMarca = mc.idMarca
-        WHERE cr.idUsuario = %s AND cr.idCarrito = (SELECT COALESCE(MAX(idCarrito), 0) FROM carrito WHERE idUsuario = %s);
+        WHERE cr.idUsuario = %s AND cr.idCarrito = (
+            SELECT COALESCE(MAX(idCarrito), 0) FROM carrito WHERE idUsuario = %s
+        )
+        GROUP BY cr.idCarrito, usu.idUsuario, pr.idProducto, 
+                 usu.nombre, usu.apePat, usu.numDoc, vt.direccion, 
+                 vt.fecha, cr.descuento, md.nombre, tp.nombre, 
+                 mc.nombre, dv.cantidad, pr.precio, vt.idVenta;
         """
 
         cursor.execute(query, (id_usuario, id_usuario))
@@ -1004,8 +1011,10 @@ def resumenCompra():
         if not productos:
             return render_template('resumen_compra.html', usuario=usuario, productos=[], total_compra=0)
 
+        # Calcular el total de la compra correctamente usando el subtotal (índice 8)
         total_compra = sum(producto[8] for producto in productos)
 
+        # Formatear los productos para pasarlos al template
         productos_format = [
             {
                 'idCarrito': producto[0],
@@ -1016,12 +1025,12 @@ def resumenCompra():
                 'direccion': producto[5],
                 'fecha': producto[6],
                 'descuento': producto[7],
-                'subtotal': producto[8],
+                'subtotal': producto[8],  # Subtotal correcto
                 'modelo': producto[9],
                 'tipo_producto': producto[10],
                 'marca': producto[11],
                 'cantidad': producto[12],
-                'precio_unitario':producto[13]
+                'precio_unitario': producto[13]  # Precio por unidad
             }
             for producto in productos
         ]
