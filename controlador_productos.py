@@ -45,11 +45,13 @@ def insertar_producto(precio, stock, idModelo, idTalla, genero, tipo_producto, i
         conexion.close()
 
 # Obtener lista de productos con todas sus relaciones
-def obtener_productos():
+def obtener_productos(genero, deporte, precio, color, marca):
     conexion = conectarse()
     productos = []
     with conexion.cursor() as cursor:
-        cursor.execute("""
+
+
+        query = """
             SELECT p.idProducto, p.precio, p.stock, m.nombre AS modelo_nombre, 
                    GROUP_CONCAT(DISTINCT c.nombre SEPARATOR ', ') AS colores, 
                    ge.nombre as genero, t.nombre AS talla_nombre, 
@@ -63,9 +65,27 @@ def obtener_productos():
             JOIN Imagen img ON p.idImagen = img.idImagen
             JOIN Genero ge ON ge.idGenero = p.idGenero
             JOIN tipo_producto tp ON tp.idTipo = p.idTipo
-            GROUP BY p.idProducto
-        """)
+        """
+        filtros = []
+        if genero:
+            query += " AND ge.nombre = %s"
+            filtros.append(genero)
+        if deporte:
+            query += " AND tp.nombre = %s"
+            filtros.append(deporte)
+        if precio:
+            query += " AND p.precio <= %s"
+            filtros.append(precio)
+        if color:
+            query += " AND c.nombre = %s"
+            filtros.append(color)
+        if marca:
+            query += " AND ma.nombre = %s"
+            filtros.append(marca)
+        query += " GROUP BY tp.nombre,m.nombre,ge.nombre,ma.nombre"
+        cursor.execute(query, filtros)
         productos = cursor.fetchall()
+        
     conexion.close()
     return productos
 def obtener_3_producto():

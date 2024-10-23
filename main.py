@@ -151,7 +151,14 @@ def listadoProductos():
 def seccionProductos():
     idUsuario = session.get("usuario", {}).get("idUsuario", None)
     
-    productos = controlador_productos.obtener_productos_diferentes()
+    genero = request.args.get('genero')
+    deporte = request.args.get('deporte')
+    precio = request.args.get('precio')
+    color = request.args.get('color')
+    marca = request.args.get('marca')
+
+
+    productos = controlador_productos.obtener_productos(genero, deporte, precio, color, marca)
     generos = controlador_productos.obtener_generos()
     categorias = controlador_productos.obtener_categorias()
     colores = controlador_productos.obtener_colores()
