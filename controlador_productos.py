@@ -45,7 +45,58 @@ def insertar_producto(precio, stock, idModelo, idTalla, genero, tipo_producto, i
         conexion.close()
 
 # Obtener lista de productos con todas sus relaciones
-def obtener_productos(genero, deporte, precio, color, marca):
+
+def obtener_3_producto():
+    conexion = conectarse()
+    productos = []
+    with conexion.cursor() as cursor:
+        cursor.execute("""
+            SELECT p.idProducto, p.precio, p.stock, m.nombre AS modelo_nombre, 
+                   GROUP_CONCAT(DISTINCT c.nombre SEPARATOR ', ') AS colores, 
+                   ge.nombre as genero, t.nombre AS talla_nombre, 
+                   tp.nombre as tipo_producto, img.imagenPrincipal, img.imagenSec01, img.imagenSec02, img.imagenSec03, p.descripcion, p.estado, ma.nombre
+            FROM Producto p 
+            JOIN Modelo m ON p.idModelo = m.idModelo
+            JOIN Marca ma ON m.idMarca = ma.idMarca
+            JOIN Talla t ON p.idTalla = t.id
+            JOIN Producto_Color pc ON pc.idProducto = p.idProducto
+            JOIN Color c ON pc.idColor = c.idColor
+            JOIN Imagen img ON p.idImagen = img.idImagen
+            JOIN Genero ge ON ge.idGenero = p.idGenero
+            JOIN tipo_producto tp ON tp.idTipo = p.idTipo
+            GROUP BY tp.nombre,m.nombre,ge.nombre,ma.nombre
+            LIMIT 3
+        """)
+        productos = cursor.fetchall()
+    conexion.close()
+    return productos
+
+
+def obtener_productos():
+    conexion = conectarse()
+    productos = []
+    with conexion.cursor() as cursor:
+        cursor.execute("""
+            SELECT p.idProducto, p.precio, p.stock, m.nombre AS modelo_nombre, 
+                   GROUP_CONCAT(DISTINCT c.nombre SEPARATOR ', ') AS colores, 
+                   ge.nombre as genero, t.nombre AS talla_nombre, 
+                   tp.nombre as tipo_producto, img.imagenPrincipal, img.imagenSec01, img.imagenSec02, img.imagenSec03, p.descripcion, p.estado, ma.nombre
+            FROM Producto p 
+            JOIN Modelo m ON p.idModelo = m.idModelo
+            JOIN Marca ma ON m.idMarca = ma.idMarca
+            JOIN Talla t ON p.idTalla = t.id
+            JOIN Producto_Color pc ON pc.idProducto = p.idProducto
+            JOIN Color c ON pc.idColor = c.idColor
+            JOIN Imagen img ON p.idImagen = img.idImagen
+            JOIN Genero ge ON ge.idGenero = p.idGenero
+            JOIN tipo_producto tp ON tp.idTipo = p.idTipo
+            GROUP BY p.idProducto
+        """)
+        productos = cursor.fetchall()
+    conexion.close()
+    return productos
+
+def obtener_productos_diferentes(genero, deporte, precio, color, marca):
     conexion = conectarse()
     productos = []
     with conexion.cursor() as cursor:
@@ -88,55 +139,6 @@ def obtener_productos(genero, deporte, precio, color, marca):
         
     conexion.close()
     return productos
-def obtener_3_producto():
-    conexion = conectarse()
-    productos = []
-    with conexion.cursor() as cursor:
-        cursor.execute("""
-            SELECT p.idProducto, p.precio, p.stock, m.nombre AS modelo_nombre, 
-                   GROUP_CONCAT(DISTINCT c.nombre SEPARATOR ', ') AS colores, 
-                   ge.nombre as genero, t.nombre AS talla_nombre, 
-                   tp.nombre as tipo_producto, img.imagenPrincipal, img.imagenSec01, img.imagenSec02, img.imagenSec03, p.descripcion, p.estado, ma.nombre
-            FROM Producto p 
-            JOIN Modelo m ON p.idModelo = m.idModelo
-            JOIN Marca ma ON m.idMarca = ma.idMarca
-            JOIN Talla t ON p.idTalla = t.id
-            JOIN Producto_Color pc ON pc.idProducto = p.idProducto
-            JOIN Color c ON pc.idColor = c.idColor
-            JOIN Imagen img ON p.idImagen = img.idImagen
-            JOIN Genero ge ON ge.idGenero = p.idGenero
-            JOIN tipo_producto tp ON tp.idTipo = p.idTipo
-            GROUP BY tp.nombre,m.nombre,ge.nombre,ma.nombre
-            LIMIT 3
-        """)
-        productos = cursor.fetchall()
-    conexion.close()
-    return productos
-
-def obtener_productos_diferentes():
-    conexion = conectarse()
-    productos = []
-    with conexion.cursor() as cursor:
-        cursor.execute("""
-            SELECT p.idProducto, p.precio, p.stock, m.nombre AS modelo_nombre, 
-                   GROUP_CONCAT(DISTINCT c.nombre SEPARATOR ', ') AS colores, 
-                   ge.nombre as genero, t.nombre AS talla_nombre, 
-                   tp.nombre as tipo_producto, img.imagenPrincipal, img.imagenSec01, img.imagenSec02, img.imagenSec03, p.descripcion, p.estado, ma.nombre
-            FROM Producto p 
-            JOIN Modelo m ON p.idModelo = m.idModelo
-            JOIN Marca ma ON m.idMarca = ma.idMarca
-            JOIN Talla t ON p.idTalla = t.id
-            JOIN Producto_Color pc ON pc.idProducto = p.idProducto
-            JOIN Color c ON pc.idColor = c.idColor
-            JOIN Imagen img ON p.idImagen = img.idImagen
-            JOIN Genero ge ON ge.idGenero = p.idGenero
-            JOIN tipo_producto tp ON tp.idTipo = p.idTipo
-            GROUP BY tp.nombre,m.nombre,ge.nombre,ma.nombre
-        """)
-        productos = cursor.fetchall()
-    conexion.close()
-    return productos
-
 # Obtener producto por ID para editar
 def obtener_producto_por_id(id):
     conexion = conectarse()

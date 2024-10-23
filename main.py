@@ -158,7 +158,7 @@ def seccionProductos():
     marca = request.args.get('marca')
 
 
-    productos = controlador_productos.obtener_productos(genero, deporte, precio, color, marca)
+    productos = controlador_productos.obtener_productos_diferentes(genero, deporte, precio, color, marca)
     generos = controlador_productos.obtener_generos()
     categorias = controlador_productos.obtener_categorias()
     colores = controlador_productos.obtener_colores()
