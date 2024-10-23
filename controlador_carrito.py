@@ -370,6 +370,7 @@ def obtener_id_carrito(id_usuario):
 def obtener_ventas_y_detalles(id_usuario):
     conexion = conectarse()
     ventas = []
+
     try:
         with conexion.cursor() as cursor:
             # Obtener todas las ventas del usuario
@@ -389,9 +390,10 @@ def obtener_ventas_y_detalles(id_usuario):
             
             ventas_base = cursor.fetchall()
 
-            for venta in ventas_base:
+            # Enumerar los pedidos secuencialmente por usuario
+            for index, venta in enumerate(ventas_base, start=1):
                 id_venta = venta[0]
-                
+
                 # Obtener los detalles de cada venta (productos)
                 cursor.execute("""
                     SELECT 
@@ -430,16 +432,17 @@ def obtener_ventas_y_detalles(id_usuario):
 
                 # Agregar los detalles a la venta
                 ventas.append({
-                    'idVenta': venta[0],
+                    'idVenta': venta[0],          # Usado para redirección interna
+                    'numeroPedido': index,        # Número de pedido secuencial
                     'fecha': venta[1],
                     'hora': venta[2],
                     'direccion': venta[3],
                     'productos': productos_list
                 })
-    
+
     except Exception as e:
         print(f"Error al obtener ventas y detalles: {e}")
-    
+
     finally:
         conexion.close()
     
