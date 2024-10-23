@@ -292,8 +292,9 @@ def redirigirPedidos():
     idUsuario = session.get("usuario", {}).get("idUsuario", None)
     if idUsuario is None:
         return redirect('/IniciarSesion')
+    numeropedido = controlador_carrito.obtener_numero_pedido(idUsuario)
     ventas = controlador_carrito.obtener_ventas_y_detalles(idUsuario)
-    return render_template('MisPedidos.html', ventas=ventas)
+    return render_template('MisPedidos.html', ventas=ventas, numeropedido=numeropedido)
 
 @app.route('/resumen_compra/<int:idVenta>')
 def resumenCompras(idVenta):
