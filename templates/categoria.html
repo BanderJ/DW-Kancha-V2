@@ -1,41 +1,60 @@
 {% extends "maestradashboard.html" %}
-{% block titulomantenimiento %} Categoria {% endblock %}
+
+{% block titulomantenimiento %}
+Categoría
+{% endblock %}
+
 {% block mantenimiento %}
 
-<section class="container my-5 section">
-    <div class="columns">
-        <div class="column">
-            <h3 class="is-size-3">Categorias</h3>
-            <a href="{{url_for('formulario_agregar_categoria')}}" class="button is-success">Agregar</a>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Nombre</th>
-                        <th>Editar</th>
-                        <th>Eliminar</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for categoria in lista %}
-                    <tr>
-                        <td>{{categoria[0]}}</td>
-                        <td>{{categoria[1]}}</td>
-                        <td>
-                            {# Pasar el id (lo que hay en categoria[0] #}
-                            <a href="{{url_for('formulario_editar_categoria',id=categoria[0])}}"><button class="btn bg-azul-k l-blanco-k">Editar</button></a>
-                        </td>
-                        <td>
-                            <form action="{{url_for('eliminar_categoria')}}" method="POST">
-                                <input type="hidden" name="id" value="{{categoria[0]}}">
-                                <button class="btn bg-rojo-k l-blanco-k">Eliminar</button>
-                            </form>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/modal.css') }}">
+
+<div class="columns">
+    <div class="column">
+        <h3 class="is-size-3"> Lista de Categorías</h3>
+        <a href="{{ url_for('formulario_agregar_categoria') }}" class="btn bg-gris-k l-blanco-k">Agregar</a>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nombre</th>
+                    <th>Editar</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for categoria in lista %}
+                <tr>
+                    <td>{{ categoria[0] }}</td>
+                    <td>{{ categoria[1] }}</td>
+                    <td>
+                        <a href="{{ url_for('formulario_editar_categoria', id=categoria[0]) }}">
+                            <button class="btn bg-azul-k l-blanco-k">Editar</button>
+                        </a>
+                    </td>
+                    <td>
+                        <form action="{{ url_for('eliminar_categoria') }}" method="POST" class="delete-form" data-id="{{ categoria[0] }}">
+                            <input type="hidden" name="id" value="{{ categoria[0] }}">
+                            <button type="button" class="btn bg-rojo-k l-blanco-k openModalButton">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-</section>
+</div>
+
+<!-- Estructura del Modal de Confirmación -->
+<div id="confirmationModal" class="modal">
+    <div class="modal-content">
+        <h2>¿Estás seguro de eliminar esta categoría?</h2>
+        <p>Esta acción no se puede deshacer.</p>
+        <button id="confirmButton" class="btn">Sí, Eliminar</button>
+        <button id="cancelButton" class="btn">Cancelar</button>
+    </div>
+</div>
+
+<!-- Enlace al archivo JavaScript -->
+<script src="{{ url_for('static', filename='js/modal.js') }}"></script>
+
 {% endblock %}
