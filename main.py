@@ -291,8 +291,92 @@ def redirigirPedidos():
     idUsuario = session.get("usuario", {}).get("idUsuario", None)
     if idUsuario is None:
         return redirect('/IniciarSesion')
-    ventas=controlador_carrito.obtener_ventas_y_detalles(idUsuario)
+    ventas = controlador_carrito.obtener_ventas_y_detalles(idUsuario)
     return render_template('MisPedidos.html', ventas=ventas)
+
+@app.route('/resumen_compra/<int:idVenta>')
+def resumenCompras(idVenta):
+    usuario = session.get("usuario")
+    if not usuario:
+        return redirect('/IniciarSesion')
+
+    try:
+        db = conectarse()
+        cursor = db.cursor()
+
+        query = """
+            SELECT 
+                cr.idCarrito, 
+                usu.idUsuario, 
+                pr.idProducto,
+                CONCAT(usu.nombre, ' ', usu.apePat) AS nombre_completo,
+                usu.numDoc, 
+                vt.direccion, 
+                vt.fecha, 
+                cr.descuento,
+                dv.cantidad, 
+                (dv.cantidad * pr.precio) AS subtotal_producto,  
+                md.nombre AS modelo, 
+                tp.nombre AS tipo_producto,
+                mc.nombre AS marca,
+                pr.precio as precio_unitario
+            FROM 
+                carrito cr
+            INNER JOIN usuario usu ON cr.idUsuario = usu.idUsuario
+            INNER JOIN detalle_venta dv ON cr.idCarrito = dv.idCarrito
+            INNER JOIN producto pr ON dv.idProducto = pr.idProducto
+            INNER JOIN venta vt ON cr.idCarrito = vt.idCarrito
+            INNER JOIN modelo md ON pr.idModelo = md.idModelo
+            INNER JOIN tipo_producto tp ON pr.idTipo = tp.idTipo
+            INNER JOIN marca mc ON md.idMarca = mc.idMarca
+            WHERE vt.idVenta = %s;
+        """
+
+        print(f"Executing query with idVenta: {idVenta}")
+        cursor.execute(query, (idVenta,))
+        productos = cursor.fetchall()
+
+        # Debug: Imprime el resultado de la consulta
+        print(f"Resultados de la consulta: {productos}")
+
+        if not productos:
+            return render_template('resumen_compra.html', productos=[], total_compra=0, usuario=usuario)
+
+        # Asegúrate de que el índice 8 (subtotal) exista en cada producto
+        try:
+            total_compra = sum(producto[9] for producto in productos)
+        except IndexError:
+            print("Error: Un producto no tiene suficiente información.")
+            return jsonify({"mensaje": "Error al calcular el total de compra", "error": "Índice fuera de rango"})
+
+        productos_format = [
+            {
+                'idCarrito': producto[0],
+                'nombre_completo': producto[3],
+                'numDoc': producto[4],
+                'direccion': producto[5],
+                'fecha': producto[6],
+                'descuento': producto[7],
+                'subtotal': producto[9],
+                'modelo': producto[10],
+                'tipo_producto': producto[11],
+                'marca': producto[12],
+                'cantidad': producto[8],
+                'precio_unitario': producto[13]
+            }
+            for producto in productos
+        ]
+
+        return render_template(
+            'resumen_compra.html',
+            productos=productos_format,
+            total_compra=total_compra,
+            usuario=usuario
+        )
+
+    except Exception as e:
+        print(f"Error al cargar el resumen: {e}")
+        return jsonify({"mensaje": "Error al cargar el resumen", "error": str(e)})
 
 @app.route('/NikeMercurial')
 def NikeMercurial():
@@ -781,49 +865,60 @@ def finalizarCompra():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
+
 @app.route('/resumen_compra')
 def resumenCompra():
-    # Verificar si el usuario está autenticado
     usuario = session.get("usuario")
     if not usuario:
-        return redirect(url_for('login'))  # Redirigir al login si no hay sesión activa
+        return redirect(url_for('login'))
 
     id_usuario = usuario.get("idUsuario")
 
     try:
-        # Conectar con la base de datos y ejecutar la consulta
         db = conectarse()
         cursor = db.cursor()
 
         query = """
-        SELECT cr.idCarrito, usu.idUsuario, pr.idProducto, usu.nombre, usu.numDoc, 
-               vt.direccion, vt.fecha, cr.descuento, cr.subtotal
+       SELECT cr.idCarrito, usu.idUsuario, pr.idProducto, 
+               CONCAT(usu.nombre, ' ', usu.apePat) AS nombre_completo,
+               usu.numDoc, vt.direccion, vt.fecha, cr.descuento, 
+               cr.subtotal, md.nombre AS modelo, tp.nombre AS tipo_producto, 
+               mc.nombre AS marca, dv.cantidad, pr.precio
         FROM carrito cr
         INNER JOIN usuario usu ON cr.idUsuario = usu.idUsuario
         INNER JOIN detalle_venta dv ON cr.idCarrito = dv.idCarrito
         INNER JOIN producto pr ON dv.idProducto = pr.idProducto
         INNER JOIN venta vt ON cr.idCarrito = vt.idCarrito
-        WHERE cr.idUsuario = %s;
+        INNER JOIN modelo md ON pr.idModelo = md.idModelo
+        INNER JOIN tipo_producto tp ON pr.idTipo = tp.idTipo
+        INNER JOIN marca mc ON md.idMarca = mc.idMarca
+        WHERE cr.idUsuario = %s AND cr.idCarrito = (SELECT COALESCE(MAX(idCarrito), 0) FROM carrito WHERE idUsuario = %s);
         """
 
-        cursor.execute(query, (id_usuario,))
+        cursor.execute(query, (id_usuario, id_usuario))
         productos = cursor.fetchall()
 
-        # Calcular el total de la compra con el subtotal y descuento
-        total_compra = sum(producto[8] for producto in productos)  # Índice 8 es el subtotal
+        if not productos:
+            return render_template('resumen_compra.html', usuario=usuario, productos=[], total_compra=0)
 
-        # Formatear los productos para pasarlos a la plantilla
+        total_compra = sum(producto[8] for producto in productos)
+
         productos_format = [
             {
                 'idCarrito': producto[0],
                 'idUsuario': producto[1],
                 'idProducto': producto[2],
-                'nombre_usuario': producto[3],
+                'nombre_completo': producto[3],
                 'numDoc': producto[4],
                 'direccion': producto[5],
                 'fecha': producto[6],
                 'descuento': producto[7],
                 'subtotal': producto[8],
+                'modelo': producto[9],
+                'tipo_producto': producto[10],
+                'marca': producto[11],
+                'cantidad': producto[12],
+                'precio_unitario':producto[13]
             }
             for producto in productos
         ]
@@ -841,6 +936,8 @@ def resumenCompra():
             "error": f"Detalles del error: {repr(e)}",
             "status": -1
         })
+
+
 
 @app.route('/get_provincias/<int:departamento_id>')
 def get_provincias(departamento_id):

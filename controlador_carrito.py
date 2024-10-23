@@ -290,6 +290,83 @@ def obtener_id_carrito(id_usuario):
 #         conexion.close()  # Cerrar la conexión
 #     return detalles
 
+# def obtener_ventas_y_detalles(id_usuario):
+#     conexion = conectarse()
+#     ventas = []
+#     try:
+#         with conexion.cursor() as cursor:
+#             # Obtener todas las ventas del usuario
+#             cursor.execute("""
+#                 SELECT 
+#                     Venta.idVenta, 
+#                     Venta.fecha, 
+#                     Venta.hora, 
+#                     Venta.direccion
+#                 FROM 
+#                     Venta
+#                 INNER JOIN Carrito ON Venta.idCarrito = Carrito.idCarrito
+#                 WHERE 
+#                     Carrito.idUsuario = %s
+#                 ORDER BY Venta.fecha DESC, Venta.hora DESC;
+#             """, (id_usuario,))
+            
+#             ventas_base = cursor.fetchall()
+
+#             for venta in ventas_base:
+#                 id_venta = venta[0]
+                
+#                 # Obtener los detalles de cada venta (productos)
+#                 cursor.execute("""
+#                     SELECT 
+#                         P.descripcion AS nombre,         -- Nombre del producto
+#                         M.nombre AS modelo,              -- Nombre del modelo
+#                         T.nombre AS talla,               -- Nombre de la talla
+#                         P.precio AS precio,              -- Precio del producto
+#                         DV.cantidad AS cantidad,         -- Cantidad comprada
+#                         I.imagenPrincipal AS imagen      -- Imagen del producto
+#                     FROM 
+#                         Detalle_venta DV
+#                     INNER JOIN Producto P ON DV.idProducto = P.idProducto
+#                     INNER JOIN Modelo M ON P.idModelo = M.idModelo
+#                     INNER JOIN Talla T ON P.idTalla = T.id
+#                     INNER JOIN Imagen I ON P.idImagen = I.idImagen
+#                     WHERE 
+#                         DV.idCarrito = (
+#                             SELECT idCarrito FROM Venta WHERE idVenta = %s
+#                         );
+#                 """, (id_venta,))
+                
+#                 productos = cursor.fetchall()
+
+#                 # Convertir cada producto en un diccionario
+#                 productos_list = []
+#                 for producto in productos:
+#                     productos_list.append({
+#                         'nombre': producto[0],
+#                         'modelo': producto[1],
+#                         'talla': producto[2],
+#                         'precio': producto[3],
+#                         'cantidad': producto[4],
+#                         'imagen': producto[5]
+#                     })
+
+#                 # Agregar los detalles a la venta
+#                 ventas.append({
+#                     'idVenta': venta[0],
+#                     'fecha': venta[1],
+#                     'hora': venta[2],
+#                     'direccion': venta[3],
+#                     'productos': productos_list
+#                 })
+    
+#     except Exception as e:
+#         print(f"Error al obtener ventas y detalles: {e}")
+    
+#     finally:
+#         conexion.close()
+    
+#     return ventas
+
 def obtener_ventas_y_detalles(id_usuario):
     conexion = conectarse()
     ventas = []
@@ -318,12 +395,12 @@ def obtener_ventas_y_detalles(id_usuario):
                 # Obtener los detalles de cada venta (productos)
                 cursor.execute("""
                     SELECT 
-                        P.descripcion AS nombre,         -- Nombre del producto
-                        M.nombre AS modelo,              -- Nombre del modelo
-                        T.nombre AS talla,               -- Nombre de la talla
-                        P.precio AS precio,              -- Precio del producto
-                        DV.cantidad AS cantidad,         -- Cantidad comprada
-                        I.imagenPrincipal AS imagen      -- Imagen del producto
+                        P.descripcion AS nombre,        
+                        M.nombre AS modelo,             
+                        T.nombre AS talla,              
+                        P.precio AS precio,             
+                        DV.cantidad AS cantidad,        
+                        I.imagenPrincipal AS imagen     
                     FROM 
                         Detalle_venta DV
                     INNER JOIN Producto P ON DV.idProducto = P.idProducto
@@ -339,16 +416,17 @@ def obtener_ventas_y_detalles(id_usuario):
                 productos = cursor.fetchall()
 
                 # Convertir cada producto en un diccionario
-                productos_list = []
-                for producto in productos:
-                    productos_list.append({
+                productos_list = [
+                    {
                         'nombre': producto[0],
                         'modelo': producto[1],
                         'talla': producto[2],
                         'precio': producto[3],
                         'cantidad': producto[4],
                         'imagen': producto[5]
-                    })
+                    }
+                    for producto in productos
+                ]
 
                 # Agregar los detalles a la venta
                 ventas.append({
@@ -366,6 +444,7 @@ def obtener_ventas_y_detalles(id_usuario):
         conexion.close()
     
     return ventas
+
 
 
 # def obtener_imagen_compra_mayor(id_usuario):
