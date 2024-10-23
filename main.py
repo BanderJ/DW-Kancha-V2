@@ -10,6 +10,7 @@ import controlador_modelo
 import controlador_productos
 import controlador_carrito
 import controlador_ubicacion
+import controlador_tipo_usuario
 from bd import conectarse
 #Para generar claves en hash aleatoriassssss
 import hashlib
@@ -567,7 +568,8 @@ def usuario():
 @app.route('/AgregarUsuario')
 def formulario_agregar_usuario():
     niveles_usuario = controlador_nivelusuario.obtener_nivelusuario()
-    return render_template('agregar_usuario.html', niveles_usuario = niveles_usuario)
+    tipos_usuario = controlador_tipo_usuario.obtener_tipos_usuario()
+    return render_template('agregar_usuario.html', niveles_usuario = niveles_usuario, tipos_usuario = tipos_usuario)
 
 @app.route("/guardar_usuario", methods=["POST"])
 def guardar_usuario():
@@ -577,11 +579,20 @@ def guardar_usuario():
     apeMat = request.form["apeMat"]
     correo = request.form["correo"]
     password = request.form["password"]
-    tipoUsu = 1
-    nivelUsu = request.form["nivel_usuario"]
-    controlador_usuario.insertar_usuario(tipoUsu, nombre, nroDoc, apePat, apeMat, correo, password, controlador_nivelusuario.obtener_nivelusuario_por_nombre(nivelUsu)[0])
-    # De cualquier modo, y si todo fue bien, redireccionar
+    telefono = request.form["telefono"]
+    fechaNacimiento = request.form["fechaNacimiento"]
+    sexo = request.form["sexo"] 
+    tipoUsu_nombre = request.form["tipo_usuario"]
+    nivelUsu_nombre = request.form["nivel_usuario"]
+    
+    tipoUsu_id = controlador_tipo_usuario.obtener_tipo_usuario_por_nombre(tipoUsu_nombre)[0]
+    nivelUsu_id = controlador_nivelusuario.obtener_nivelusuario_por_nombre(nivelUsu_nombre)[0]
+
+    controlador_usuario.insertar_usuario(tipoUsu_id, nombre, nroDoc, apePat, apeMat, correo, password, telefono, fechaNacimiento, sexo, nivelUsu_id)
+
     return redirect("/Usuario")
+
+
 
 @app.route("/eliminar_usuario", methods=["POST"])
 def eliminar_usuario():
@@ -591,8 +602,9 @@ def eliminar_usuario():
 @app.route("/formulario_editar_Usuario/<int:id>")
 def formulario_editar_usuario(id):
     usuario = controlador_usuario.obtener_usuario_por_id(id)
+    tipos_usuario = controlador_tipo_usuario.obtener_tipos_usuario()
     niveles_usuario = controlador_nivelusuario.obtener_nivelusuario()
-    return render_template("editar_Usuario.html", usuario=usuario, niveles_usuario = niveles_usuario)
+    return render_template("editar_Usuario.html", usuario=usuario, niveles_usuario = niveles_usuario, tipos_usuario = tipos_usuario)
 
 @app.route("/actualizar_usuario", methods=["POST"])
 def actualizar_usuario():
@@ -602,11 +614,16 @@ def actualizar_usuario():
     apePat = request.form["apePat"]
     apeMat = request.form["apeMat"]
     correo = request.form["correo"]
-    password = request.form["password"]
-    tipoUsu = 1
-    nivelUsu = request.form["nivel_usuario"]
-    controlador_usuario.actualizar_usuario(tipoUsu, nombre, nroDoc, apePat, apeMat, correo, password, controlador_nivelusuario.obtener_nivelusuario_por_nombre(nivelUsu)[0], id)
+    telefono = request.form["telefono"] 
+    fechaNacimiento = request.form["fechaNacimiento"]  
+    sexo = request.form["sexo"] 
+    tipoUsu = request.form["tipo_usuario"]  
+    nivelUsu = request.form["nivel_usuario"]  
+
+    controlador_usuario.actualizar_usuario(controlador_tipo_usuario.obtener_tipo_usuario_por_nombre(tipoUsu)[0], nombre, nroDoc, apePat, apeMat, correo, telefono, fechaNacimiento, sexo, controlador_nivelusuario.obtener_nivelusuario_por_nombre(nivelUsu)[0], id)
+
     return redirect("/Usuario")
+
 
 # PARTE RELACIONADA AL PRODUCTO:
 
