@@ -459,7 +459,7 @@
                 var ntarj = $("#ntarj").val();
                 var onlyNumbersPattern = /^[0-9]+$/;  // Expresión regular que solo permite números
 
-                if (ntarj.length < 16) {
+                if (ntarj.length != 16) {
                     $("#errorNtarj").text("El número de tarjeta debe tener al menos 16 dígitos.");
                 } else if (!onlyNumbersPattern.test(ntarj)) {
                     $("#errorNtarj").text("El número de tarjeta solo debe contener números.");
