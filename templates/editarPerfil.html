@@ -1,0 +1,36 @@
+{% extends "maestra.html" %}
+{% block link %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/editarPerfil.css') }}">
+{% endblock %}
+{% block title %}Editar Usuario{% endblock %}
+{% block contenido %}
+<main>
+    <form action="{{ url_for('editarDatosPerfil') }}" method="post">
+        <label for="">Nombre</label>
+        <input type="text" name="nombre" value="{{datos[1]}}">
+        <br>
+        <label for="">Apellidos</label>
+        <input type="text" name="apellidos" value="{{datos[2]+' '+datos[3]}}">
+        <br>
+        <label for="">Email</label>
+        <input type="email" name="email" value="{{datos[4]}}">
+        <br>
+        <label for="">Número de documento</label>
+        <input type="text" name="numero_documento" value="{{datos[5]}}">
+        <br>
+        <label for="">Fecha Nacimiento</label>
+        <input type="date" name="fecha_nacimiento" value="{{ datos[6] }}">
+        <br>
+        <label for="">Sexo</label>
+        <select name="sexo">
+            <option value="Masculino" {% if datos[7] == 'M' %}selected{% endif %}>Masculino</option>
+            <option value="Femenino" {% if datos[7] == 'F' %}selected{% endif %}>Femenino</option>
+        </select>
+        <br>
+        <label for="">Número de celular</label>
+        <input type="text" name="telefono" value="{{datos[8]}}">
+        <br>
+        <input type="submit" value="Guardar cambios">
+    </form>
+</main>
+{% endblock %}
