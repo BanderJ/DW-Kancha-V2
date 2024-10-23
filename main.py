@@ -244,17 +244,13 @@ def validarInicioSesion():
         cursor.execute("SELECT idUsuario, nombre, apePat, apeMat, correo, numdoc,fechaNacimiento,sexo,telefono FROM usuario WHERE correo=%s AND password=%s", (email, contraseña,))
         registro = cursor.fetchone()
 
-        fecha_str = registro[6]
-        fecha_dt = datetime.strptime(fecha_str, "%a, %d %b %Y %H:%M:%S %Z")
-        fecha_formateada = fecha_dt.strftime("%d/%m/%Y")
-
         if registro:  # Verificar si se encontró un registro
             datosUsuario["idUsuario"] = registro[0]
             datosUsuario["nombre"] = registro[1]
             datosUsuario["apellidos"] = f"{registro[2]} {registro[3]}"
             datosUsuario["correo"] = registro[4]
             datosUsuario["numdoc"] = registro[5]
-            datosUsuario["fechaNac"]=fecha_formateada
+            datosUsuario["fechaNac"]=registro[6]
             datosUsuario["sexo"]=registro[7]
             datosUsuario["telefono"]=registro[8]
             datosUsuario["mensaje"] = "Usuario logueado exitosamente"
