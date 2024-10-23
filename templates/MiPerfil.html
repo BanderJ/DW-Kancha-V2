@@ -85,9 +85,9 @@ Mi perfil
                 </div>
                 <div class="row m-0 p-0 my-4">
                     <div class="botonPerfil col">
-                        <button id="edit-save-btn" class="btn bg-rojo-k l-blanco-k fondoKancha" onclick="toggleEditSave()">
+                        <a id="edit-save-btn" class="btn bg-rojo-k l-blanco-k fondoKancha" href="{{url_for('editarUsuario',id=userData.idUsuario)}}">
                             Editar perfil
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
