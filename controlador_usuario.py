@@ -60,10 +60,10 @@ def actualizar_usuario(idTipoUsuario, nombre, numDoc, apePat, apeMat, correo, te
     conexion.commit()
     conexion.close()
 
-def actualizarPerfilUsuario(nombre, numDoc, apePat, apeMat, correo,fechaNac,telefono, id):
+def actualizarPerfilUsuario(nombre, numDoc, apePat, apeMat, correo,fechaNac,telefono,sexo, id):
     conexion = obtener_conexion()
     with conexion.cursor() as cursor:
-        cursor.execute("UPDATE usuario SET nombre = %s, numDoc = %s, apePat = %s, apeMat = %s, correo = %s, fechaNacimiento=%s, telefono=%s WHERE idusuario = %s",
-                       (nombre, numDoc, apePat, apeMat, correo,fechaNac,telefono, id))
+        cursor.execute("UPDATE usuario SET nombre = %s, numDoc = %s, apePat = %s, apeMat = %s, correo = %s, fechaNacimiento=%s, telefono=%s,sexo=%s WHERE idusuario = %s",
+                       (nombre, numDoc, apePat, apeMat, correo,fechaNac,telefono,sexo, id))
     conexion.commit()
     conexion.close()
