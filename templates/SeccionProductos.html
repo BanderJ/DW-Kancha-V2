@@ -178,47 +178,53 @@
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary mt-3">Aplicar filtros</button>
+                    <button id="saveFilters" class="btn btn-success mb-3" type="submit">Aplicar filtros</button>
                 </form>
 
             </div>
 
             <div class="col-md-9">
                 <div class="row" id="productContainer">
+                    {% set seen_ids = [] %}  <!-- Inicializa una lista para rastrear IDs de productos -->
                     {% for producto in productos %}
-                    <div class="col-4 p-0 px-1 extrac product-card col-md-4 col-lg-3 col-sm-6 col-6">
-                        <div class="heart-container">
-                            <img src="{{ url_for('static', filename='img/corazonLleno.svg') if producto[0] in favoritos else url_for('static', filename='img/corazonVacio.svg') }}"
-                                class="heart-icon" data-id="{{producto[0]}}"
-                                data-corazon-lleno="{{ url_for('static', filename='img/corazonLleno.svg') }}"
-                                data-corazon-vacio="{{ url_for('static', filename='img/corazonVacio.svg') }}"
-                                onclick="toggleFavorite(this)" alt="heart">
-                        </div>
-                        <a href="{{url_for('detalle_producto', id=producto[0])}}">
-                            <img class="imagen img-fluid pb-2"
-                                src="{{ url_for('static', filename='img/' + producto[8]) }}">
-                        </a>
-                        <div class="row">
-                            <div class="col-12 mb-1">
-                                <p>{{ producto[7] }} {{producto[3]}}</p>
+                        {% if producto[0] not in seen_ids %}  <!-- Verifica si el ID del producto ya fue visto -->
+                            <div class="col-4 p-0 px-1 extrac product-card col-md-4 col-lg-3 col-sm-6 col-6">
+                                <div class="heart-container">
+                                    <img src="{{ url_for('static', filename='img/corazonLleno.svg') if producto[0] in favoritos else url_for('static', filename='img/corazonVacio.svg') }}"
+                                         class="heart-icon" data-id="{{ producto[0] }}"
+                                         data-corazon-lleno="{{ url_for('static', filename='img/corazonLleno.svg') }}"
+                                         data-corazon-vacio="{{ url_for('static', filename='img/corazonVacio.svg') }}"
+                                         onclick="toggleFavorite(this)" alt="heart">
+                                </div>
+                                <a href="{{ url_for('detalle_producto', id=producto[0]) }}">
+                                    <img class="imagen img-fluid pb-2"
+                                         src="{{ url_for('static', filename='img/' + producto[8]) }}">
+                                </a>
+                                <div class="row">
+                                    <div class="col-12 mb-1">
+                                        <p>{{ producto[7] }} {{ producto[3] }}</p>
+                                    </div>
+                                    <div class="col-6 pe-0">
+                                        <p class="text-start"><b>S/{{ ((producto[1] | float) * 0.85) | round(2) }}</b></p>
+                                    </div>
+                                    <div class="col-6 ps-0">
+                                        <p class="text-end"><b><s>S/ {{ producto[1] }}</s></b></p>
+                                    </div>
+                                    <div class="col-8 pe-0 my-1">
+                                        <p class="text-start l-rojo-k"><b>S/{{ ((producto[1] | float) * 0.50) | round(2) }}</b></p>
+                                    </div>
+                                    <div class="col-4 ps-0 d-flex justify-content-end my-1">
+                                        <img class="klo" src="{{ url_for('static', filename='img/logo_kancha_club.svg') }}"
+                                             alt="Logo pequeño">
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-6 pe-0">
-                                <p class="text-start"><b>S/{{((producto[1] | float)*0.85)| round(2)}}</b></p>
-                            </div>
-                            <div class="col-6 ps-0">
-                                <p class="text-end"><b><s>S/ {{producto[1]}}</s></b></p>
-                            </div>
-                            <div class="col-8 pe-0 my-1">
-                                <p class="text-start l-rojo-k"><b>S/ {{((producto[1] | float)*0.50 )| round(2)}}</b></p>
-                            </div>
-                            <div class="col-4 ps-0 d-flex justify-content-end my-1">
-                                <img class="klo" src="{{ url_for('static', filename='img/logo_kancha_club.svg') }}"
-                                    alt="Logo pequeño">
-                            </div>
-                        </div>
-                    </div>
+                            {% set seen_ids = seen_ids + [producto[0]] %}  <!-- Agrega el ID del producto a la lista -->
+                        {% endif %}
                     {% endfor %}
                 </div>
+                
+                
             </div>
         </div>
         <div class="col p-0"></div>
