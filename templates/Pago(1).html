@@ -1,10 +1,8 @@
-{% extends "maestra.html" %} 
-{% block titulo %}Pago{% endblock %} 
-{% block link %}
+{% extends "maestra.html" %} {% block titulo %}Pago{% endblock %} {% block link
+%}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/Pago.css') }}" />
 <link rel="stylesheet" href="{{ url_for('static', filename='css/titulo.css') }}" />
-{% endblock %} 
-{% block contenido %}
+{% endblock %} {% block contenido %}
 <main class="mt-4">
     <div class="row m-0 py-2">
         <div class="col p-0"></div>
@@ -42,7 +40,7 @@
                     <img src="{{ url_for('static', filename='img/usuario.svg') }}" alt="" class="imgTitulo" />
                 </p>
             </div>
-            
+
             <div class="mb-5">
                 <div class="row">
                     <div class="col">
@@ -77,40 +75,53 @@
                     <div class="accordion" id="accordionExample">
                         <!-- Primer paso: Contacto -->
                         <form action="{{ url_for('finalizarCompra')}}" method="POST">
-                            <input type="hidden" name="id_carrito" value="{{id_carrito}}">
+                            <input type="hidden" name="id_carrito" value="{{id_carrito}}" />
                             <div class="accordion-item">
-                                <h2 class="acordionEncabezado accordion-header d-flex justify-content-between align-items-center">
+                                <h2
+                                    class="acordionEncabezado accordion-header d-flex justify-content-between align-items-center">
                                     <span id="acordiontitle">Contacto</span>
-                                    <img src="{{ url_for('static', filename='img/edit-white.svg') }}" alt="toggle" class="toggle-img d-none" id="toggleOne" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" />
+                                    <img src="{{ url_for('static', filename='img/edit-white.svg') }}" alt="toggle"
+                                        class="toggle-img d-none" id="toggleOne" data-bs-toggle="collapse"
+                                        data-bs-target="#collapseOne" aria-expanded="true"
+                                        aria-controls="collapseOne" />
                                 </h2>
-                                <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                                <div id="collapseOne" class="accordion-collapse collapse show"
+                                    data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
                                         <div class="row">
                                             <div class="col-12">
                                                 <label for="correo">Correo</label><br />
-                                                <input style="width: 100%" type="text" name="correo" id="correo" />
+                                                <input style="width: 100%" type="text" name="correo" id="correo" required/>
+                                                <span id="errorCorreo" style="color: red; font-size: 0.9em"></span>
                                             </div>
                                         </div>
                                         <br />
                                         <div class="row">
                                             <div class="col">
                                                 <label for="nombres">Nombres</label> <br />
-                                                <input style="width: 100%" type="text" name="nombres" id="nombres" />
+                                                <input style="width: 100%" type="text" name="nombres" id="nombres" required />
+                                                <span id="errorNombres" style="color: red; font-size: 0.9em"></span>
                                             </div>
                                             <div class="col">
                                                 <label for="apellidos">Apellidos</label> <br />
-                                                <input style="width: 100%" type="text" name="apellidos" id="apellidos" />
+                                                <input style="width: 100%" type="text" name="apellidos"
+                                                    id="apellidos" required/>
+                                                <span id="errorApellidos" style="color: red; font-size: 0.9em"></span>
                                             </div>
                                         </div>
                                         <br />
                                         <div class="row">
                                             <div class="col">
                                                 <label for="dni">Documento de identidad</label> <br />
-                                                <input inputmode="numeric" style="width: 100%" type="text" name="dni" id="dni" />
+                                                <input inputmode="numeric" style="width: 100%" type="text" name="dni"
+                                                    id="dni" required />
+                                                <span id="errorDNI" style="color: red; font-size: 0.9em"></span>
                                             </div>
                                             <div class="col">
                                                 <label for="movil">Movil</label> <br />
-                                                <input inputmode="numeric" style="width: 100%" type="text" name="movil" id="movil" />
+                                                <input inputmode="numeric" style="width: 100%" type="text" name="movil"
+                                                    id="movil" required/>
+                                                <span id="errorMovil" style="color: red; font-size: 0.9em"></span>
                                             </div>
                                         </div>
                                         <br />
@@ -127,46 +138,62 @@
 
                             <!-- Segundo paso: Envío -->
                             <div class="accordion-item">
-                                <h2 class="acordionEncabezado accordion-header d-flex justify-content-between align-items-center">
+                                <h2
+                                    class="acordionEncabezado accordion-header d-flex justify-content-between align-items-center">
                                     <span id="acordiontitle">Envio</span>
-                                    <img src="{{ url_for('static', filename='img/edit-white.svg') }}" alt="toggle" class="toggle-img d-none" id="toggleTwo" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" />
+                                    <img src="{{ url_for('static', filename='img/edit-white.svg') }}" alt="toggle"
+                                        class="toggle-img d-none" id="toggleTwo" data-bs-toggle="collapse"
+                                        data-bs-target="#collapseTwo" aria-expanded="false"
+                                        aria-controls="collapseTwo" />
                                 </h2>
-                                <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                                <div id="collapseTwo" class="accordion-collapse collapse"
+                                    data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
                                         <div class="row">
                                             <div class="col-lg-6 col-md-6 col-sm-12 dataAddress">
                                                 <label class="form-label">Departamento:</label>
-                                                <select class="form-select" id="id_departamento" name="id_departamento" aria-label="Default select example" onchange="loadProvincias()">
-                                                    <option selected>--Seleccione su departamento--</option>
+                                                <select class="form-select" id="id_departamento" name="id_departamento"
+                                                    aria-label="Default select example" onchange="loadProvincias()">
+                                                    <option selected>
+                                                        --Seleccione su departamento--
+                                                    </option>
                                                     {% for departamento in departamentos %}
-                                                        <option value="{{departamento[0]}}">{{departamento[1]}}</option>
+                                                    <option value="{{departamento[0]}}">
+                                                        {{departamento[1]}}
+                                                    </option>
                                                     {% endfor %}
                                                 </select>
+                                                <span id="errorDepartamento" style="color: red; font-size: 0.9em"></span>
                                             </div>
                                         </div>
                                         <br />
                                         <div class="row">
                                             <div class="col-lg-6 col-md-6 col-sm-12 dataAddress">
                                                 <label class="form-label">Provincia:</label>
-                                                <select class="form-select" id="id_provincia" name="id_provincia" aria-label="Default select example" onchange="loadDistritos()">
+                                                <select class="form-select" id="id_provincia" name="id_provincia"
+                                                    aria-label="Default select example" onchange="loadDistritos()">
                                                     <option selected>--Seleccione su provincia--</option>
                                                 </select>
+                                                <span id="errorProvincia" style="color: red; font-size: 0.9em"></span>
                                             </div>
                                         </div>
                                         <br />
                                         <div class="row">
                                             <div class="col-lg-6 col-md-6 col-sm-12 dataAddress">
                                                 <label class="form-label">Distrito:</label>
-                                                <select class="form-select" id="id_distrito" name="id_distrito" aria-label="Default select example">
+                                                <select class="form-select" id="id_distrito" name="id_distrito"
+                                                    aria-label="Default select example">
                                                     <option selected>--Seleccione su distrito--</option>
                                                 </select>
+                                                <span id="errorDistrito" style="color: red; font-size: 0.9em"></span>
                                             </div>
                                         </div>
                                         <br />
                                         <div class="row">
                                             <div class="col-12">
                                                 <label for="direcc">Direccion</label><br />
-                                                <input style="width: 100%" type="text" name="direcc" id="direcc" />
+                                                <input style="width: 100%" type="text" name="direcc" id="direcc" required />
+                                                <span id="errorDireccion" style="color: red; font-size: 0.9em"></span>
                                             </div>
                                         </div>
                                         <br />
@@ -183,11 +210,16 @@
 
                             <!-- Tercer paso: Pago -->
                             <div class="accordion-item">
-                                <h2 class="acordionEncabezado accordion-header d-flex justify-content-between align-items-center">
+                                <h2
+                                    class="acordionEncabezado accordion-header d-flex justify-content-between align-items-center">
                                     <span id="acordiontitle">Pago</span>
-                                    <img src="{{ url_for('static', filename='img/edit-white.svg') }}" alt="toggle" class="toggle-img d-none" id="toggleThree" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" />
+                                    <img src="{{ url_for('static', filename='img/edit-white.svg') }}" alt="toggle"
+                                        class="toggle-img d-none" id="toggleThree" data-bs-toggle="collapse"
+                                        data-bs-target="#collapseThree" aria-expanded="false"
+                                        aria-controls="collapseThree" />
                                 </h2>
-                                <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                                <div id="collapseThree" class="accordion-collapse collapse"
+                                    data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
                                         <div class="row">
                                             <div class="col">
@@ -206,7 +238,8 @@
                                             <div class="col-12">
                                                 <label for="ntarj">Número de tarjeta</label><br />
                                                 <input inputmode="numeric" style="width: 100%" type="text" name="ntarj"
-                                                    id="ntarj" />
+                                                    id="ntarj" required />
+                                                <span id="errorNtarj" style="color: red; font-size: 0.9em"></span>
                                             </div>
                                         </div>
                                         <br />
@@ -215,7 +248,9 @@
                                                 <label for="nombrestarjeta">Nombres y apellidos del titular de
                                                     tarjeta</label><br />
                                                 <input style="width: 100%" type="text" name="nombrestarjeta"
-                                                    id="nombrestarjeta" />
+                                                    id="nombrestarjeta" required />
+                                                <span id="errorNombresTarjeta"
+                                                    style="color: red; font-size: 0.9em"></span>
                                             </div>
                                         </div>
                                         <br />
@@ -227,12 +262,15 @@
                                                 <span class="separator">/</span>
                                                 <input type="number" id="exp-year" name="exp-year" placeholder="AA"
                                                     min="0" max="99" required />
+                                                <br>
+                                                <span id="errorExp" style="color: red; font-size: 0.9em"></span>
                                             </div>
                                             <br /><br />
                                             <div class="col">
                                                 <label for="codeSeg">Código de seguridad</label><br />
                                                 <input inputmode="numeric" style="width: 100%" type="text"
-                                                    name="codeSeg" id="codeSeg" />
+                                                    name="codeSeg" id="codeSeg" required />
+                                                <span id="errorCodeSeg" style="color: red; font-size: 0.9em"></span>
                                             </div>
                                         </div>
                                         <br /><br />
@@ -290,11 +328,196 @@
         <div class="col p-0"></div>
     </div>
 </main>
-{% endblock %} 
+{% endblock %} {% block js %}
 
-{% block js %}
-<script src="{{ url_for('static', filename='js/scriptPago.js') }}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+    $(document).ready(function () {
+        let timer;
+
+        function delayedValidation(callback) {
+            clearTimeout(timer); // Limpiar el temporizador anterior
+            timer = setTimeout(callback, 500); // Ejecutar la función después de 1 segundo
+        }
+
+        // Validación para el campo de correo
+        $("#correo").on("keyup blur", function () {
+            delayedValidation(function () {
+                var correo = $("#correo").val();
+                var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailPattern.test(correo)) {
+                    $("#errorCorreo").text("El correo es inválido.");
+                } else {
+                    $("#errorCorreo").text(""); // Limpiar mensaje de error
+                }
+            });
+        });
+
+        // Validación para el campo de nombres
+        $("#nombres").on("keyup blur", function () {
+            delayedValidation(function () {
+                var nombres = $("#nombres").val();
+                if (nombres === "") {
+                    $("#errorNombres").text("El campo nombres no puede estar vacío.");
+                } else {
+                    $("#errorNombres").text(""); // Limpiar mensaje de error
+                }
+            });
+        });
+
+        // Validación para el campo de apellidos
+        $("#apellidos").on("keyup blur", function () {
+            delayedValidation(function () {
+                var apellidos = $("#apellidos").val();
+                if (apellidos === "") {
+                    $("#errorApellidos").text("El campo apellidos no puede estar vacío.");
+                } else {
+                    $("#errorApellidos").text(""); // Limpiar mensaje de error
+                }
+            });
+        });
+
+        // Validación para el campo de DNI
+        $("#dni").on("keyup blur", function () {
+            delayedValidation(function () {
+                var dni = $("#dni").val();
+                if (dni.length != 8) {
+                    $("#errorDNI").text("El DNI debe tener  8 dígitos.");
+                } else {
+                    $("#errorDNI").text(""); // Limpiar mensaje de error
+                }
+            });
+        });
+
+        // Validación para el campo de móvil (solo números)
+        $("#movil").on("keyup blur", function () {
+            delayedValidation(function () {
+                var movil = $("#movil").val();
+                var onlyNumbersPattern = /^[0-9]+$/;  // Expresión regular que solo permite números
+
+                if (movil.length != 9) {
+                    $("#errorMovil").text("El móvil debe tener al menos 9 dígitos.");
+                } else if (!onlyNumbersPattern.test(movil)) {
+                    $("#errorMovil").text("El móvil solo debe contener números.");
+                } else {
+                    $("#errorMovil").text("");  // Limpiar mensaje de error
+                }
+            });
+        });
+
+        // Validación de selección de Departamento
+    function validarDepartamento() {
+        var departamento = $("#id_departamento").val();
+        if (departamento === "--Seleccione su departamento--") {
+            $("#errorDepartamento").text("Debe seleccionar un departamento.");
+            return false;
+        } else {
+            $("#errorDepartamento").text("");
+            return true;
+        }
+    }
+
+    // Validación de selección de Provincia
+    function validarProvincia() {
+        var provincia = $("#id_provincia").val();
+        if (provincia === "--Seleccione su provincia--") {
+            $("#errorProvincia").text("Debe seleccionar una provincia.");
+            return false;
+        } else {
+            $("#errorProvincia").text("");
+            return true;
+        }
+    }
+
+    // Validación de selección de Distrito
+    function validarDistrito() {
+        var distrito = $("#id_distrito").val();
+        if (distrito === "--Seleccione su distrito--") {
+            $("#errorDistrito").text("Debe seleccionar un distrito.");
+            return false;
+        } else {
+            $("#errorDistrito").text("");
+            return true;
+        }
+    }
+
+        // Validación para el campo de Dirección
+        $("#direcc").on("keyup blur", function () {
+            delayedValidation(function () {
+                var direccion = $("#direcc").val();
+                if (direccion === "") {
+                    $("#errorDireccion").text("El campo dirección no puede estar vacío.");
+                } else {
+                    $("#errorDireccion").text(""); // Limpiar mensaje de error
+                }
+            });
+        });
+
+        // Validación para el campo de número de tarjeta (solo números)
+        $("#ntarj").on("keyup blur", function () {
+            delayedValidation(function () {
+                var ntarj = $("#ntarj").val();
+                var onlyNumbersPattern = /^[0-9]+$/;  // Expresión regular que solo permite números
+
+                if (ntarj.length < 16) {
+                    $("#errorNtarj").text("El número de tarjeta debe tener al menos 16 dígitos.");
+                } else if (!onlyNumbersPattern.test(ntarj)) {
+                    $("#errorNtarj").text("El número de tarjeta solo debe contener números.");
+                } else {
+                    $("#errorNtarj").text("");  // Limpiar mensaje de error
+                }
+            });
+        });
+
+        // Validación para los nombres de la tarjeta
+        $("#nombrestarjeta").on("keyup blur", function () {
+            delayedValidation(function () {
+                var nombrestarjeta = $("#nombrestarjeta").val();
+                if (nombrestarjeta === "") {
+                    $("#errorNombresTarjeta").text(
+                        "Debe ingresar los nombres y apellidos del titular de la tarjeta."
+                    );
+                } else {
+                    $("#errorNombresTarjeta").text(""); // Limpiar mensaje de error
+                }
+            });
+        });
+
+        // Validación para la fecha de vencimiento
+        $("#exp-month, #exp-year").on("keyup blur", function () {
+            delayedValidation(function () {
+                var expMonth = $("#exp-month").val();
+                var expYear = $("#exp-year").val();
+                var monthValid = expMonth >= 1 && expMonth <= 12; // Mes debe estar entre 1 y 12
+                var yearValid = expYear >= 1 && expYear <= 99; // Año debe estar entre 1 y 99
+
+                if (expMonth === "" || expYear === "") {
+                    $("#errorExp").text("Debe ingresar una fecha de vencimiento válida.");
+                } else if (!monthValid) {
+                    $("#errorExp").text("El mes debe estar entre 1 y 12.");
+                } else if (!yearValid) {
+                    $("#errorExp").text("El año debe estar entre 1 y 99.");
+                } else {
+                    $("#errorExp").text(""); // Limpiar mensaje de error si todo está correcto
+                }
+            });
+        });
+
+        // Validación para el código de seguridad
+        $("#codeSeg").on("keyup blur", function () {
+            delayedValidation(function () {
+                var codeSeg = $("#codeSeg").val();
+                if (codeSeg.length < 3) {
+                    $("#errorCodeSeg").text(
+                        "El código de seguridad debe tener al menos 3 dígitos."
+                    );
+                } else {
+                    $("#errorCodeSeg").text(""); // Limpiar mensaje de error
+                }
+            });
+        });
+    });
+
     function clearOptions(selectElement, defaultText) {
         selectElement.innerHTML = `<option selected>${defaultText}</option>`;
     }
@@ -308,33 +531,36 @@
         }
 
         fetch(`/get_provincias/${departamento_id}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Error en la solicitud");
-            }
-            return response.json();
-        })
-        .then(data => {
-            var id_provincia = document.getElementById("id_provincia");
-            var id_distrito = document.getElementById("id_distrito");
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Error en la solicitud");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                var id_provincia = document.getElementById("id_provincia");
+                var id_distrito = document.getElementById("id_distrito");
 
-            clearOptions(id_provincia, '--Seleccione su provincia--');
-            clearOptions(id_distrito, '--Seleccione su distrito--');
+                clearOptions(id_provincia, "--Seleccione su provincia--");
+                clearOptions(id_distrito, "--Seleccione su distrito--");
 
-            if (data.length === 0) {
-                console.warn("No se encontraron provincias para este departamento.");
-            } else {
-                data.forEach(function(provincia) {
-                    var option = document.createElement("option");
-                    option.value = provincia[0];  
-                    option.text = provincia[1];   
-                    id_provincia.appendChild(option);
-                });
-            }
-        })
-        .catch(error => {
-            console.error("Hubo un problema con la solicitud de provincias:", error);
-        });
+                if (data.length === 0) {
+                    console.warn("No se encontraron provincias para este departamento.");
+                } else {
+                    data.forEach(function (provincia) {
+                        var option = document.createElement("option");
+                        option.value = provincia[0];
+                        option.text = provincia[1];
+                        id_provincia.appendChild(option);
+                    });
+                }
+            })
+            .catch((error) => {
+                console.error(
+                    "Hubo un problema con la solicitud de provincias:",
+                    error
+                );
+            });
     }
 
     function loadDistritos() {
@@ -346,31 +572,32 @@
         }
 
         fetch(`/get_distritos/${provincia_id}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Error en la solicitud");
-            }
-            return response.json();
-        })
-        .then(data => {
-            var id_distrito = document.getElementById("id_distrito");
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Error en la solicitud");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                var id_distrito = document.getElementById("id_distrito");
 
-            clearOptions(id_distrito, '--Seleccione su distrito--');
+                clearOptions(id_distrito, "--Seleccione su distrito--");
 
-            if (data.length === 0) {
-                console.warn("No se encontraron distritos para esta provincia.");
-            } else {
-                data.forEach(function(distrito) {
-                    var option = document.createElement("option");
-                    option.value = distrito[0];  
-                    option.text = distrito[1];   
-                    id_distrito.appendChild(option);
-                });
-            }
-        })
-        .catch(error => {
-            console.error("Hubo un problema con la solicitud de distritos:", error);
-        });
+                if (data.length === 0) {
+                    console.warn("No se encontraron distritos para esta provincia.");
+                } else {
+                    data.forEach(function (distrito) {
+                        var option = document.createElement("option");
+                        option.value = distrito[0];
+                        option.text = distrito[1];
+                        id_distrito.appendChild(option);
+                    });
+                }
+            })
+            .catch((error) => {
+                console.error("Hubo un problema con la solicitud de distritos:", error);
+            });
     }
 </script>
+<script src="{{ url_for('static', filename='js/scriptPago.js') }}"></script>
 {% endblock %}
