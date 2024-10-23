@@ -153,11 +153,14 @@
             <img src="{{ url_for('static', filename='img/carrito.svg') }}" alt="" />
           </button>
         </a>
-        
-
         <button type="button" id="user-dropdown-button" class="btn btrig py-2 px-2">
           <img src="{{ url_for('static', filename='img/usuario.svg') }}" alt="" />
         </button>
+        <a href="{{ url_for('marca') }}">
+          <button type="button" class="btn btrig py-2" id="admin_temp">
+            <img src="{{ url_for('static', filename='img/admin_temp.png') }}" alt="" />
+          </button>
+        </a>
       </div>
 
       <div class="col"></div>
