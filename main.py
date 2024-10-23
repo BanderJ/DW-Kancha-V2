@@ -592,6 +592,25 @@ def guardar_usuario():
 
     return redirect("/Usuario")
 
+@app.route("/guardar_cliente", methods=["POST"])
+def guardar_cliente():
+    nombre = request.form["nombre"]
+    nroDoc = request.form["numerodocumento"]
+    apePat = request.form["apePat"]
+    apeMat = request.form["apeMat"]
+    correo = request.form["correo"]
+    password = request.form["password"]
+    telefono = request.form["telefono"]
+    fechaNacimiento = request.form["fechaNacimiento"]
+    sexo = request.form["sexo"] 
+    
+    tipoUsu_id = 2
+    nivelUsu_id = 1
+
+    controlador_usuario.insertar_usuario(tipoUsu_id, nombre, nroDoc, apePat, apeMat, correo, password, telefono, fechaNacimiento, sexo, nivelUsu_id)
+
+    return redirect('/IniciarSesion')
+
 
 
 @app.route("/eliminar_usuario", methods=["POST"])

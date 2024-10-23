@@ -7,9 +7,10 @@ Registrar Kanchero
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" href="{{url_for('static',filename='img/SVG/logo_kancha_club.svg')}}">
 <link rel="stylesheet" href="{{url_for('static',filename='css/RegistroUsuario.css')}}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/validacionRegistroUsuario.css') }}">
 {% endblock %}
 {% block contenido %}
-<form action="">
+<form action="{{ url_for('guardar_cliente') }}" method="post">
     <fieldset>
         <div id="metodos_crear">
             <label for="">Crear cuenta con</label>
@@ -34,37 +35,63 @@ Registrar Kanchero
             </div>
         </div>
         <hr>
-        <input type="text" placeholder="Nombres" class="campo">
-        <br>
-        <input type="text" placeholder="Apellidos" class="campo">
-        <br>
-        <select name="Tipo documento" id="" class="campo">
-            <option value="">DNI</option>
-            <option value="">Pasaporte</option>
-            <option value="">Carnet de extranjería</option>
+        <input type="text" placeholder="Nombres" class="input campo" name="nombre" id="nombre" required>
+        <span id="nombreError" class="error-message"></span>
+        <br><br>
+
+        <input type="text" placeholder="Apellido Paterno" class="input campo" name="apePat" id="apePat" required>
+        <span id="apePatError" class="error-message"></span>
+        <br><br>
+
+        <input type="text" placeholder="Apellido Materno" class="input campo" name="apeMat" id="apeMat" required>
+        <span id="apeMatError" class="error-message"></span>
+        <br><br>
+
+        <input type="number" placeholder="Número de documento" class="input campo" name="numerodocumento" id="numerodocumento" required>
+        <span id="nroDocError" class="error-message"></span>
+        <br><br>
+
+        <input type="email" placeholder="Correo e-mail" class="input campo" name="correo" id="correo" required>
+        <span id="correoError" class="error-message"></span>
+        <br><br>
+
+        <input type="password" placeholder="Contraseña" class="input campo" name="password" id="password" required>
+        <span id="passwordError" class="error-message"></span>
+        <br><br>
+
+        <input type="password" placeholder="Confirmar contraseña" class="input campo" name="confirmar_password" id="confirmar_password" required>
+        <span id="confirmarPasswordError" class="error-message"></span>
+        <br><br>
+
+        <input type="tel" placeholder="Teléfono" class="input campo" name="telefono" id="telefono" required>
+        <span id="telefonoError" class="error-message"></span>
+        <br><br>
+
+        <input type="date" class="input campo" name="fechaNacimiento" id="fechaNacimiento" required>
+        <span id="fechaError" class="error-message"></span>
+        <br><br>
+
+        <select name="sexo" id="sexo" class="input campo" required>
+            <option value="" disabled selected>Seleccione sexo</option>
+            <option value="M">Masculino</option>
+            <option value="F">Femenino</option>
+            <option value="N">No especificado</option>
         </select>
-        <br>
-        <input type="text" placeholder="Num documento" class="campo">
-        <br>
-        <input type="email" placeholder="Correo e-mail" class="campo">
-        <br>
-        <input type="password" placeholder="Contraseña" class="campo">
-        <br>
-        <input type="password" placeholder="Confirmar contraseña" class="campo">
-        <br>
-        <br>
+        <span id="sexoError" class="error-message"></span>
+        <br><br>
         <div id="ctn_acuerdos">
-            <input type="checkbox" name="politicas" id=""><label for="politicas">Acepto las políticas de seguridad y
-                privacidad de Kancha</label><br><br>
-            <input type="checkbox" name="cookies" id=""><label for="cookies">Acepto las políticas de cookies
-                empleadas en Kancha</label><br><br>
-            <input type="checkbox" name="datos" id=""><label for="datos">Aceptar tratamiento de
-                datos</label><br><br>
-            <input type="checkbox" name="condiciones" id=""><label for="condiciones">Estoy de acuerdo con las
-                condiciones de uso de Kancha</label><br>
+            <input type="checkbox" name="politicas" id="politicas" required>
+            <label for="politicas">Acepto las políticas de seguridad y privacidad de Kancha</label><br><br>
+            <input type="checkbox" name="cookies" id="cookies" required>
+            <label for="cookies">Acepto las políticas de cookies empleadas en Kancha</label><br><br>
+            <input type="checkbox" name="datos" id="datos" required>
+            <label for="datos">Aceptar tratamiento de datos</label><br><br>
+            <input type="checkbox" name="condiciones" id="condiciones" required>
+            <label for="condiciones">Estoy de acuerdo con las condiciones de uso de Kancha</label><br>
         </div>
         <br>
-        <input type="submit" value="Crear Cuenta" id="enviar">
+        <button type="submit" value="Crear Cuenta" id="enviar">Crear Cuenta</button>
     </fieldset>
 </form>
+<script src="{{ url_for('static', filename='js/validacionRegistroUsuario.js') }}"></script>
 {% endblock %}
