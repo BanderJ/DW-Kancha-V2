@@ -1,87 +1,99 @@
 {% extends "maestradashboard.html" %}
+
 {% block titulomantenimiento %}
 Editar Usuario
 {% endblock %}
+
 {% block mantenimiento %}
+<!-- Mantengo el CSS de usuario y añado el del modal -->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/usuario.css') }}">
-<section class="section container my-5">
-    <div class="columns">
-        <div class="column">
-            <h3 class="is-size-3">Editar Usuario</h3>
-            <form action="{{url_for('actualizar_usuario')}}" method="post">
-                {# Enviar el id en un campo oculto #}
-                <input type="hidden" name="id" value="{{usuario[0]}}">
-                
-                <label for="nombre">Nombre:</label>
-                <input required type="text" value="{{usuario[1]}}" class="input" placeholder="Nombre" name="nombre" id="nombre">
-                <span id="nombreError" class="error-message"></span> <!-- Mensaje de error -->
-                <br><br>
-                
-                <label for="numerodocumento">Número de Documento:</label>
-                <input required type="number" value="{{usuario[2]}}" class="input" placeholder="Número de documento" name="numerodocumento" id="numerodocumento">
-                <span id="nroDocError" class="error-message"></span> <!-- Mensaje de error -->
-                <br><br>
-                
-                <label for="apePat">Apellido Paterno:</label>
-                <input required type="text" value="{{usuario[3]}}" class="input" placeholder="Apellido Paterno" name="apePat" id="apePat">
-                <span id="apePatError" class="error-message"></span> <!-- Mensaje de error -->
-                <br><br>
-                
-                <label for="apeMat">Apellido Materno:</label>
-                <input required type="text" value="{{usuario[4]}}" class="input" placeholder="Apellido Materno" name="apeMat" id="apeMat">
-                <span id="apeMatError" class="error-message"></span> <!-- Mensaje de error -->
-                <br><br>
-                
-                <label for="correo">Correo:</label>
-                <input required type="email" value="{{usuario[5]}}" class="input" placeholder="Correo" name="correo" id="correo">
-                <span id="correoError" class="error-message"></span> <!-- Mensaje de error -->
-                <br><br>
-                
-                <label for="telefono">Teléfono:</label>
-                <input required type="tel" value="{{usuario[6]}}" class="input" placeholder="Teléfono" name="telefono" id="telefono">
-                <span id="telefonoError" class="error-message"></span> <!-- Mensaje de error -->
-                <br><br>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
 
-                <label for="fechaNacimiento">Fecha de Nacimiento:</label>
-                <input required type="date" value="{{usuario[7]}}" class="input" name="fechaNacimiento" id="fechaNacimiento">
-                <span id="fechaError" class="error-message"></span> <!-- Mensaje de error -->
-                <br><br>
-
-                <label for="sexo">Sexo:</label>
-                <select name="sexo" id="sexo" class="input" required>
-                    <option value="{{usuario[8]}}" disabled selected>Seleccione sexo</option>
-                    <option value="M" {% if usuario[8] == 'M' %}selected{% endif %}>Masculino</option>
-                    <option value="F" {% if usuario[8] == 'F' %}selected{% endif %}>Femenino</option>
-                    <option value="N" {% if usuario[8] == 'N' %}selected{% endif %}>No especificado</option>
-                </select>
-                <span id="sexoError" class="error-message"></span> <!-- Mensaje de error -->
-                <br><br>
-
-                <label for="tipo_usuario">Tipo de Usuario:</label>
-                <select name="tipo_usuario" id="tipo_usuario" class="input" required>
-                    <option value="{{usuario[9]}}" disabled selected>Seleccione un tipo de usuario</option>
-                    {% for tipo in tipos_usuario %}
-                        <option value="{{ tipo[1] }}" {% if tipo[1] == usuario[9] %}selected{% endif %}>{{ tipo[1] }}</option>
-                    {% endfor %}
-                </select>
-                <span id="tipoUsuError" class="error-message"></span> <!-- Mensaje de error -->
-                <br><br>
-
-                <label for="nivel_usuario">Nivel de Usuario:</label>
-                <select name="nivel_usuario" id="nivel_usuario" class="input" required>
-                    <option value="{{usuario[10]}}" disabled selected>Seleccione un nivel de usuario</option>
-                    {% for nivel in niveles_usuario %}
-                        <option value="{{ nivel[1] }}">{{ nivel[1] }}</option>
-                    {% endfor %}
-                </select>
-                <span id="nivelUsuError" class="error-message"></span> <!-- Mensaje de error -->
-                <br><br>
-
-                <button type="submit" class="button is-success mt-2">Guardar</button>
-                <a href="{{url_for('usuario')}}" class="button is-primary mt-2">Volver</a>
-            </form>
+<div class="columns">
+    <div class="column">
+        <div style="display: flex; justify-content: flex-end;">
+            <a class="d-flex align-items-center me-2 regresar" href="{{url_for('usuario')}}" style="text-decoration: none;">
+                <button class="btn bg-rojo-k me-2 d-flex align-items-center">
+                    <img class="img-fluid" src="{{url_for('static',filename='img/fr.svg')}}" alt="" style="max-height: 32px;"> <!-- Ajusta el tamaño de la imagen si es necesario -->
+                </button>
+                <label class="l-rojo-k" for="regresar" style="margin: 0;">Volver</label>
+            </a>
         </div>
+        <form action="{{url_for('actualizar_usuario')}}" method="post" id="editarUsuarioForm">
+            {# Enviar el id en un campo oculto #}
+            <input type="hidden" name="id" value="{{usuario[0]}}">
+            <label for="nombre">Nombre:</label>
+            <input required type="text" value="{{usuario[1]}}" class="input" placeholder="Nombre" name="nombre" id="nombre">
+            <span id="nombreError" class="error-message"></span>
+            <br><br>
+            <label for="numerodocumento">Número de Documento:</label>
+            <input required type="number" value="{{usuario[2]}}" class="input" placeholder="Número de documento" name="numerodocumento" id="numerodocumento">
+            <span id="nroDocError" class="error-message"></span>
+            <br><br>
+            <label for="apePat">Apellido Paterno:</label>
+            <input required type="text" value="{{usuario[3]}}" class="input" placeholder="Apellido Paterno" name="apePat" id="apePat">
+            <span id="apePatError" class="error-message"></span>
+            <br><br>
+            <label for="apeMat">Apellido Materno:</label>
+            <input required type="text" value="{{usuario[4]}}" class="input" placeholder="Apellido Materno" name="apeMat" id="apeMat">
+            <span id="apeMatError" class="error-message"></span>
+            <br><br>
+            <label for="correo">Correo:</label>
+            <input required type="email" value="{{usuario[5]}}" class="input" placeholder="Correo" name="correo" id="correo">
+            <span id="correoError" class="error-message"></span>
+            <br><br>
+            <label for="telefono">Teléfono:</label>
+            <input required type="tel" value="{{usuario[6]}}" class="input" placeholder="Teléfono" name="telefono" id="telefono">
+            <span id="telefonoError" class="error-message"></span>
+            <br><br>
+            <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+            <input required type="date" value="{{usuario[7]}}" class="input" name="fechaNacimiento" id="fechaNacimiento">
+            <span id="fechaError" class="error-message"></span>
+            <br><br>
+            <label for="sexo">Sexo:</label>
+            <select name="sexo" id="sexo" class="input" required>
+                <option value="{{usuario[8]}}" disabled selected>Seleccione sexo</option>
+                <option value="M" {% if usuario[8] == 'M' %}selected{% endif %}>Masculino</option>
+                <option value="F" {% if usuario[8] == 'F' %}selected{% endif %}>Femenino</option>
+                <option value="N" {% if usuario[8] == 'N' %}selected{% endif %}>No especificado</option>
+            </select>
+            <span id="sexoError" class="error-message"></span>
+            <br><br>
+            <label for="tipo_usuario">Tipo de Usuario:</label>
+            <select name="tipo_usuario" id="tipo_usuario" class="input" required>
+                <option value="{{usuario[9]}}" disabled selected>Seleccione un tipo de usuario</option>
+                {% for tipo in tipos_usuario %}
+                <option value="{{ tipo[1] }}" {% if tipo[1] == usuario[9] %}selected{% endif %}>{{ tipo[1] }}</option>
+                {% endfor %}
+            </select>
+            <span id="tipoUsuError" class="error-message"></span>
+            <br><br>
+            <label for="nivel_usuario">Nivel de Usuario:</label>
+            <select name="nivel_usuario" id="nivel_usuario" class="input" required>
+                <option value="{{usuario[10]}}" disabled selected>Seleccione un nivel de usuario</option>
+                {% for nivel in niveles_usuario %}
+                <option value="{{ nivel[1] }}" {% if nivel[1] == usuario[10] %}selected{% endif %}>{{ nivel[1] }}</option>
+                {% endfor %}
+            </select>
+            <span id="nivelUsuError" class="error-message"></span>
+            <br><br>
+            <!-- Botón para abrir el modal -->
+            <button type="button" class="button is-success mt-2 openModalButton" data-form-id="editarUsuarioForm">Guardar Cambios</button>
+        </form>
     </div>
-</section>
+</div>
+
+<!-- Modal de Confirmación -->
+<div id="confirmationModal" class="modal">
+    <div class="modal-content">
+        <h2>¿Estás seguro de modificar al usuario?</h2>
+        <p>Esta acción actualizará la información del usuario. ¿Deseas continuar?</p>
+        <button id="confirmButton" class="btn">Sí, Modificar</button>
+        <button id="cancelButton" class="btn">Cancelar</button>
+    </div>
+</div>
+
+<!-- Mantengo el JS de usuario y añado el del modal -->
 <script src="{{ url_for('static', filename='js/usuario.js') }}"></script>
+<script src="{{ url_for('static', filename='js/modal.js') }}"></script>
 {% endblock %}
