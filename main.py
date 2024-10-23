@@ -224,10 +224,38 @@ def registrarUsuario():
 def mostrarPerfil():
     datos = session.get("usuario", {"nombre":"Invitado","apellidos":"Invitado"})
     if datos["nombre"] != "Invitado":
-        # Solo formatear la fecha si hay sesión del usuario
-        fecha_nac = datetime.strptime(datos["fechaNac"], "%a, %d %b %Y %H:%M:%S %Z")
-        formato_fecha = fecha_nac.strftime("%d/%m/%Y")
-        return render_template("MiPerfil.html", userData=datos,nacimiento=formato_fecha)
+        fecha_str = datos["fechaNac"]
+
+        # Dividir la cadena y extraer los componentes necesarios
+        partes = fecha_str.split()  # Esto separa la cadena en partes
+
+        # Obtener el día, el mes y el año
+        dia = partes[1]  # '06'
+        mes = partes[2]  # 'Sep'
+        anio = partes[3]  # '2024'
+
+        # Crear un diccionario para convertir el mes abreviado a su número correspondiente
+        meses = {
+            'Jan': '01',
+            'Feb': '02',
+            'Mar': '03',
+            'Apr': '04',
+            'May': '05',
+            'Jun': '06',
+            'Jul': '07',
+            'Aug': '08',
+            'Sep': '09',
+            'Oct': '10',
+            'Nov': '11',
+            'Dec': '12'
+        }
+
+        # Obtener el número del mes
+        mes_num = meses[mes]
+
+        # Formatear la nueva fecha
+        nueva_fecha = f"{dia}/{mes_num}/{anio}"
+        return render_template("MiPerfil.html", userData=datos,nacimiento=nueva_fecha)
     else:
         return redirect("/IniciarSesion")
     
