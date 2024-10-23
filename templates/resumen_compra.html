@@ -1,0 +1,50 @@
+{% extends "maestra.html" %}
+
+{% block titulo %}
+Resumen de Compra
+{% endblock %}
+
+{% block contenido %}
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Resumen de Compra</h2>
+
+  <!-- Detalles de productos -->
+  <div class="table-responsive">
+    <table class="table table-bordered">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">ID Carrito</th>
+          <th scope="col">ID Producto</th>
+          <th scope="col">Usuario</th>
+          <th scope="col">Documento</th>
+          <th scope="col">Dirección</th>
+          <th scope="col">Fecha</th>
+          <th scope="col">Subtotal</th>
+          <th scope="col">Descuento</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for producto in productos %}
+        <tr>
+          <td>{{ producto.idCarrito }}</td>
+          <td>{{ producto.idProducto }}</td>
+          <td>{{ producto.nombre_usuario }}</td>
+          <td>{{ producto.numDoc }}</td>
+          <td>{{ producto.direccion }}</td>
+          <td>{{ producto.fecha }}</td>
+          <td>S/. {{ producto.subtotal }}</td>
+          <td>S/. {{ producto.descuento }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Total de la compra -->
+  <div class="d-flex justify-content-end mt-4">
+    <h4>Total: <span class="text-success">S/. {{ total_compra }}</span></h4>
+  </div>
+
+  <!-- Botones de acción -->
+</div>
+{% endblock %}

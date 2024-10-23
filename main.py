@@ -777,9 +777,70 @@ def finalizarCompra():
     # Llamar a la función incrementarcantidad para actualizar en la base de datos
     try:
         controlador_carrito.finalizarCompra_bd(id_carrito, id_ciudad, direccion, id_usuario)
-        return redirect(url_for('inicio'))
+        return redirect(url_for('resumenCompra'))
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+@app.route('/resumen_compra')
+def resumenCompra():
+    # Verificar si el usuario está autenticado
+    usuario = session.get("usuario")
+    if not usuario:
+        return redirect(url_for('login'))  # Redirigir al login si no hay sesión activa
+
+    id_usuario = usuario.get("idUsuario")
+
+    try:
+        # Conectar con la base de datos y ejecutar la consulta
+        db = conectarse()
+        cursor = db.cursor()
+
+        query = """
+        SELECT cr.idCarrito, usu.idUsuario, pr.idProducto, usu.nombre, usu.numDoc, 
+               vt.direccion, vt.fecha, cr.descuento, cr.subtotal
+        FROM carrito cr
+        INNER JOIN usuario usu ON cr.idUsuario = usu.idUsuario
+        INNER JOIN detalle_venta dv ON cr.idCarrito = dv.idCarrito
+        INNER JOIN producto pr ON dv.idProducto = pr.idProducto
+        INNER JOIN venta vt ON cr.idCarrito = vt.idCarrito
+        WHERE cr.idUsuario = %s;
+        """
+
+        cursor.execute(query, (id_usuario,))
+        productos = cursor.fetchall()
+
+        # Calcular el total de la compra con el subtotal y descuento
+        total_compra = sum(producto[8] for producto in productos)  # Índice 8 es el subtotal
+
+        # Formatear los productos para pasarlos a la plantilla
+        productos_format = [
+            {
+                'idCarrito': producto[0],
+                'idUsuario': producto[1],
+                'idProducto': producto[2],
+                'nombre_usuario': producto[3],
+                'numDoc': producto[4],
+                'direccion': producto[5],
+                'fecha': producto[6],
+                'descuento': producto[7],
+                'subtotal': producto[8],
+            }
+            for producto in productos
+        ]
+
+        return render_template(
+            'resumen_compra.html',
+            usuario=usuario,
+            productos=productos_format,
+            total_compra=total_compra
+        )
+
+    except Exception as e:
+        return jsonify({
+            "mensaje": "Error al cargar el resumen de compra",
+            "error": f"Detalles del error: {repr(e)}",
+            "status": -1
+        })
 
 @app.route('/get_provincias/<int:departamento_id>')
 def get_provincias(departamento_id):

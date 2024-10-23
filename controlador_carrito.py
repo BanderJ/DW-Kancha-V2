@@ -466,3 +466,11 @@ def obtener_cantidad_actual(id_det_vta):
     finally:
         conexion.close()
     return cantidad_actual
+
+
+# SELECT cr.idCarrito, usu.idUsuario, usu.nombre, usu.numDoc, vt.direccion, vt.fecha, cr.descuento, cr.subtotal
+# from carrito cr inner join usuario usu on cr.idUsuario = usu.idUsuario
+# inner join detalle_venta dv on cr.idCarrito = dv.idCarrito
+# inner join producto pr on dv.idProducto = pr.idProducto
+# inner join venta vt on cr.idCarrito = vt.idCarrito
+# where idUsuario = 
