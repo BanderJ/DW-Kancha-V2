@@ -432,6 +432,7 @@ def editarDatosPerfil():
             email,
             fecha_nacimiento,
             numero_celular,
+            sexo,
             idUsuario
         )
         
