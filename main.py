@@ -115,7 +115,7 @@ def authorizeGoogle():
 @app.route("/")
 @app.route("/Inicio")
 def inicio():
-    productos = controlador_productos.obtener_productos()
+    productos = controlador_productos.obtener_3_producto()
     # Pasa valores predeterminados para evitar errores en las plantillas que dependen de estas variables
     return render_template(
         "index.html", 
@@ -150,7 +150,7 @@ def listadoProductos():
 def seccionProductos():
     idUsuario = session.get("usuario", {}).get("idUsuario", None)
     
-    productos = controlador_productos.obtener_productos()
+    productos = controlador_productos.obtener_productos_diferentes()
     generos = controlador_productos.obtener_generos()
     categorias = controlador_productos.obtener_categorias()
     colores = controlador_productos.obtener_colores()
@@ -559,11 +559,13 @@ def guardar_producto():
     tipo_producto = request.form["idTipo"]
     descripcion = request.form["descripcion"]
     imagenPrincipal = request.files["imagenPrincipal"]
+    estado = request.form.get('vigencia')
     imagenesSecundarias = request.files.getlist("imagenesSecundarias")
     colores = request.form.getlist("colores")
     categorias = request.form.getlist("categorias")
+    estado = 'A' if request.form.get('vigencia') == '1' else 'I'
 
-    controlador_productos.insertar_producto(precio, stock, idModelo, idTalla, genero, tipo_producto, imagenPrincipal, imagenesSecundarias, colores, categorias,descripcion)
+    controlador_productos.insertar_producto(precio, stock, idModelo, idTalla, genero, tipo_producto, imagenPrincipal, imagenesSecundarias, colores, categorias,descripcion,estado)
     flash("Producto agregado exitosamente.")
     return redirect("/formulario_productos")
 
@@ -596,14 +598,16 @@ def actualizar_producto():
     idTalla = request.form["idTalla"]
     genero = request.form["idGenero"]
     tipo_producto = request.form["idTipo"]
-
+    estado = request.form.get('vigencia')
     descripcion = request.form["descripcion"]
     imagenPrincipal = request.files["imagenPrincipal"]
     imagenesSecundarias = request.files.getlist("imagenesSecundarias")
     colores = request.form.getlist("colores")
     categorias = request.form.getlist("categorias")
 
-    controlador_productos.actualizar_producto(id, precio, stock, idModelo, idTalla, genero, tipo_producto, imagenPrincipal, imagenesSecundarias, colores, categorias, descripcion)
+    estado = 'A' if request.form.get('vigencia') == '1' else 'I'
+    
+    controlador_productos.actualizar_producto(id, precio, stock, idModelo, idTalla, genero, tipo_producto, imagenPrincipal, imagenesSecundarias, colores, categorias, descripcion,estado)
     flash("Producto actualizado.")
     return redirect("/formulario_productos")
 
@@ -611,21 +615,35 @@ def actualizar_producto():
 @app.route("/producto/<int:id>")
 def detalle_producto(id):
     usuario = session.get("usuario", None)
+    print(id)
+    productos_gustarte = controlador_productos.obtener_3_producto()
+    # Llamamos a la función para obtener las tallas del producto
+    producto_tallas = controlador_productos.obtenerTallasPorProducto(id)
+    
+    # Usamos un diccionario para eliminar duplicados basados en la talla (size[1])
+    # La clave es la talla, el valor es la tupla completa.
+    tallas_unicas = {talla[1]: talla for talla in producto_tallas}
 
+    # Convertimos el diccionario de vuelta a una lista de tuplas
+    tallas_filtradas = list(tallas_unicas.values())
+    print(producto_tallas)
     producto = controlador_productos.obtener_producto_por_id(id)
-
+    colores_similares = controlador_productos.obtenerConColorDiferentePorID(id)
+    print(colores_similares)
     if usuario is None:
-        return render_template("detalle_producto.html", producto=producto)
+        return render_template("detalle_producto.html", producto=producto,colores_similares=colores_similares,productos_gustarte=productos_gustarte,producto_tallas=tallas_filtradas)
 
     idUsuario = usuario.get("idUsuario")
     favoritos = controlador_favoritos.obtener_favoritos(idUsuario)
-    ids_favoritos = {fav[0] for fav in favoritos}  
-
+    ids_favoritos = {fav[0] for fav in favoritos} 
     return render_template(
         "detalle_producto.html", 
         producto=producto, 
+        colores_similares=colores_similares,
         favoritos=ids_favoritos, 
-        usuario=usuario
+        usuario=usuario,
+        productos_gustarte=productos_gustarte,
+        producto_tallas=producto_tallas
     )
 
 

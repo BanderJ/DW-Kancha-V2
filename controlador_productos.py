@@ -8,7 +8,7 @@ def guardar_imagen(archivo, carpeta='static/img'):
     return archivo.filename
 
 # Insertar producto con imágenes, colores y categorías
-def insertar_producto(precio, stock, idModelo, idTalla, genero, tipo_producto, imagenPrincipal, imagenSecundarias, colores, categorias,descripcion):
+def insertar_producto(precio, stock, idModelo, idTalla, genero, tipo_producto, imagenPrincipal, imagenSecundarias, colores, categorias,descripcion,estado):
     conexion = conectarse()
     try:
         # Guardar las imágenes
@@ -24,8 +24,8 @@ def insertar_producto(precio, stock, idModelo, idTalla, genero, tipo_producto, i
 
             # Insertar en la tabla Producto
             cursor.execute(
-                "INSERT INTO Producto (precio, stock, idModelo, idTalla, idImagen, idGenero, idTipo, descripcion) VALUES ( %s, %s, %s, %s, %s, %s, %s, %s)",
-                (precio, stock, idModelo, idTalla, idImagen, genero, tipo_producto, descripcion)
+                "INSERT INTO Producto (precio, stock, idModelo, idTalla, idImagen, idGenero, idTipo, descripcion,estado) VALUES ( %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                (precio, stock, idModelo, idTalla, idImagen, genero, tipo_producto, descripcion,estado)
             )
             idProducto = cursor.lastrowid
 
@@ -53,9 +53,10 @@ def obtener_productos():
             SELECT p.idProducto, p.precio, p.stock, m.nombre AS modelo_nombre, 
                    GROUP_CONCAT(DISTINCT c.nombre SEPARATOR ', ') AS colores, 
                    ge.nombre as genero, t.nombre AS talla_nombre, 
-                   tp.nombre as tipo_producto, img.imagenPrincipal, img.imagenSec01, img.imagenSec02, img.imagenSec03, p.descripcion
-            FROM Producto p
+                   tp.nombre as tipo_producto, img.imagenPrincipal, img.imagenSec01, img.imagenSec02, img.imagenSec03, p.descripcion, p.estado, ma.nombre
+            FROM Producto p 
             JOIN Modelo m ON p.idModelo = m.idModelo
+            JOIN Marca ma ON m.idMarca = ma.idMarca
             JOIN Talla t ON p.idTalla = t.id
             JOIN Producto_Color pc ON pc.idProducto = p.idProducto
             JOIN Color c ON pc.idColor = c.idColor
@@ -63,6 +64,54 @@ def obtener_productos():
             JOIN Genero ge ON ge.idGenero = p.idGenero
             JOIN tipo_producto tp ON tp.idTipo = p.idTipo
             GROUP BY p.idProducto
+        """)
+        productos = cursor.fetchall()
+    conexion.close()
+    return productos
+def obtener_3_producto():
+    conexion = conectarse()
+    productos = []
+    with conexion.cursor() as cursor:
+        cursor.execute("""
+            SELECT p.idProducto, p.precio, p.stock, m.nombre AS modelo_nombre, 
+                   GROUP_CONCAT(DISTINCT c.nombre SEPARATOR ', ') AS colores, 
+                   ge.nombre as genero, t.nombre AS talla_nombre, 
+                   tp.nombre as tipo_producto, img.imagenPrincipal, img.imagenSec01, img.imagenSec02, img.imagenSec03, p.descripcion, p.estado, ma.nombre
+            FROM Producto p 
+            JOIN Modelo m ON p.idModelo = m.idModelo
+            JOIN Marca ma ON m.idMarca = ma.idMarca
+            JOIN Talla t ON p.idTalla = t.id
+            JOIN Producto_Color pc ON pc.idProducto = p.idProducto
+            JOIN Color c ON pc.idColor = c.idColor
+            JOIN Imagen img ON p.idImagen = img.idImagen
+            JOIN Genero ge ON ge.idGenero = p.idGenero
+            JOIN tipo_producto tp ON tp.idTipo = p.idTipo
+            GROUP BY tp.nombre,m.nombre,ge.nombre,ma.nombre
+            LIMIT 3
+        """)
+        productos = cursor.fetchall()
+    conexion.close()
+    return productos
+
+def obtener_productos_diferentes():
+    conexion = conectarse()
+    productos = []
+    with conexion.cursor() as cursor:
+        cursor.execute("""
+            SELECT p.idProducto, p.precio, p.stock, m.nombre AS modelo_nombre, 
+                   GROUP_CONCAT(DISTINCT c.nombre SEPARATOR ', ') AS colores, 
+                   ge.nombre as genero, t.nombre AS talla_nombre, 
+                   tp.nombre as tipo_producto, img.imagenPrincipal, img.imagenSec01, img.imagenSec02, img.imagenSec03, p.descripcion, p.estado, ma.nombre
+            FROM Producto p 
+            JOIN Modelo m ON p.idModelo = m.idModelo
+            JOIN Marca ma ON m.idMarca = ma.idMarca
+            JOIN Talla t ON p.idTalla = t.id
+            JOIN Producto_Color pc ON pc.idProducto = p.idProducto
+            JOIN Color c ON pc.idColor = c.idColor
+            JOIN Imagen img ON p.idImagen = img.idImagen
+            JOIN Genero ge ON ge.idGenero = p.idGenero
+            JOIN tipo_producto tp ON tp.idTipo = p.idTipo
+            GROUP BY tp.nombre,m.nombre,ge.nombre,ma.nombre
         """)
         productos = cursor.fetchall()
     conexion.close()
@@ -77,9 +126,10 @@ def obtener_producto_por_id(id):
             SELECT p.idProducto, p.precio, p.stock, m.nombre AS modelo_nombre, 
                    GROUP_CONCAT(DISTINCT c.nombre SEPARATOR ', ') AS colores, 
                    ge.nombre as genero, t.nombre AS talla_nombre, 
-                   tp.nombre as tipo_producto, img.imagenPrincipal, img.imagenSec01, img.imagenSec02, img.imagenSec03, p.descripcion
+                   tp.nombre as tipo_producto, img.imagenPrincipal, img.imagenSec01, img.imagenSec02, img.imagenSec03, p.descripcion, p.estado, ma.nombre, ma.imagen
             FROM Producto p
             JOIN Modelo m ON p.idModelo = m.idModelo
+            JOIN Marca ma ON m.idMarca = ma.idMarca
             JOIN Talla t ON p.idTalla = t.id
             JOIN Producto_Color pc ON pc.idProducto = p.idProducto
             JOIN Color c ON pc.idColor = c.idColor
@@ -93,9 +143,56 @@ def obtener_producto_por_id(id):
         producto = cursor.fetchone()
     conexion.close()
     return producto
+def obtenerConColorDiferentePorID(id):
+    conexion = conectarse()
+    producto = None
+    with conexion.cursor() as cursor:
+        cursor.execute("""
+            SELECT p.idProducto, p.descripcion, p.precio, i.imagenPrincipal, pc.idColor
+            FROM producto p
+            JOIN producto_color pc ON p.idProducto = pc.idProducto
+            JOIN imagen i ON p.idImagen = i.idImagen
+            WHERE p.idModelo = (SELECT idModelo FROM producto WHERE idProducto = %s)
+            AND p.idGenero = (SELECT idGenero FROM producto WHERE idProducto = %s)
+            AND p.idTalla = (SELECT idTalla FROM producto WHERE idProducto = %s)
+            AND p.idTipo = (SELECT idTipo FROM producto WHERE idProducto = %s)
+            AND p.precio = (SELECT precio FROM producto WHERE idProducto = %s)
+            AND p.stock = (SELECT stock FROM producto WHERE idProducto = %s)
+            AND p.idProducto != %s -- Excluye el producto actual
+            LIMIT 3;
+        """, (id, id, id, id, id, id, id))
+        producto = cursor.fetchall()
+    conexion.close()
+    return producto
+
+def obtenerTallasPorProducto(id):
+    conexion = conectarse()
+    producto = None
+    with conexion.cursor() as cursor:
+        cursor.execute("""
+            SELECT p.idProducto, t.nombre, p.stock
+            FROM Producto p 
+            JOIN Modelo m ON p.idModelo = m.idModelo
+            JOIN Talla t ON p.idTalla = t.id
+            JOIN Producto_Color pc ON pc.idProducto = p.idProducto
+            JOIN Color c ON pc.idColor = c.idColor
+            JOIN Imagen img ON p.idImagen = img.idImagen
+            JOIN Genero ge ON ge.idGenero = p.idGenero
+            JOIN tipo_producto tp ON tp.idTipo = p.idTipo
+            WHERE m.idModelo = (SELECT idModelo FROM producto WHERE idProducto=%s)
+            AND c.idColor IN (SELECT idColor FROM producto_color WHERE idProducto = %s)
+            AND tp.idTipo = (SELECT idTipo FROM producto WHERE idProducto=%s)
+            AND p.idGenero = (SELECT idTipo FROM producto WHERE idProducto = %s)
+            GROUP BY t.nombre, p.stock;
+        """, (id, id, id, id))
+        producto = cursor.fetchall()
+    conexion.close()
+    return producto
+
+    
 
 # Actualizar producto
-def actualizar_producto(id, precio, stock, idModelo, idTalla, genero, tipo_producto, imagenPrincipal, imagenSecundarias, colores, categorias,descripcion):
+def actualizar_producto(id, precio, stock, idModelo, idTalla, genero, tipo_producto, imagenPrincipal, imagenSecundarias, colores, categorias,descripcion,estado):
     conexion = conectarse()
     try:
         with conexion.cursor() as cursor:
@@ -110,9 +207,9 @@ def actualizar_producto(id, precio, stock, idModelo, idTalla, genero, tipo_produ
 
             # Actualizar producto
             cursor.execute("""
-                UPDATE Producto set precio = %s, stock = %s, idModelo = %s, idTalla = %s, idGenero = %s, idTipo = %s, descripcion =%s
+                UPDATE Producto set precio = %s, stock = %s, idModelo = %s, idTalla = %s, idGenero = %s, idTipo = %s, descripcion =%s, estado =%s
                 WHERE idProducto = %s
-            """, ( precio, stock, idModelo, idTalla, genero, tipo_producto, descripcion,id))
+            """, ( precio, stock, idModelo, idTalla, genero, tipo_producto, descripcion,estado,id))
 
             # Actualizar colores y categorías
             cursor.execute("DELETE FROM Producto_Color WHERE idProducto = %s", (id,))

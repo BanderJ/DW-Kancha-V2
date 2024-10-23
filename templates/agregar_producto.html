@@ -13,6 +13,9 @@
                 <label for="stock">Stock:</label>
                 <input type="number" name="stock" class="input" required>
 
+                <label for="vigencia">Vigente:</label>
+                <input type="checkbox" id="vigencia" name="vigencia" value="1" {% if producto_vigente %} checked {% endif %}>
+
                 <label for="idModelo">Modelo:</label>
                 <select name="idModelo" class="input" required>
                     {% for modelo in modelos %}

@@ -19,6 +19,7 @@
                         <th>Imágenes Secundarias</th>
                         <th>Precio</th>
                         <th>Stock</th>
+                        <th>Vigencia</th>
                         <th>Editar</th>
                         <th>Eliminar</th>
                     </tr>
@@ -41,7 +42,18 @@
                         <td>{{ producto[1] }}</td> <!-- Precio -->
                         <td>{{ producto[2] }}</td> <!-- Stock -->
                         <td>
-                            <a href="{{ url_for('editar_producto', id=producto[0]) }}" class="button is-warning">Editar</a>
+                            {% if producto[13] == 'A' %}
+                            Activo
+                            {% elif producto[13] == 'I' %}
+                            Inactivo
+                            {% else %}
+                            Desconocido
+                            {% endif %}
+
+                        </td> <!-- Vigencia -->
+                        <td>
+                            <a href="{{ url_for('editar_producto', id=producto[0]) }}"
+                                class="button is-warning">Editar</a>
                         </td>
                         <td>
                             <form action="{{ url_for('eliminar_producto') }}" method="POST">

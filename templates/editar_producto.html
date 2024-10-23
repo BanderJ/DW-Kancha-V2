@@ -14,6 +14,11 @@
                 <label for="stock">Stock:</label>
                 <input type="number" name="stock" value="{{ producto[2] }}" class="input" required>
 
+                <label for="vigencia">Vigente:</label>
+                <input type="checkbox" id="vigencia" name="vigencia" value="1" 
+                {% if producto[13] == 'A' %} checked {% endif %}>
+
+
                 <label for="idModelo">Modelo:</label>
                 <select name="idModelo" class="input" required>
                     {% for modelo in modelos %}
@@ -70,6 +75,9 @@
                     <option value="{{ categoria[0] }}" {% if categoria[0] in producto_categorias %} selected {% endif %}>{{ categoria[1] }}</option>
                     {% endfor %}
                 </select>
+
+                
+
 
                 <button type="submit" class="button is-success mt-2">Guardar</button>
             </form>
