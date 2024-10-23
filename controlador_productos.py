@@ -156,8 +156,6 @@ def obtenerConColorDiferentePorID(id):
             AND p.idGenero = (SELECT idGenero FROM producto WHERE idProducto = %s)
             AND p.idTalla = (SELECT idTalla FROM producto WHERE idProducto = %s)
             AND p.idTipo = (SELECT idTipo FROM producto WHERE idProducto = %s)
-            AND p.precio = (SELECT precio FROM producto WHERE idProducto = %s)
-            AND p.stock = (SELECT stock FROM producto WHERE idProducto = %s)
             AND p.idProducto != %s -- Excluye el producto actual
             LIMIT 3;
         """, (id, id, id, id, id, id, id))
