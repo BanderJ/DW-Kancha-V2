@@ -15,34 +15,38 @@
                 <input type="number" name="stock" value="{{ producto[2] }}" class="input" required>
 
                 <label for="vigencia">Vigente:</label>
-                <input type="checkbox" id="vigencia" name="vigencia" value="1" 
-                {% if producto[13] == 'A' %} checked {% endif %}>
+                <input type="checkbox" id="vigencia" name="vigencia" value="1" {% if producto[13]=='A' %} checked {%
+                    endif %}>
 
 
                 <label for="idModelo">Modelo:</label>
                 <select name="idModelo" class="input" required>
                     {% for modelo in modelos %}
-                    <option value="{{ modelo[0] }}" {% if producto[4] == modelo[0] %} selected {% endif %}>{{ modelo[1] }}</option>
+                    <option value="{{ modelo[0] }}" {% if producto[4]==modelo[0] %} selected {% endif %}>{{ modelo[1] }}
+                    </option>
                     {% endfor %}
                 </select>
 
                 <label for="idTalla">Talla:</label>
                 <select name="idTalla" class="input" required>
                     {% for talla in tallas %}
-                    <option value="{{ talla[0] }}" {% if producto[5] == talla[0] %} selected {% endif %}>{{ talla[1] }}</option>
+                    <option value="{{ talla[0] }}" {% if producto[5]==talla[0] %} selected {% endif %}>{{ talla[1] }}
+                    </option>
                     {% endfor %}
                 </select>
                 <label for="idGenero">Genero:</label>
                 <select name="idGenero" class="input" required>
                     {% for genero in generos %}
-                    <option value="{{ genero[0] }}" {% if producto[4] == genero[0] %} selected {% endif %}>{{ genero[1] }}</option>
+                    <option value="{{ genero[0] }}" {% if producto[4]==genero[0] %} selected {% endif %}>{{ genero[1] }}
+                    </option>
                     {% endfor %}
                 </select>
-                
+
                 <label for="idTipo">Tipo de producto:</label>
                 <select name="idTipo" class="input" required>
                     {% for tipo in tipos %}
-                    <option value="{{ tipo[0] }}" {% if producto[4] == tipo[0] %} selected {% endif %}>{{ tipo[1] }}</option>
+                    <option value="{{ tipo[0] }}" {% if producto[4]==tipo[0] %} selected {% endif %}>{{ tipo[1] }}
+                    </option>
                     {% endfor %}
                 </select>
 
@@ -65,18 +69,22 @@
                 <label for="colores">Colores:</label>
                 <select name="colores" class="input" multiple required>
                     {% for color in colores %}
-                    <option value="{{ color[0] }}" {% if color[0] in producto_colores %} selected {% endif %}>{{ color[1] }}</option>
+                    <option value="{{ color[0] }}" {% if color[0] in producto_colores %} selected {% endif %}>{{
+                        color[1] }}</option>
                     {% endfor %}
                 </select>
+
 
                 <label for="categorias">Categorías:</label>
                 <select name="categorias" class="input" multiple required>
                     {% for categoria in categorias %}
-                    <option value="{{ categoria[0] }}" {% if categoria[0] in producto_categorias %} selected {% endif %}>{{ categoria[1] }}</option>
+                    <option value="{{ categoria[0] }}" {% if categoria[0] in producto_categorias %} selected {% endif
+                        %}>{{ categoria[1] }}</option>
                     {% endfor %}
                 </select>
 
-                
+
+
 
 
                 <button type="submit" class="button is-success mt-2">Guardar</button>

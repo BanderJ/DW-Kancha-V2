@@ -756,16 +756,40 @@ def eliminar_producto():
     return redirect("/formulario_productos")
 
 # Editar producto
+# @app.route("/editar_producto/<int:id>")
+# def editar_producto(id):
+#     producto = controlador_productos.obtener_producto_por_id(id)
+#     modelos = controlador_productos.obtener_modelos()
+#     tallas = controlador_productos.obtener_tallas()
+#     colores = controlador_productos.obtener_colores()
+#     categorias = controlador_productos.obtener_categorias()
+#     generos = controlador_productos.obtener_generos()
+#     tipos = controlador_productos.obtener_tipos()
+#     return render_template("editar_producto.html", producto=producto, modelos=modelos, tallas=tallas,colores=colores, categorias=categorias,generos=generos,tipos=tipos)
+
 @app.route("/editar_producto/<int:id>")
 def editar_producto(id):
-    producto = controlador_productos.obtener_producto_por_id(id)
+    producto, producto_colores, producto_categorias = controlador_productos.obtener_producto_por_id_2(id)
     modelos = controlador_productos.obtener_modelos()
     tallas = controlador_productos.obtener_tallas()
     colores = controlador_productos.obtener_colores()
     categorias = controlador_productos.obtener_categorias()
     generos = controlador_productos.obtener_generos()
     tipos = controlador_productos.obtener_tipos()
-    return render_template("editar_producto.html", producto=producto, modelos=modelos, tallas=tallas,colores=colores, categorias=categorias,generos=generos,tipos=tipos)
+
+    # Renderiza el template pasando el producto y sus colores y categorías seleccionados
+    return render_template(
+        "editar_producto.html",
+        producto=producto,
+        producto_colores=[color[0] for color in producto_colores],  # Solo los IDs de colores
+        producto_categorias=[categoria[0] for categoria in producto_categorias],  # Solo los IDs de categorías
+        modelos=modelos,
+        tallas=tallas,
+        colores=colores,
+        categorias=categorias,
+        generos=generos,
+        tipos=tipos
+    )
 
 # Actualizar producto
 @app.route("/actualizar_producto", methods=["POST"])
