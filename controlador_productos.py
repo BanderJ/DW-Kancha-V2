@@ -158,7 +158,7 @@ def obtenerConColorDiferentePorID(id):
             AND p.idTipo = (SELECT idTipo FROM producto WHERE idProducto = %s)
             AND p.idProducto != %s -- Excluye el producto actual
             LIMIT 3;
-        """, (id, id, id, id, id, id, id))
+        """, (id, id, id, id, id))
         producto = cursor.fetchall()
     conexion.close()
     return producto
