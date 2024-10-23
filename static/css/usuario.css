@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+
+:root {
+    --error-color: #dc3545; /* Color rojo para errores */
+    --success-color: #28a745; /* Color verde para éxito */
+}
+
+.form-field.error input {
+    border-color: var(--error-color); /* Borde rojo si hay un error */
+}
+
+.form-field.success input {
+    border-color: var(--success-color); /* Borde verde si está correcto */
+}
+
+input.error, select.error {
+    border-color: var(--error-color); /* Aplicar color de error */
+}
+
+input.success, select.success {
+    border-color: var(--success-color); /* Aplicar color de éxito */
+}
+
+.error-message {
+    color: var(--error-color);
+    font-size: 0.8em;
+    display: none; /* Ocultar mensajes por defecto */
+}
+
+
+/* Asegúrate de que el CSS afecte a los inputs de tipo date */
+input[type="date"].error {
+    border-color: var(--error-color);
+}
+
+input[type="date"].success {
+    border-color: var(--success-color);
+}

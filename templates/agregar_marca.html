@@ -6,27 +6,43 @@ Agregar Marca
 
 {% block mantenimiento %}
 
-    <div class="columns">
-        <a href="{{ url_for('marca') }}" class="button is-light is-fullwidth" >Volver</a>
-        <div class="column is-one-third">
-            <form action="{{ url_for('guardar_marca') }}" method="post" enctype="multipart/form-data">
-                <label for="nombre">Nombre:</label>
-                <input required type="text" class="input" placeholder="Nombre" name="nombre" id="nombre">
-                <br><br>
+<!-- Enlace al archivo CSS del modal -->
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/modal.css') }}">
 
-                <label for="imagen">Imagen:</label>
-                <input required type="file" class="input" name="imagen" id="imagen">
-                <div id="cargaImagen" class="progress" style="display:none;">Cargando...</div>
-                <br><br>
-
-                <!-- Contenedor para los botones -->
-                <div class="columns">
-                    <div class="column is-half">
-                        <button type="submit" class="button is-success is-fullwidth">Guardar</button>
-                    </div>
-                </div>
-            </form>
-        </div>
+<div class="columns">
+    <div style="display: flex; justify-content: flex-end;">
+        <a class="d-flex align-items-center me-2 regresar" href="{{url_for('marca')}}" style="text-decoration: none;">
+            <button class="btn bg-rojo-k me-2 d-flex align-items-center">
+                <img class="img-fluid" src="{{url_for('static',filename='img/fr.svg')}}" alt="" style="max-height: 32px;"> <!-- Ajusta el tamaño de la imagen si es necesario -->
+            </button>
+            <label class="l-rojo-k" for="regresar" style="margin: 0;">Volver</label>
+        </a>
     </div>
+    <!-- Formulario para agregar una marca -->
+    <form action="{{ url_for('guardar_marca') }}" method="post" enctype="multipart/form-data" id="marcaForm">
+        <label for="nombre">Nombre:</label>
+        <input required type="text" class="input" placeholder="Nombre" name="nombre" id="nombre">
+        <br>
+        <label for="imagen">Imagen:</label>
+        <input required type="file" class="input" name="imagen" id="imagen">
+        <div id="cargaImagen" class="progress" style="display:none;"></div>
+        <br><br>
+        <button type="button" data-form-id="marcaForm" class="button is-success is-fullwidth openModalButton">Guardar</button>
+    </form>    
+</div>
+
+    <!-- Estructura del Modal de Confirmación -->
+<div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <h2>¿Estás seguro de continuar?</h2>
+            <p>Esta acción guardará la categoría. ¿Deseas continuar?</p>
+            <button id="confirmButton" class="btn">Sí, Guardar</button>
+            <button id="cancelButton" class="btn">Cancelar</button>
+        </div>
+</div>
+
+
+<!-- Enlace al archivo JavaScript -->
+<script src="{{ url_for('static', filename='js/modal.js') }}"></script>
 
 {% endblock %}

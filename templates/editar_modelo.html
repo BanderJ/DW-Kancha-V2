@@ -5,32 +5,53 @@ Editar Modelo
 {% endblock %}
 
 {% block mantenimiento %}
-<section class="section container my-5">
-    <div class="columns">
-        <div class="column">
-            <h3 class="is-size-3">Editar Modelo</h3>
-            <form action="{{ url_for('actualizar_modelo') }}" method="post">
-                {# Enviar el id en un campo oculto #}
-                <input type="hidden" name="id" value="{{ modelo[0] }}">
-                
-                <label for="nombre">Nombre:</label>
-                <input value="{{ modelo[1] }}" required type="text" class="input" placeholder="Nombre" name="nombre" id="nombre">
-                
-                <label for="idMarca">Marca:</label>
-                <div class="select">
-                    <select name="idMarca" id="idMarca" required>
-                        <option value="" disabled>Selecciona una marca</option>
-                        {% for marca in marcas %}
-                            <option value="{{ marca[0] }}" {% if modelo[2] == marca[0] %}selected{% endif %}>{{ marca[1] }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                
-                <br><br>
-                <button type="submit" class="button is-success mt-2">Guardar</button>
-                <a href="{{ url_for('modelo') }}" class="button is-primary mt-2">Volver</a>
-            </form>
+<!-- Enlace al archivo CSS del modal -->
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/modal.css') }}">
+
+<div class="columns">
+    <div class="column">
+        <div style="display: flex; justify-content: flex-end;">
+            <a class="d-flex align-items-center me-2 regresar" href="{{ url_for('modelo') }}" style="text-decoration: none;">
+                <button class="btn bg-rojo-k me-2 d-flex align-items-center">
+                    <img class="img-fluid" src="{{ url_for('static', filename='img/fr.svg') }}" alt="" style="max-height: 32px;">
+                </button>
+                <label class="l-rojo-k" for="regresar" style="margin: 0;">Volver</label>
+            </a>
         </div>
+        
+        <form action="{{ url_for('actualizar_modelo') }}" method="post" id="modeloForm">
+            {# Enviar el id en un campo oculto #}
+            <input type="hidden" name="id" value="{{ modelo[0] }}">
+            
+            <label for="nombre">Nombre:</label>
+            <input value="{{ modelo[1] }}" required type="text" class="input" placeholder="Nombre" name="nombre" id="nombre">
+            
+            <label for="idMarca">Marca:</label>
+            <div class="select">
+                <select name="idMarca" id="idMarca" required>
+                    <option value="" disabled>Selecciona una marca</option>
+                    {% for marca in marcas %}
+                        <option value="{{ marca[0] }}" {% if modelo[2] == marca[0] %}selected{% endif %}>{{ marca[1] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <br><br>
+            <button type="button" class="button is-success mt-2 openModalButton" data-form-id="modeloForm">Guardar</button>
+        </form>
     </div>
-</section>
+</div>
+
+<!-- Estructura del Modal de Confirmación -->
+<div id="confirmationModal" class="modal">
+    <div class="modal-content">
+        <h2>¿Estás seguro de continuar?</h2>
+        <p>Esta acción editará el modelo. ¿Deseas continuar?</p>
+        <button id="confirmButton" class="btn">Sí, Guardar</button>
+        <button id="cancelButton" class="btn">Cancelar</button>
+    </div>
+</div>
+
+<!-- Enlace al archivo JavaScript -->
+<script src="{{ url_for('static', filename='js/modal.js') }}"></script>
 {% endblock %}

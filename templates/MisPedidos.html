@@ -1,24 +1,30 @@
-{% extends "maestra.html" %} {% block titulo %}Mis Compras{% endblock %} {%
-block link %}
+{% extends "maestra.html" %}
+
+{% block titulo %}Mis Compras{% endblock %}
+
+{% block link %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/titulo.css') }}" />
 <style>
-    #imagenproducto{
+    #imagenproducto {
         width: 50%;
         height: auto;
     }
-    #imagen{
-        text-align: right;        
+    #imagen {
+        text-align: right;
     }
 </style>
-{% endblock %} {% block contenido %}
+{% endblock %}
+
+{% block contenido %}
 <main class="mt-4">
     <div class="row m-0 py-2">
         <div class="col p-0"></div>
         <div class="col-xl-9 col-lg-9 col-md-9 col-sm-10 col-10 d-flex align-items-center p-0 justify-content-sm-start">
             <a class="d-flex align-items-center me-2 regresar" href="">
                 <button class="btn bg-rojo-k me-2 d-flex">
-                    <img class="img-fluid" src="{{ url_for('static', filename='img/fr.svg') }}" alt="" /></button><label
-                    class="l-rojo-k" for="regresar">Regresar</label>
+                    <img class="img-fluid" src="{{ url_for('static', filename='img/fr.svg') }}" alt="" />
+                </button>
+                <label class="l-rojo-k" for="regresar">Regresar</label>
             </a>
             <nav data-mdb-navbar-init class="navbar navbar-expand-lg p-0 ms-2 d-sm-block d-none">
                 <div class="container-fluid">
@@ -48,26 +54,29 @@ block link %}
                 </p>
             </div>
             <div class="container d-flex flex-column justify-content-center">
-                <!-- Iterar sobre todas las ventas -->
                 {% for venta in ventas %}
                 <div class="row mb-5 border">
                     <p class="h4">Pedido N°{{ venta.idVenta }}</p>
-                    <div id="venta_{{ venta.idVenta }}" class="col">
+                    <div class="col">
                         <div class="col">
                             <h2>Contenido</h2>
                             <p>
-                                <!-- Iterar sobre los productos de cada venta -->
-                                {% for producto in venta.productos %} {{ producto.modelo }}{% if
-                                not loop.last %}, {% endif %} {% endfor %}
+                                {% for producto in venta.productos %}
+                                    {{ producto.modelo }}{% if not loop.last %}, {% endif %}
+                                {% endfor %}
                             </p>
                             <h4>Fecha: {{ venta.fecha }}</h4>
                         </div>
                     </div>
                     <div class="col" id="imagen">
                         {% for producto in venta.productos %}
-                        {% if loop.first %}
-                        <img id="imagenproducto" class="img-fluid" src="{{ url_for('static', filename='img/' + producto.imagen) }}" alt="">
-                        {% endif %}
+                            {% if loop.first %}
+                            <div class="d-flex justify-content-center">
+                                <a href="{{ url_for('resumenCompras', idVenta=venta.idVenta) }}" class="text-decoration-none">
+                                    <img id="imagenproducto" class="img-fluid" src="{{ url_for('static', filename='img/' + producto.imagen) }}" alt="">
+                                </a>
+                            </div>
+                            {% endif %}
                         {% endfor %}
                     </div>
                 </div>
@@ -75,9 +84,8 @@ block link %}
             </div>
             {% else %}
             <div style="text-align: center; height: 20vw; margin-top: 10vw;">
-                <h4>Aun no ha realizado ninguna compra
-                </h4>
-              </div>
+                <h4>Aun no ha realizado ninguna compra</h4>
+            </div>
             {% endif %}
         </div>
         <div class="col p-0"></div>

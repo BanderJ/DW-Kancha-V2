@@ -1,0 +1,75 @@
+/* Estilos para el fondo del modal */
+.modal {
+    display: none; /* Oculto por defecto */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
+  }
+  
+  /* Contenido del modal */
+  .modal-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 30%;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Botón para cerrar el modal */
+  .close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .close-btn:hover {
+    color: black;
+  }
+  
+/* Botón de confirmación con borde negro sólido */
+#confirmButton {
+  border: 1px solid black; /* Borde sólido negro */
+  background-color: rgba(255, 244, 244, 0.9); /* Blanco rosado semitransparente */
+  color: black; /* Texto negro */
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px; /* Borde redondeado opcional */
+  transition: background-color 0.3s, opacity 0.3s;
+  opacity: 0.9; /* Opacidad inicial */
+}
+
+/* Efecto hover para el botón */
+#confirmButton:hover {
+  background-color: rgba(253, 188, 188, 0.9); /* Blanco rosado semitransparente */
+  color: black;
+  opacity: 1; /* Opacidad completa */
+}
+
+
+#cancelButton {
+  border: 1px solid black; /* Borde sólido negro */
+  opacity: 0.9; /* Botón más transparente inicialmente */
+  background-color: rgba(255, 0, 0, 0.7); /* Rojo semitransparente */
+  color: white; /* Texto blanco */
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px; /* Borde redondeado opcional */
+  transition: background-color 0.3s, opacity 0.3s;
+}
+
+/* Efecto hover: Rojo intenso y opacidad al 100% */
+#cancelButton:hover {
+  background-color: red; /* Rojo intenso */
+  color: black;
+  opacity: 1; /* Opacidad completa */
+}

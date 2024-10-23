@@ -84,77 +84,79 @@ def eliminar_detalle_venta_bd(id_det_vta, id_producto, id_carrito, id_usuario):
 def incrementarcantidad(id_det_vta, id_producto, id_carrito, id_usuario):
     conexion = conectarse()
     try:
-        with conexion.cursor() as cursor:
-            # Obtener el stock disponible del producto
-            cursor.execute("SELECT stock FROM producto WHERE idProducto = %s", (id_producto,))
-            stock_disponible = cursor.fetchone()[0]
-            
-            # Obtener la cantidad actual del producto en el detalle de venta
-            cursor.execute("""
-                SELECT cantidad FROM detalle_venta 
-                WHERE idDetVta = %s AND idProducto = %s AND idCarrito = %s;
-            """, (id_det_vta, id_producto, id_carrito))
-            cantidad_actual = cursor.fetchone()[0]
+        stock_disponible = obtener_stock_producto(id_producto)
+        cantidad_actual = obtener_cantidad_actual(id_det_vta)
 
-            # Verificar si al incrementar la cantidad se supera el stock disponible
-            if cantidad_actual + 1 > stock_disponible:
-                print("No se puede incrementar la cantidad. Se ha alcanzado el límite de stock.")
-                return  # Salir sin hacer cambios
+        # Verificar si al incrementar la cantidad se supera el stock disponible
+        if cantidad_actual + 1 > stock_disponible:
+            return {"error": "La cantidad no puede exceder el stock disponible."}
 
-            # Si la cantidad es válida, incrementar en 1
-            cursor.execute("""
-                UPDATE detalle_venta 
-                INNER JOIN carrito ON detalle_venta.idCarrito = carrito.idCarrito 
-                SET detalle_venta.cantidad = detalle_venta.cantidad + 1 
-                WHERE detalle_venta.idDetVta = %s AND detalle_venta.idProducto = %s AND detalle_venta.idCarrito = %s AND carrito.idUsuario = %s;
-            """, (id_det_vta, id_producto, id_carrito, id_usuario))
-            
-            # Llamar al procedimiento almacenado para actualizar el subtotal del carrito
-            cursor.execute("CALL actualizar_subtotal_carrito(%s);", (id_carrito,))
+        # Incrementar cantidad en la base de datos
+        cursor = conexion.cursor()
+        cursor.execute("""
+            UPDATE detalle_venta 
+            INNER JOIN carrito ON detalle_venta.idCarrito = carrito.idCarrito 
+            SET detalle_venta.cantidad = detalle_venta.cantidad + 1 
+            WHERE detalle_venta.idDetVta = %s AND detalle_venta.idProducto = %s AND detalle_venta.idCarrito = %s AND carrito.idUsuario = %s;
+        """, (id_det_vta, id_producto, id_carrito, id_usuario))
+        
+        # Obtener el precio del producto
+        cursor.execute("SELECT precio FROM producto WHERE idProducto = %s", (id_producto,))
+        precio = cursor.fetchone()[0]
+        
+        # Calcular el nuevo subtotal
+        nuevo_subtotal = (cantidad_actual + 1) * precio
 
-            # Confirmar los cambios en la base de datos
-            conexion.commit()
+        # Actualizar subtotal del carrito
+        cursor.execute("CALL actualizar_subtotal_carrito(%s);", (id_carrito,))
+        conexion.commit()
+
+        return {"nueva_cantidad": cantidad_actual + 1, "nuevo_subtotal": nuevo_subtotal}
     except Exception as e:
         conexion.rollback()
-        print(f"Error al actualizar cantidad detalle de venta: {e}")
+        print(f"Error al incrementar cantidad: {e}")
+        return {"error": "Error al incrementar cantidad."}
     finally:
         conexion.close()
-
 
 
 def disminuircantidad(id_det_vta, id_producto, id_carrito, id_usuario):
     conexion = conectarse()
     try:
-        with conexion.cursor() as cursor:
-            # Obtener la cantidad actual del producto en el detalle de venta
-            cursor.execute("""
-                SELECT cantidad FROM detalle_venta 
-                WHERE idDetVta = %s AND idProducto = %s AND idCarrito = %s;
-            """, (id_det_vta, id_producto, id_carrito))
-            cantidad_actual = cursor.fetchone()[0]
+        cantidad_actual = obtener_cantidad_actual(id_det_vta)
 
-            # Verificar si la cantidad es mayor a 1 antes de restar
-            if cantidad_actual > 1:
-                # Actualizar la cantidad del producto en el detalle de venta (disminuir en 1)
-                cursor.execute("""
-                    UPDATE detalle_venta 
-                    INNER JOIN carrito ON detalle_venta.idCarrito = carrito.idCarrito 
-                    SET detalle_venta.cantidad = detalle_venta.cantidad - 1 
-                    WHERE detalle_venta.idDetVta = %s AND detalle_venta.idProducto = %s AND detalle_venta.idCarrito = %s AND carrito.idUsuario = %s;
-                """, (id_det_vta, id_producto, id_carrito, id_usuario))
-                
-                # Llamar al procedimiento almacenado para actualizar el subtotal del carrito
-                cursor.execute("CALL actualizar_subtotal_carrito(%s);", (id_carrito,))
+        # Verificar si al disminuir la cantidad es menor que 1
+        if cantidad_actual - 1 < 1:
+            return {"error": "La cantidad no puede ser menor a 1."}
 
-                # Confirmar los cambios en la base de datos
-                conexion.commit()
-            else:
-                print("No se puede disminuir la cantidad. El valor mínimo es 1.")
+        # Disminuir cantidad en la base de datos
+        cursor = conexion.cursor()
+        cursor.execute("""
+            UPDATE detalle_venta 
+            INNER JOIN carrito ON detalle_venta.idCarrito = carrito.idCarrito 
+            SET detalle_venta.cantidad = detalle_venta.cantidad - 1 
+            WHERE detalle_venta.idDetVta = %s AND detalle_venta.idProducto = %s AND detalle_venta.idCarrito = %s AND carrito.idUsuario = %s;
+        """, (id_det_vta, id_producto, id_carrito, id_usuario))
+        
+        # Obtener el precio del producto
+        cursor.execute("SELECT precio FROM producto WHERE idProducto = %s", (id_producto,))
+        precio = cursor.fetchone()[0]
+        
+        # Calcular el nuevo subtotal
+        nuevo_subtotal = (cantidad_actual - 1) * precio
+
+        # Actualizar subtotal del carrito
+        cursor.execute("CALL actualizar_subtotal_carrito(%s);", (id_carrito,))
+        conexion.commit()
+
+        return {"nueva_cantidad": cantidad_actual - 1, "nuevo_subtotal": nuevo_subtotal}
     except Exception as e:
         conexion.rollback()
-        print(f"Error al actualizar cantidad detalle de venta: {e}")
+        print(f"Error al disminuir cantidad: {e}")
+        return {"error": "Error al disminuir cantidad."}
     finally:
         conexion.close()
+
 
 
 
@@ -288,6 +290,83 @@ def obtener_id_carrito(id_usuario):
 #         conexion.close()  # Cerrar la conexión
 #     return detalles
 
+# def obtener_ventas_y_detalles(id_usuario):
+#     conexion = conectarse()
+#     ventas = []
+#     try:
+#         with conexion.cursor() as cursor:
+#             # Obtener todas las ventas del usuario
+#             cursor.execute("""
+#                 SELECT 
+#                     Venta.idVenta, 
+#                     Venta.fecha, 
+#                     Venta.hora, 
+#                     Venta.direccion
+#                 FROM 
+#                     Venta
+#                 INNER JOIN Carrito ON Venta.idCarrito = Carrito.idCarrito
+#                 WHERE 
+#                     Carrito.idUsuario = %s
+#                 ORDER BY Venta.fecha DESC, Venta.hora DESC;
+#             """, (id_usuario,))
+            
+#             ventas_base = cursor.fetchall()
+
+#             for venta in ventas_base:
+#                 id_venta = venta[0]
+                
+#                 # Obtener los detalles de cada venta (productos)
+#                 cursor.execute("""
+#                     SELECT 
+#                         P.descripcion AS nombre,         -- Nombre del producto
+#                         M.nombre AS modelo,              -- Nombre del modelo
+#                         T.nombre AS talla,               -- Nombre de la talla
+#                         P.precio AS precio,              -- Precio del producto
+#                         DV.cantidad AS cantidad,         -- Cantidad comprada
+#                         I.imagenPrincipal AS imagen      -- Imagen del producto
+#                     FROM 
+#                         Detalle_venta DV
+#                     INNER JOIN Producto P ON DV.idProducto = P.idProducto
+#                     INNER JOIN Modelo M ON P.idModelo = M.idModelo
+#                     INNER JOIN Talla T ON P.idTalla = T.id
+#                     INNER JOIN Imagen I ON P.idImagen = I.idImagen
+#                     WHERE 
+#                         DV.idCarrito = (
+#                             SELECT idCarrito FROM Venta WHERE idVenta = %s
+#                         );
+#                 """, (id_venta,))
+                
+#                 productos = cursor.fetchall()
+
+#                 # Convertir cada producto en un diccionario
+#                 productos_list = []
+#                 for producto in productos:
+#                     productos_list.append({
+#                         'nombre': producto[0],
+#                         'modelo': producto[1],
+#                         'talla': producto[2],
+#                         'precio': producto[3],
+#                         'cantidad': producto[4],
+#                         'imagen': producto[5]
+#                     })
+
+#                 # Agregar los detalles a la venta
+#                 ventas.append({
+#                     'idVenta': venta[0],
+#                     'fecha': venta[1],
+#                     'hora': venta[2],
+#                     'direccion': venta[3],
+#                     'productos': productos_list
+#                 })
+    
+#     except Exception as e:
+#         print(f"Error al obtener ventas y detalles: {e}")
+    
+#     finally:
+#         conexion.close()
+    
+#     return ventas
+
 def obtener_ventas_y_detalles(id_usuario):
     conexion = conectarse()
     ventas = []
@@ -316,12 +395,12 @@ def obtener_ventas_y_detalles(id_usuario):
                 # Obtener los detalles de cada venta (productos)
                 cursor.execute("""
                     SELECT 
-                        P.descripcion AS nombre,         -- Nombre del producto
-                        M.nombre AS modelo,              -- Nombre del modelo
-                        T.nombre AS talla,               -- Nombre de la talla
-                        P.precio AS precio,              -- Precio del producto
-                        DV.cantidad AS cantidad,         -- Cantidad comprada
-                        I.imagenPrincipal AS imagen      -- Imagen del producto
+                        P.descripcion AS nombre,        
+                        M.nombre AS modelo,             
+                        T.nombre AS talla,              
+                        P.precio AS precio,             
+                        DV.cantidad AS cantidad,        
+                        I.imagenPrincipal AS imagen     
                     FROM 
                         Detalle_venta DV
                     INNER JOIN Producto P ON DV.idProducto = P.idProducto
@@ -337,16 +416,17 @@ def obtener_ventas_y_detalles(id_usuario):
                 productos = cursor.fetchall()
 
                 # Convertir cada producto en un diccionario
-                productos_list = []
-                for producto in productos:
-                    productos_list.append({
+                productos_list = [
+                    {
                         'nombre': producto[0],
                         'modelo': producto[1],
                         'talla': producto[2],
                         'precio': producto[3],
                         'cantidad': producto[4],
                         'imagen': producto[5]
-                    })
+                    }
+                    for producto in productos
+                ]
 
                 # Agregar los detalles a la venta
                 ventas.append({
@@ -364,6 +444,7 @@ def obtener_ventas_y_detalles(id_usuario):
         conexion.close()
     
     return ventas
+
 
 
 # def obtener_imagen_compra_mayor(id_usuario):
@@ -464,3 +545,11 @@ def obtener_cantidad_actual(id_det_vta):
     finally:
         conexion.close()
     return cantidad_actual
+
+
+# SELECT cr.idCarrito, usu.idUsuario, usu.nombre, usu.numDoc, vt.direccion, vt.fecha, cr.descuento, cr.subtotal
+# from carrito cr inner join usuario usu on cr.idUsuario = usu.idUsuario
+# inner join detalle_venta dv on cr.idCarrito = dv.idCarrito
+# inner join producto pr on dv.idProducto = pr.idProducto
+# inner join venta vt on cr.idCarrito = vt.idCarrito
+# where idUsuario = 

@@ -1,0 +1,79 @@
+{% extends "maestra.html" %}
+
+{% block titulo %}
+Resumen de Compra
+{% endblock %}
+
+{% block contenido %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Boleta de Compra</h2>
+
+    {% if productos %}
+    <div class="mb-4">
+        <h5>Información del Cliente</h5>
+        <table class="table table-borderless">
+            <tbody>
+                <tr>
+                    <th>Nombre Completo:</th>
+                    <td>{{ productos[0]['nombre_completo'] }}</td>
+                </tr>
+                <tr>
+                    <th>Número de DNI:</th>
+                    <td>{{ productos[0]['numDoc'] }}</td>
+                </tr>
+                <tr>
+                    <th>Correo Electrónico:</th>
+                    <td>{{ usuario.get('correo', 'No disponible') }}</td>
+                </tr>
+                <tr>
+                    <th>Dirección:</th>
+                    <td>{{ productos[0]['direccion'] }}</td>
+                </tr>
+                <tr>
+                    <th>Fecha de Compra:</th>
+                    <td>{{ productos[0]['fecha'] }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h5>Detalle de Compra</h5>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th class="text-center">Cantidad</th>
+                <th class="text-right">Precio Unitario</th>
+                <th class="text-right">Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for producto in productos %}
+            <tr>
+                <td>{{ producto['marca'] }} {{ producto['tipo_producto'] }} {{ producto['modelo'] }}</td>
+                <td class="text-center">{{ producto['cantidad'] }}</td>
+                <td class="text-right">S/. {{ producto['precio_unitario'] }}</td>
+                <td class="text-right">S/. {{ producto['subtotal'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" class="text-right"><strong>Subtotal</strong></td>
+                <td class="text-right"><strong>S/. {{ total_compra }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="3" class="text-right"><strong>Descuento</strong></td>
+                <td class="text-right"><strong class="text-danger">S/. {{ productos[0]['descuento'] }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="3" class="text-right"><strong>Total a Pagar</strong></td>
+                <td class="text-right"><strong class="text-success">S/. {{ total_compra - productos[0]['descuento'] }}</strong></td>
+            </tr>
+        </tfoot>
+    </table>
+    {% else %}
+    <p class="text-center">No se encontraron productos para esta compra.</p>
+    {% endif %}
+</div>
+{% endblock %}

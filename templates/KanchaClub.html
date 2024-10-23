@@ -23,16 +23,16 @@
                             <div
                                 class="col-xl-9 col-lg-9 col-md-9 col-sm-10 col-10 d-flex align-items-center p-0 justify-content-sm-start">
                                 <a class="d-flex align-items-center me-2 regresar" href="index.html">
-                                    <button class="btn bg-rojo-k me-2 d-flex"><img class="img-fluid" src="../img/fr.svg"
+                                    <button class="btn bg-rojo-k me-2 d-flex"><img class="img-fluid" src="{{ url_for('static', filename='img/fr.svg') }}"
                                             alt=""></button><label class="l-rojo-k" for="regresar">Regresar</label>
                                 </a>
                                 <nav data-mdb-navbar-init class="navbar navbar-expand-lg p-0 ms-2 d-sm-block d-none">
                                     <div class="container-fluid">
                                         <nav aria-label="breadcrumb">
                                             <ol class="breadcrumb m-0">
-                                                <li class="breadcrumb-item"><a class="l-blanco-k" href="index.html">Inicio</a>
+                                                <li class="breadcrumb-item"><a class="l-blanco-k" href="{{url_for('inicio')}}">Inicio</a>
                                                 </li>
-                                                <li class="breadcrumb-item"><a class="l-blanco-k" href="index.html">Kancha Club</a>
+                                                <li class="breadcrumb-item"><a class="l-blanco-k" href="{{url_for('kancha_club')}}">Kancha Club</a>
                                                 </li>
                                             </ol>
                                         </nav>
@@ -45,7 +45,7 @@
                     <div class="text-overlay">
                         <img src="{{ url_for('static', filename='img/kancha_club.svg') }}" alt="">
                         <div class="unirsepie d-flex justify-content-center mt-5">
-                            <a class="d-flex align-items-center unirse" href="KanchaClub.html">
+                            <a class="d-flex align-items-center unirse" href="{{url_for('registrarUsuario')}}">
                                 <button class="btn bg-rojo-k l-blanco-k">UNIRSE</button>
                             </a>
                         </div>
@@ -69,7 +69,7 @@
                     <div class="col-12 col-md-4 imgmarca mb-5">
                         <img src="{{ url_for('static', filename='img/novedades.svg') }}" alt="" class="img-fluid mb-4 iconk">
                         <p class="titlep">Novedades</p>
-                        <p>Obtén acceso anticipado a los últimos lanzamientos y sé uno de los primeros en comprarlos.</p>
+                        <p>Obtén acceso a los últimos lanzamientos y sé uno de los primeros en comprarlos.</p>
                     </div>
                     <div class="col-12 col-md-4 imgmarca mb-5">
                         <img src="{{ url_for('static', filename='img/beneficios.svg') }}" alt="" class="img-fluid mb-4 iconk">
@@ -78,8 +78,8 @@
                     </div>
                     <div class="col-12 col-md-4 imgmarca mb-5">
                         <img src="{{ url_for('static', filename='img/personalizar.svg') }}" alt="" class="img-fluid mb-4 iconk">
-                        <p class="titlep">Personalización</p>
-                        <p>Añade tu nombre y tu número a tus camisetas favoritas sin costo alguno con Kancha Custom.</p>
+                        <p class="titlep">Puntos</p>
+                        <p>Acumula puntos por cada compra y gana mejores descuentos</p>
                     </div>
                 </div>
             </div>

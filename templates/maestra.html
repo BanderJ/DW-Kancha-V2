@@ -153,11 +153,14 @@
             <img src="{{ url_for('static', filename='img/carrito.svg') }}" alt="" />
           </button>
         </a>
-        
-
         <button type="button" id="user-dropdown-button" class="btn btrig py-2 px-2">
           <img src="{{ url_for('static', filename='img/usuario.svg') }}" alt="" />
         </button>
+        <a href="{{ url_for('marca') }}">
+          <button type="button" class="btn btrig py-2" id="admin_temp">
+            <img src="{{ url_for('static', filename='img/admin_temp.png') }}" alt="" />
+          </button>
+        </a>
       </div>
 
       <div class="col"></div>
@@ -265,7 +268,7 @@
         </p>
       </div>
       <div class="col-xl-1 col-lg-1 col-md-12 col-sm-12 p-0 unirsepie d-flex justify-content-center my-lg-0 my-3">
-        <a class="d-flex align-items-center unirse" href="KanchaClub.html">
+        <a class="d-flex align-items-center unirse" href="{{ url_for('kancha_club')}}">
           <button class="btn bg-rojo-k l-blanco-k">UNIRSE</button>
         </a>
       </div>

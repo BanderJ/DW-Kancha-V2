@@ -10,6 +10,7 @@ import controlador_modelo
 import controlador_productos
 import controlador_carrito
 import controlador_ubicacion
+import controlador_tipo_usuario
 from bd import conectarse
 #Para generar claves en hash aleatoriassssss
 import hashlib
@@ -291,8 +292,92 @@ def redirigirPedidos():
     idUsuario = session.get("usuario", {}).get("idUsuario", None)
     if idUsuario is None:
         return redirect('/IniciarSesion')
-    ventas=controlador_carrito.obtener_ventas_y_detalles(idUsuario)
+    ventas = controlador_carrito.obtener_ventas_y_detalles(idUsuario)
     return render_template('MisPedidos.html', ventas=ventas)
+
+@app.route('/resumen_compra/<int:idVenta>')
+def resumenCompras(idVenta):
+    usuario = session.get("usuario")
+    if not usuario:
+        return redirect('/IniciarSesion')
+
+    try:
+        db = conectarse()
+        cursor = db.cursor()
+
+        query = """
+            SELECT 
+                cr.idCarrito, 
+                usu.idUsuario, 
+                pr.idProducto,
+                CONCAT(usu.nombre, ' ', usu.apePat) AS nombre_completo,
+                usu.numDoc, 
+                vt.direccion, 
+                vt.fecha, 
+                cr.descuento,
+                dv.cantidad, 
+                (dv.cantidad * pr.precio) AS subtotal_producto,  
+                md.nombre AS modelo, 
+                tp.nombre AS tipo_producto,
+                mc.nombre AS marca,
+                pr.precio as precio_unitario
+            FROM 
+                carrito cr
+            INNER JOIN usuario usu ON cr.idUsuario = usu.idUsuario
+            INNER JOIN detalle_venta dv ON cr.idCarrito = dv.idCarrito
+            INNER JOIN producto pr ON dv.idProducto = pr.idProducto
+            INNER JOIN venta vt ON cr.idCarrito = vt.idCarrito
+            INNER JOIN modelo md ON pr.idModelo = md.idModelo
+            INNER JOIN tipo_producto tp ON pr.idTipo = tp.idTipo
+            INNER JOIN marca mc ON md.idMarca = mc.idMarca
+            WHERE vt.idVenta = %s;
+        """
+
+        print(f"Executing query with idVenta: {idVenta}")
+        cursor.execute(query, (idVenta,))
+        productos = cursor.fetchall()
+
+        # Debug: Imprime el resultado de la consulta
+        print(f"Resultados de la consulta: {productos}")
+
+        if not productos:
+            return render_template('resumen_compra.html', productos=[], total_compra=0, usuario=usuario)
+
+        # Asegúrate de que el índice 8 (subtotal) exista en cada producto
+        try:
+            total_compra = sum(producto[9] for producto in productos)
+        except IndexError:
+            print("Error: Un producto no tiene suficiente información.")
+            return jsonify({"mensaje": "Error al calcular el total de compra", "error": "Índice fuera de rango"})
+
+        productos_format = [
+            {
+                'idCarrito': producto[0],
+                'nombre_completo': producto[3],
+                'numDoc': producto[4],
+                'direccion': producto[5],
+                'fecha': producto[6],
+                'descuento': producto[7],
+                'subtotal': producto[9],
+                'modelo': producto[10],
+                'tipo_producto': producto[11],
+                'marca': producto[12],
+                'cantidad': producto[8],
+                'precio_unitario': producto[13]
+            }
+            for producto in productos
+        ]
+
+        return render_template(
+            'resumen_compra.html',
+            productos=productos_format,
+            total_compra=total_compra,
+            usuario=usuario
+        )
+
+    except Exception as e:
+        print(f"Error al cargar el resumen: {e}")
+        return jsonify({"mensaje": "Error al cargar el resumen", "error": str(e)})
 
 @app.route('/NikeMercurial')
 def NikeMercurial():
@@ -483,7 +568,8 @@ def usuario():
 @app.route('/AgregarUsuario')
 def formulario_agregar_usuario():
     niveles_usuario = controlador_nivelusuario.obtener_nivelusuario()
-    return render_template('agregar_usuario.html', niveles_usuario = niveles_usuario)
+    tipos_usuario = controlador_tipo_usuario.obtener_tipos_usuario()
+    return render_template('agregar_usuario.html', niveles_usuario = niveles_usuario, tipos_usuario = tipos_usuario)
 
 @app.route("/guardar_usuario", methods=["POST"])
 def guardar_usuario():
@@ -493,11 +579,39 @@ def guardar_usuario():
     apeMat = request.form["apeMat"]
     correo = request.form["correo"]
     password = request.form["password"]
-    tipoUsu = 1
-    nivelUsu = request.form["nivel_usuario"]
-    controlador_usuario.insertar_usuario(tipoUsu, nombre, nroDoc, apePat, apeMat, correo, password, controlador_nivelusuario.obtener_nivelusuario_por_nombre(nivelUsu)[0])
-    # De cualquier modo, y si todo fue bien, redireccionar
+    telefono = request.form["telefono"]
+    fechaNacimiento = request.form["fechaNacimiento"]
+    sexo = request.form["sexo"] 
+    tipoUsu_nombre = request.form["tipo_usuario"]
+    nivelUsu_nombre = request.form["nivel_usuario"]
+    
+    tipoUsu_id = controlador_tipo_usuario.obtener_tipo_usuario_por_nombre(tipoUsu_nombre)[0]
+    nivelUsu_id = controlador_nivelusuario.obtener_nivelusuario_por_nombre(nivelUsu_nombre)[0]
+
+    controlador_usuario.insertar_usuario(tipoUsu_id, nombre, nroDoc, apePat, apeMat, correo, password, telefono, fechaNacimiento, sexo, nivelUsu_id)
+
     return redirect("/Usuario")
+
+@app.route("/guardar_cliente", methods=["POST"])
+def guardar_cliente():
+    nombre = request.form["nombre"]
+    nroDoc = request.form["numerodocumento"]
+    apePat = request.form["apePat"]
+    apeMat = request.form["apeMat"]
+    correo = request.form["correo"]
+    password = request.form["password"]
+    telefono = request.form["telefono"]
+    fechaNacimiento = request.form["fechaNacimiento"]
+    sexo = request.form["sexo"] 
+    
+    tipoUsu_id = 2
+    nivelUsu_id = 1
+
+    controlador_usuario.insertar_usuario(tipoUsu_id, nombre, nroDoc, apePat, apeMat, correo, password, telefono, fechaNacimiento, sexo, nivelUsu_id)
+
+    return redirect('/IniciarSesion')
+
+
 
 @app.route("/eliminar_usuario", methods=["POST"])
 def eliminar_usuario():
@@ -507,8 +621,9 @@ def eliminar_usuario():
 @app.route("/formulario_editar_Usuario/<int:id>")
 def formulario_editar_usuario(id):
     usuario = controlador_usuario.obtener_usuario_por_id(id)
+    tipos_usuario = controlador_tipo_usuario.obtener_tipos_usuario()
     niveles_usuario = controlador_nivelusuario.obtener_nivelusuario()
-    return render_template("editar_Usuario.html", usuario=usuario, niveles_usuario = niveles_usuario)
+    return render_template("editar_Usuario.html", usuario=usuario, niveles_usuario = niveles_usuario, tipos_usuario = tipos_usuario)
 
 @app.route("/actualizar_usuario", methods=["POST"])
 def actualizar_usuario():
@@ -518,11 +633,16 @@ def actualizar_usuario():
     apePat = request.form["apePat"]
     apeMat = request.form["apeMat"]
     correo = request.form["correo"]
-    password = request.form["password"]
-    tipoUsu = 1
-    nivelUsu = request.form["nivel_usuario"]
-    controlador_usuario.actualizar_usuario(tipoUsu, nombre, nroDoc, apePat, apeMat, correo, password, controlador_nivelusuario.obtener_nivelusuario_por_nombre(nivelUsu)[0], id)
+    telefono = request.form["telefono"] 
+    fechaNacimiento = request.form["fechaNacimiento"]  
+    sexo = request.form["sexo"] 
+    tipoUsu = request.form["tipo_usuario"]  
+    nivelUsu = request.form["nivel_usuario"]  
+
+    controlador_usuario.actualizar_usuario(controlador_tipo_usuario.obtener_tipo_usuario_por_nombre(tipoUsu)[0], nombre, nroDoc, apePat, apeMat, correo, telefono, fechaNacimiento, sexo, controlador_nivelusuario.obtener_nivelusuario_por_nombre(nivelUsu)[0], id)
+
     return redirect("/Usuario")
+
 
 # PARTE RELACIONADA AL PRODUCTO:
 
@@ -658,17 +778,15 @@ def detalle_producto(id):
 @app.route('/anadir_carrito', methods=['POST'])
 def anadir_carrito():
     # Obtener los datos del formulario
+
     id_producto = request.form.get('id_producto')
     nombre = request.form.get('nombre')
     precio = request.form.get('precio')
     cantidad = request.form.get('cantidad')
     id_usuario = session.get("usuario", {}).get("idUsuario", None)
-    # Llamar a la función de insertar detalle de venta
     controlador_carrito.insertar_detalle_venta(id_usuario, id_producto, cantidad, precio)
-    # Obtener detalles del producto nuevamente para mostrar al usuario
     producto = controlador_productos.obtener_producto_por_id(id_producto)
-    # Asegúrate de pasar 'subtotal' y 'total' con valores predeterminados para evitar errores
-    return render_template("detalle_producto.html", producto=producto)
+    return redirect(f'/producto/{id_producto}?')
 
 
 @app.route('/carrito')
@@ -700,24 +818,15 @@ def actualizar_cantidad_mas():
     id_carrito = request.form.get('id_carrito')
     id_usuario = session.get("usuario", {}).get("idUsuario", None)
 
-    try:
-        # Obtener el stock disponible para este producto
-        stock_disponible = controlador_carrito.obtener_stock_producto(id_producto)
+    resultado = controlador_carrito.incrementarcantidad(id_det_vta, id_producto, id_carrito, id_usuario)
 
-        # Obtener la cantidad actual
-        cantidad_actual = controlador_carrito.obtener_cantidad_actual(id_det_vta)
-
-        # Verificar si al incrementar se supera el stock disponible
-        if cantidad_actual + 1 > stock_disponible:
-            return jsonify({"error": "La cantidad no puede exceder el stock disponible."}), 400
-
-        # Incrementar cantidad en la base de datos
-        controlador_carrito.incrementarcantidad(id_det_vta, id_producto, id_carrito, id_usuario)
-
-        # Devolver la nueva cantidad
-        return jsonify({"nueva_cantidad": cantidad_actual + 1}), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    if "error" in resultado:
+        return jsonify({"error": resultado["error"]}), 400
+    else:
+        return jsonify({
+            "nueva_cantidad": resultado["nueva_cantidad"],
+            "nuevo_subtotal": resultado["nuevo_subtotal"]
+        }), 200
 
 @app.route('/actualizar_cantidad_menos', methods=['POST'])
 def actualizar_cantidad_menos():
@@ -726,21 +835,74 @@ def actualizar_cantidad_menos():
     id_carrito = request.form.get('id_carrito')
     id_usuario = session.get("usuario", {}).get("idUsuario", None)
 
+    resultado = controlador_carrito.disminuircantidad(id_det_vta, id_producto, id_carrito, id_usuario)
+
+    if "error" in resultado:
+        return jsonify({"error": resultado["error"]}), 400
+    else:
+        return jsonify({
+            "nueva_cantidad": resultado["nueva_cantidad"],
+            "nuevo_subtotal": resultado["nuevo_subtotal"]
+        }), 200
+
+@app.route('/actualizar_cantidad', methods=['POST'])
+def actualizar_cantidad():
+    id_producto = request.form.get('id_producto')
+    id_carrito = request.form.get('id_carrito')
+    accion = request.form.get('accion')  # 'mas' o 'menos'
+
+    # Lógica para obtener la cantidad actual y stock disponible
+    conexion = conectarse()
     try:
-        # Obtener la cantidad actual
-        cantidad_actual = controlador_carrito.obtener_cantidad_actual(id_det_vta)
+        with conexion.cursor() as cursor:
+            # Obtener la cantidad actual del detalle de venta
+            cursor.execute("SELECT cantidad FROM detalle_venta WHERE idProducto = %s AND idCarrito = %s", (id_producto, id_carrito))
+            cantidad_actual = cursor.fetchone()[0]
 
-        # Verificar si al disminuir la cantidad es menor que 1
-        if cantidad_actual - 1 < 1:
-            return jsonify({"error": "La cantidad no puede ser menor a 1."}), 400
+            # Obtener el stock disponible del producto
+            cursor.execute("SELECT stock FROM producto WHERE idProducto = %s", (id_producto,))
+            stock_disponible = cursor.fetchone()[0]
 
-        # Disminuir cantidad en la base de datos
-        controlador_carrito.disminuircantidad(id_det_vta, id_producto, id_carrito, id_usuario)
+            # Verificar la acción
+            if accion == 'mas':
+                if cantidad_actual < stock_disponible:
+                    nueva_cantidad = cantidad_actual + 1
+                else:
+                    return jsonify({'error': 'No se puede agregar más. Stock insuficiente.'}), 400
+            elif accion == 'menos':
+                if cantidad_actual > 1:
+                    nueva_cantidad = cantidad_actual - 1
+                else:
+                    return jsonify({'error': 'La cantidad mínima es 1.'}), 400
+            else:
+                return jsonify({'error': 'Acción no válida.'}), 400
 
-        # Devolver la nueva cantidad
-        return jsonify({"nueva_cantidad": cantidad_actual - 1}), 200
+            # Actualizar la cantidad en la base de datos
+            cursor.execute("""
+                UPDATE detalle_venta 
+                SET cantidad = %s 
+                WHERE idProducto = %s AND idCarrito = %s
+            """, (nueva_cantidad, id_producto, id_carrito))
+
+            # Recalcular el subtotal del carrito
+            cursor.execute("CALL actualizar_subtotal_carrito(%s)", (id_carrito,))
+            conexion.commit()
+
+            # Devolver la nueva cantidad y el precio del producto para actualizar el frontend
+            cursor.execute("SELECT precio FROM producto WHERE idProducto = %s", (id_producto,))
+            precio_unitario = cursor.fetchone()[0]
+
+            return jsonify({
+                'nueva_cantidad': nueva_cantidad,
+                'precio_unitario': precio_unitario
+            })
+
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        conexion.rollback()
+        return jsonify({'error': str(e)}), 500
+
+    finally:
+        conexion.close()
 
 
 @app.route('/finalizarcompra', methods=['POST'])
@@ -753,9 +915,83 @@ def finalizarCompra():
     # Llamar a la función incrementarcantidad para actualizar en la base de datos
     try:
         controlador_carrito.finalizarCompra_bd(id_carrito, id_ciudad, direccion, id_usuario)
-        return redirect(url_for('inicio'))
+        return redirect(url_for('resumenCompra'))
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+
+@app.route('/resumen_compra')
+def resumenCompra():
+    usuario = session.get("usuario")
+    if not usuario:
+        return redirect(url_for('login'))
+
+    id_usuario = usuario.get("idUsuario")
+
+    try:
+        db = conectarse()
+        cursor = db.cursor()
+
+        query = """
+       SELECT cr.idCarrito, usu.idUsuario, pr.idProducto, 
+               CONCAT(usu.nombre, ' ', usu.apePat) AS nombre_completo,
+               usu.numDoc, vt.direccion, vt.fecha, cr.descuento, 
+               cr.subtotal, md.nombre AS modelo, tp.nombre AS tipo_producto, 
+               mc.nombre AS marca, dv.cantidad, pr.precio
+        FROM carrito cr
+        INNER JOIN usuario usu ON cr.idUsuario = usu.idUsuario
+        INNER JOIN detalle_venta dv ON cr.idCarrito = dv.idCarrito
+        INNER JOIN producto pr ON dv.idProducto = pr.idProducto
+        INNER JOIN venta vt ON cr.idCarrito = vt.idCarrito
+        INNER JOIN modelo md ON pr.idModelo = md.idModelo
+        INNER JOIN tipo_producto tp ON pr.idTipo = tp.idTipo
+        INNER JOIN marca mc ON md.idMarca = mc.idMarca
+        WHERE cr.idUsuario = %s AND cr.idCarrito = (SELECT COALESCE(MAX(idCarrito), 0) FROM carrito WHERE idUsuario = %s);
+        """
+
+        cursor.execute(query, (id_usuario, id_usuario))
+        productos = cursor.fetchall()
+
+        if not productos:
+            return render_template('resumen_compra.html', usuario=usuario, productos=[], total_compra=0)
+
+        total_compra = sum(producto[8] for producto in productos)
+
+        productos_format = [
+            {
+                'idCarrito': producto[0],
+                'idUsuario': producto[1],
+                'idProducto': producto[2],
+                'nombre_completo': producto[3],
+                'numDoc': producto[4],
+                'direccion': producto[5],
+                'fecha': producto[6],
+                'descuento': producto[7],
+                'subtotal': producto[8],
+                'modelo': producto[9],
+                'tipo_producto': producto[10],
+                'marca': producto[11],
+                'cantidad': producto[12],
+                'precio_unitario':producto[13]
+            }
+            for producto in productos
+        ]
+
+        return render_template(
+            'resumen_compra.html',
+            usuario=usuario,
+            productos=productos_format,
+            total_compra=total_compra
+        )
+
+    except Exception as e:
+        return jsonify({
+            "mensaje": "Error al cargar el resumen de compra",
+            "error": f"Detalles del error: {repr(e)}",
+            "status": -1
+        })
+
+
 
 @app.route('/get_provincias/<int:departamento_id>')
 def get_provincias(departamento_id):
