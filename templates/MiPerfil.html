@@ -66,21 +66,21 @@ Mi perfil
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 col-12">
                         <label id="labfecha" for="fechan">Fecha de nacimiento</label>
-                        <input name="fechan" id="fechan" value="2004-08-11" type="date" class="form-control mb-2" aria-label="Username" aria-describedby="basic-addon1" disabled>
+                        <input name="fechan" id="fechan" value="{{userData.fechaNac}}" type="text" class="form-control mb-2" aria-label="Username" aria-describedby="basic-addon1" disabled>
                     </div>
                 </div>
                 <div class="row m-0 p-0 my-4">
                     <div class="col-lg-6 col-md-6 col-sm-12 col-12">
                         <label style="display: block;" for="genero">Sexo</label>
                         <select class="genero" id="genero" name="genero" disabled>
-                            <option value="masculino">Masculino</option>
-                            <option value="femenino">Femenino</option>
+                            <option value="masculino" {% if userData.sexo == 'M' %}selected{% endif %}>Masculino</option>
+                            <option value="femenino" {% if userData.sexo == 'F' %}selected{% endif %}>Femenino</option>
                             <option value="no-definido">Prefiero no decirlo</option>
                         </select>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 col-12">
                         <label for="movil">Numero de celular</label>
-                        <input name="movil" id="movil" type="text" class="form-control mb-2" aria-label="Username" value="971133030" aria-describedby="basic-addon1" disabled>
+                        <input name="movil" id="movil" type="text" class="form-control mb-2" aria-label="Username" value="{{userData.telefono}}" aria-describedby="basic-addon1" disabled>
                     </div>
                 </div>
                 <div class="row m-0 p-0 my-4">
