@@ -386,10 +386,59 @@ def NikeMercurial():
 @app.route('/dashboard')
 def dash():
     return render_template('maestradashboard.html')
-    
-    
 
-# ------------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------
+@app.route("/editarUsuario/<int:id>")
+def editarUsuario(id):
+    try:
+        cursor = conectarse().cursor()
+        sql = "SELECT idUsuario, nombre, apePat, apeMat, correo, numDoc, fechaNacimiento, sexo, telefono FROM usuario WHERE idUsuario = %s"
+        cursor.execute(sql, (id,))
+        registro = cursor.fetchone()  # Usamos fetchone ya que solo esperamos un registr
+
+            # Redirigir a la página de edición con los datos del usuario
+        return render_template('editarPerfil.html', datos=registro)
+    except Exception as e:
+        print(f"Error al editar usuario: {e}")
+        return "Error interno del servidor"
+
+@app.route("/editarPerfil", methods=["POST"])
+def editarDatosPerfil():
+    datos = session.get("usuario", {"nombre": "Invitado"})
+    
+    if datos["nombre"] != "Invitado":
+        idUsuario = datos["idUsuario"]
+        nombre = request.form['nombre']
+        apellidos = request.form['apellidos']
+        
+        # Split de apellidos y verificación
+        apellidosPadres = apellidos.split(" ")
+        apePat = apellidosPadres[0] if len(apellidosPadres) > 0 else ""
+        apeMat = apellidosPadres[1] if len(apellidosPadres) > 1 else ""
+        
+        email = request.form['email']
+        numero_documento = request.form['numero_documento']
+        fecha_nacimiento = request.form['fecha_nacimiento']
+        sexo = request.form['sexo']
+        numero_celular = request.form['telefono']
+        
+        # Actualizar perfil del usuario
+        controlador_usuario.actualizarPerfilUsuario(
+            nombre,
+            numero_documento,
+            apePat,
+            apeMat,
+            email,
+            fecha_nacimiento,
+            numero_celular,
+            idUsuario
+        )
+        
+        return redirect("/logout")
+    else:
+        return redirect('/IniciarSesion')
+################################################################################
+# ----------------------------------------------------------------------------------------------------------------
 # Controladores
 # Nivel de Usuario
 @app.route('/NivelUsuario')
