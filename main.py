@@ -559,11 +559,13 @@ def eliminar_marca():
     exito = controlador_marca.eliminar_marca(id_marca)
     
     if not exito:
-        flash(f'La marca "{nombre_marca}" no se puede ser eliminada. Ya existen productos asociados', 'success')
+        # Enviar mensaje indicando que la eliminación falló por inconsistencia
+        return jsonify({"status": "error", "message": f'No se puede eliminar la marca "{nombre_marca}" porque ya hay productos asignados.'})
     else:
-        flash(f'Marca "{nombre_marca}" eliminada correctamente.', 'success')
+        # Enviar mensaje indicando que la eliminación fue exitosa
+        return jsonify({"status": "success", "message": f'Marca "{nombre_marca}" eliminada correctamente.'})
 
-    return redirect("/Marca")
+
 
 @app.route("/formulario_editar_marca/<int:id>")
 def formulario_editar_marca(id):
