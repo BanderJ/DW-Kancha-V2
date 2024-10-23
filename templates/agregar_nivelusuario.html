@@ -1,22 +1,47 @@
 {% extends "maestradashboard.html" %}
+
 {% block titulomantenimiento %}
-Agregar nivel de usuario
+Agregar Nivel de Usuario
 {% endblock %}
+
 {% block mantenimiento %}
-<section class="section container my-5">
-    <div class="columns">
-        <div class="column is-one-third">
-            <h3 class="is-size-3">Agregar Nivel Usuario</h3>
-            <form action="{{url_for('guardar_nivelusuario')}}" method="post">
-                <label for="nombre">Nombre:</label>
-                <input required type="text" class="input" placeholder="Nombre" name="nombre" id="nombre">
-                <br><br>
-                <label for="puntos">Puntos Requeridos</label>
-                <input required type="number" class="input" placeholder="Artista" name="puntos" id="puntos">
-                <button type="submit" class="btn bg-azul-k mt-2">Guardar</button>
-                <a href="{{url_for('nivelusuario')}}" class="bg-azul-k">Volver</a>
-            </form>
-        </div>
+<!-- Enlace al archivo CSS del modal -->
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/modal.css') }}">
+
+<div class="columns">
+    <div style="display: flex; justify-content: flex-end;">
+        <a class="d-flex align-items-center me-2 regresar" href="{{url_for('nivelusuario')}}" style="text-decoration: none;">
+            <button class="btn bg-rojo-k me-2 d-flex align-items-center">
+                <img class="img-fluid" src="{{url_for('static',filename='img/fr.svg')}}" alt="" style="max-height: 32px;"> <!-- Ajusta el tamaño de la imagen si es necesario -->
+            </button>
+            <label class="l-rojo-k" for="regresar" style="margin: 0;">Volver</label>
+        </a>
     </div>
-</section>
+    <div class="column is-one-third">
+        <form action="{{ url_for('guardar_nivelusuario') }}" method="post" id="nivelUsuarioForm">
+            <label for="nombre">Nombre:</label>
+            <input required type="text" class="input" placeholder="Nombre" name="nombre" id="nombre">
+            
+            <br><br>
+            <label for="puntos">Puntos Requeridos:</label>
+            <input required type="number" class="input" placeholder="Puntos" name="puntos" id="puntos">
+            
+            <br><br>
+            <button type="button" class="button is-success mt-2 openModalButton" data-form-id="nivelUsuarioForm">Guardar</button>
+        </form>
+    </div>
+</div>
+
+<!-- Estructura del Modal de Confirmación -->
+<div id="confirmationModal" class="modal">
+    <div class="modal-content">
+        <h2>¿Estás seguro de continuar?</h2>
+        <p>Esta acción guardará el nivel de usuario. ¿Deseas continuar?</p>
+        <button id="confirmButton" class="btn">Sí, Guardar</button>
+        <button id="cancelButton" class="btn">Cancelar</button>
+    </div>
+</div>
+
+<!-- Enlace al archivo JavaScript -->
+<script src="{{ url_for('static', filename='js/modal.js') }}"></script>
 {% endblock %}
