@@ -367,15 +367,30 @@ def obtener_id_carrito(id_usuario):
     
 #     return ventas
 
+def obtener_numero_pedido(id_usuario):
+    conexion = conectarse()
+    ventas = []
+    try:
+        with conexion.cursor() as cursor:
+            cursor.execute("""select count(*) as cantidad
+                    from carrito where idUsuario = %s and estado = 'C'""", (id_usuario,))
+            ventas = cursor.fetchone()
+    except Exception as e:
+        print(f"Error al obtener ventas y detalles: {e}")
+    finally: 
+        conexion.close()
+
+    return ventas
+
 def obtener_ventas_y_detalles(id_usuario):
     conexion = conectarse()
     ventas = []
 
     try:
         with conexion.cursor() as cursor:
-            # Obtener todas las ventas del usuario
+            # Obtener todas las ventas del usuario en orden descendente (más reciente primero)
             cursor.execute("""
-                SELECT 
+                SELECT
                     Venta.idVenta, 
                     Venta.fecha, 
                     Venta.hora, 
@@ -389,8 +404,9 @@ def obtener_ventas_y_detalles(id_usuario):
             """, (id_usuario,))
             
             ventas_base = cursor.fetchall()
+            total_pedidos = len(ventas_base)  # Total de pedidos
 
-            # Enumerar los pedidos secuencialmente por usuario
+            # Enumerar los pedidos en orden inverso
             for index, venta in enumerate(ventas_base, start=1):
                 id_venta = venta[0]
 
@@ -430,10 +446,10 @@ def obtener_ventas_y_detalles(id_usuario):
                     for producto in productos
                 ]
 
-                # Agregar los detalles a la venta
+                # Agregar los detalles a la venta, numerando desde el total hacia abajo
                 ventas.append({
-                    'idVenta': venta[0],          # Usado para redirección interna
-                    'numeroPedido': index,        # Número de pedido secuencial
+                    'idVenta': venta[0],               # Usado para redirección interna
+                    'numeroPedido': total_pedidos - index + 1,  # Invertir el orden
                     'fecha': venta[1],
                     'hora': venta[2],
                     'direccion': venta[3],
@@ -447,6 +463,7 @@ def obtener_ventas_y_detalles(id_usuario):
         conexion.close()
     
     return ventas
+
 
 
 
