@@ -205,10 +205,10 @@
                                         <p>{{ producto[7] }} {{ producto[3] }}</p>
                                     </div>
                                     <div class="col-6 pe-0">
-                                        <p class="text-start"><b>S/{{ ((producto[1] | float) * 0.85) | round(2) }}</b></p>
+                                        <p class="text-start"><b>S/{{ producto[1] }}</b></p>
                                     </div>
                                     <div class="col-6 ps-0">
-                                        <p class="text-end"><b><s>S/ {{ producto[1] }}</s></b></p>
+                                        <p class="text-end"><b><s>S/{{ ((producto[1] | float) * 1.50) | round(2) }}</s></b></p>
                                     </div>
                                     <div class="col-8 pe-0 my-1">
                                         <p class="text-start l-rojo-k"><b>S/{{ ((producto[1] | float) * 0.50) | round(2) }}</b></p>

@@ -53,10 +53,10 @@
                       <p>{{ favorito[4] }} {{ favorito[1] }}</p>
                   </div>
                   <div class="col-6 pe-0">
-                      <p class="text-start"><b>S/ {{ ((favorito[2] | float) * 0.85) | round(2) }}</b></p>
+                      <p class="text-start"><b>S/ {{ favorito[2] }}</b></p>
                   </div>
                   <div class="col-6 ps-0">
-                      <p class="text-end"><b><s>S/ {{ favorito[2] }}</s></b></p>
+                      <p class="text-end"><b><s>S/{{ ((favorito[2] | float) * 1.50) | round(2) }}</s></b></p>
                   </div>
                   <div class="col-8 pe-0 my-1">
                       <p class="text-start l-rojo-k"><b>S/ {{ ((favorito[2] | float) * 0.50) | round(2) }}</b></p>

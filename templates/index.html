@@ -46,10 +46,10 @@
       <div class="card-body">
         <h5 class="card-title">{{ producto[7] }} {{producto[3]}}</h5>
         <div class="row">
-          <p class="card-text col">S/{{((producto[1] | float)*0.85)| round(2)}}</p>
-          <p class="col"><del>S/{{producto[1]}}</del></p>
+          <p class="card-text col">S/{{producto[1]}}</p>
+          <p class="col"><del>S/{{ ((producto[1] | float) * 1.50) | round(2) }}</del></p>
         </div>
-        <p><strong>S/ {{((producto[1] | float)*0.50 )| round(2)}}</strong></p>
+        <p style="color:red"><strong>S/ {{((producto[1] | float)*0.50 )| round(2)}}</strong></p>
       </div>
     </div>
     {% endfor %}
