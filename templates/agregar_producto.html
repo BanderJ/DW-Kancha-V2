@@ -1,78 +1,94 @@
 {% extends "maestradashboard.html" %}
 {% block titulomantenimiento %}Agregar Producto{% endblock %}
 {% block mantenimiento %}
-<section class="section">
-    <div class="columns">
-        <div class="column is-half">
-            <h3 class="is-size-3">Agregar Producto</h3>
-            <form action="{{ url_for('guardar_producto') }}" method="POST" enctype="multipart/form-data">
 
-                <label for="precio">Precio:</label>
-                <input type="number" name="precio" class="input" step="0.01" required>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/modal.css') }}">
 
-                <label for="stock">Stock:</label>
-                <input type="number" name="stock" class="input" required>
-
-                <label for="vigencia">Vigente:</label>
-                <input type="checkbox" id="vigencia" name="vigencia" value="1" {% if producto_vigente %} checked {% endif %}>
-
-                <label for="idModelo">Modelo:</label>
-                <select name="idModelo" class="input" required>
-                    {% for modelo in modelos %}
-                    <option value="{{ modelo[0] }}">{{ modelo[1] }}</option>
-                    {% endfor %}
-                </select>
-
-                <label for="idTalla">Talla:</label>
-                <select name="idTalla" class="input" required>
-                    {% for talla in tallas %}
-                    <option value="{{ talla[0] }}">{{ talla[1] }}</option>
-                    {% endfor %}
-                </select>
-
-                <label for="idGenero">Género:</label>
-                <select name="idGenero" class="input"  required>
-                    {% for genero in generos %}
-                    <option value="{{ genero[0] }}">{{ genero[1] }}</option>
-                    {% endfor %}
-                </select>
-
-                <label for="idTipo">Tipo de Producto:</label>
-                <select name="idTipo" class="input"  required>
-                    {% for tipo in tipos %}
-                    <option value="{{ tipo[0] }}">{{ tipo[1] }}</option>
-                    {% endfor %}
-                </select>
-
-                <label for="descripcion">Descripcion:</label>
-                <textarea id="descripcion" name="descripcion" rows="4" cols="50"></textarea><br><br>
-
-                <label for="imagenPrincipal">Imagen Principal:</label>
-                <input type="file" name="imagenPrincipal" class="input" required>
-                <div id="cargaPrincipal" class="progress" style="display:none;">Cargando...</div>
-
-                <label for="imagenesSecundarias">Imágenes Secundarias (3):</label>
-                <input type="file" name="imagenesSecundarias" class="input" multiple required>
-                <div id="cargaSecundarias" class="progress" style="display:none;">Cargando...</div>
-
-                <label for="colores">Colores:</label>
-                <select name="colores" class="input" multiple required>
-                    {% for color in colores %}
-                    <option value="{{ color[0] }}">{{ color[1] }}</option>
-                    {% endfor %}
-                </select>
-
-                <label for="categorias">Categorías:</label>
-                <select name="categorias" class="input" multiple required>
-                    {% for categoria in categorias %}
-                    <option value="{{ categoria[0] }}">{{ categoria[1] }}</option>
-                    {% endfor %}
-                </select>
-
-                <button type="submit" class="button is-success mt-2">Guardar</button>
-            </form>
+<div class="columns">
+    <div class="column is-half">
+        <div style="display: flex; justify-content: flex-end;">
+            <a class="d-flex align-items-center me-2 regresar" href="{{url_for('formulario_producto')}}" style="text-decoration: none;">
+                <button class="btn bg-rojo-k me-2 d-flex align-items-center">
+                    <img class="img-fluid" src="{{url_for('static',filename='img/fr.svg')}}" alt="" style="max-height: 32px;">
+                </button>
+                <label class="l-rojo-k" for="regresar" style="margin: 0;">Volver</label>
+            </a>
         </div>
+        <form id="productoForm" action="{{ url_for('guardar_producto') }}" method="POST" enctype="multipart/form-data">
+            <label for="precio">Precio:</label>
+            <input type="number" name="precio" class="input" step="0.01" required>
+            <label for="stock">Stock:</label>
+            <input type="number" name="stock" class="input" required>
+            <label for="vigencia">Vigente:</label>
+            <input type="checkbox" id="vigencia" name="vigencia" value="1" {% if producto_vigente %} checked {% endif %}>
+            <label for="idModelo">Modelo:</label>
+            <select name="idModelo" class="input" required>
+                {% for modelo in modelos %}
+                <option value="{{ modelo[0] }}">{{ modelo[1] }}</option>
+                {% endfor %}
+            </select>
+            <label for="idTalla">Talla:</label>
+            <select name="idTalla" class="input" required>
+                {% for talla in tallas %}
+                <option value="{{ talla[0] }}">{{ talla[1] }}</option>
+                {% endfor %}
+            </select>
+            <label for="idGenero">Género:</label>
+            <select name="idGenero" class="input" required>
+                {% for genero in generos %}
+                <option value="{{ genero[0] }}">{{ genero[1] }}</option>
+                {% endfor %}
+            </select>
+            <label for="idTipo">Tipo de Producto:</label>
+            <select name="idTipo" class="input" required>
+                {% for tipo in tipos %}
+                <option value="{{ tipo[0] }}">{{ tipo[1] }}</option>
+                {% endfor %}
+            </select>
+            <label for="descripcion">Descripcion:</label>
+            <textarea id="descripcion" name="descripcion" rows="4" cols="50"></textarea><br><br>
+            <label for="imagenPrincipal">Imagen Principal:</label>
+            <input type="file" name="imagenPrincipal" class="input" required>
+            <div id="cargaPrincipal" class="progress" style="display:none;">Cargando...</div>
+            <label for="imagenesSecundarias">Imágenes Secundarias (3):</label>
+            <input type="file" name="imagenesSecundarias" class="input" multiple required>
+            <div id="cargaSecundarias" class="progress" style="display:none;">Cargando...</div>
+            <label for="colores">Colores:</label>
+            <select name="colores" class="input" multiple required>
+                {% for color in colores %}
+                <option value="{{ color[0] }}">{{ color[1] }}</option>
+                {% endfor %}
+            </select>
+            <label for="categorias">Categorías:</label>
+            <select name="categorias" class="input" multiple required>
+                {% for categoria in categorias %}
+                <option value="{{ categoria[0] }}">{{ categoria[1] }}</option>
+                {% endfor %}
+            </select>
+            <button type="button" data-form-id="productoForm" class="button is-success mt-2 openModalButton">Guardar</button>
+        </form>
     </div>
-</section>
+</div>
+
+<div id="confirmationModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <h2>¿Estás seguro de guardar este producto?</h2>
+        <p>Esta acción no se puede deshacer.</p>
+        <button id="confirmButton" class="button is-success">Confirmar</button>
+        <button id="cancelButton" class="button">Cancelar</button>
+    </div>
+</div>
+
+<div id="errorModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <h2>Error de Validación</h2>
+        <p id="errorMessage"></p>
+        <button id="closeErrorButton" class="button">Cerrar</button>
+    </div>
+</div>
+
+<!-- <script src="{{ url_for('static', filename='js/modalproducto.js') }}"></script> -->
+<script src="{{ url_for('static', filename='js/validacionProducto.js') }}"></script>
+
 {% endblock %}
 
