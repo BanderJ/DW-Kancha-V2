@@ -82,3 +82,40 @@ document.getElementById('collapseTwo').addEventListener('shown.bs.collapse', fun
 document.getElementById('collapseThree').addEventListener('shown.bs.collapse', function () {
   updateProgress(2);
 });
+
+
+// Selección de elementos
+const purchaseModal = document.getElementById('purchaseModal');
+const confirmPurchaseButton = document.getElementById('confirmPurchaseButton');
+const cancelPurchaseButton = document.getElementById('cancelPurchaseButton');
+const closePurchaseModal = document.getElementById('closePurchaseModal');
+
+// Mostrar el modal al hacer clic en el botón "Finalizar compra"
+document.querySelector('#btn3').addEventListener('click', (e) => {
+    e.preventDefault();  // Evitar que el formulario se envíe inmediatamente
+    purchaseModal.style.display = 'block';
+});
+
+// Confirmar la compra
+confirmPurchaseButton.addEventListener('click', () => {
+    // Enviar el formulario de compra aquí
+    document.querySelector('form').submit();
+    purchaseModal.style.display = 'none';
+});
+
+// Cancelar la compra y cerrar el modal
+cancelPurchaseButton.addEventListener('click', () => {
+    purchaseModal.style.display = 'none';
+});
+
+// Cerrar el modal si se hace clic en la 'x'
+closePurchaseModal.addEventListener('click', () => {
+    purchaseModal.style.display = 'none';
+});
+
+// Cerrar el modal si se hace clic fuera del contenido
+window.addEventListener('click', (event) => {
+    if (event.target === purchaseModal) {
+        purchaseModal.style.display = 'none';
+    }
+});

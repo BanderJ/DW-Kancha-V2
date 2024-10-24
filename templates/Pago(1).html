@@ -2,6 +2,8 @@
 %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/Pago.css') }}" />
 <link rel="stylesheet" href="{{ url_for('static', filename='css/titulo.css') }}" />
+<link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}" />
+
 {% endblock %} {% block contenido %}
 <main class="mt-4">
     <div class="row m-0 py-2">
@@ -327,6 +329,18 @@
         </div>
         <div class="col p-0"></div>
     </div>
+
+    <!-- Modal de confirmación de compra -->
+<div id="purchaseModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" id="closePurchaseModal">&times;</span>
+      <h2>¿Desea continuar con la compra?</h2>
+      <p>Confirme si desea proceder con la compra y realizar el pago.</p>
+      <button id="confirmPurchaseButton">Confirmar</button>
+      <button id="cancelPurchaseButton">Cancelar</button>
+    </div>
+  </div>
+
 </main>
 {% endblock %} {% block js %}
 
