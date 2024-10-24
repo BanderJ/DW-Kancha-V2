@@ -18,8 +18,7 @@ document.getElementById('btn2').addEventListener('click', function () {
 
 document.getElementById('btn3').addEventListener('click', function () {
   if (validateSection('collapseThree')) {
-    // Aquí puedes agregar la lógica para finalizar la compra
-    alert('Compra finalizada!');
+
   }
 });
 

@@ -147,6 +147,52 @@ def obtener_producto_por_id(id):
     conexion.close()
     return producto
 
+def obtener_producto_por_id_2(id):
+    conexion = conectarse()
+    producto = None
+    with conexion.cursor() as cursor:
+        # Consulta principal para obtener los datos del producto
+        cursor.execute("""
+            SELECT p.idProducto, p.precio, p.stock, m.nombre AS modelo_nombre, 
+                   ge.nombre as genero, t.id AS talla_id, t.nombre AS talla_nombre, 
+                   tp.nombre as tipo_producto, img.imagenPrincipal, img.imagenSec01, 
+                   img.imagenSec02, img.imagenSec03, p.descripcion, p.estado, 
+                   ma.nombre AS marca_nombre, ma.imagen AS marca_imagen
+            FROM Producto p
+            JOIN Modelo m ON p.idModelo = m.idModelo
+            JOIN Marca ma ON m.idMarca = ma.idMarca
+            JOIN Talla t ON p.idTalla = t.id
+            JOIN Imagen img ON p.idImagen = img.idImagen
+            JOIN Genero ge ON p.idGenero = ge.idGenero
+            JOIN Tipo_Producto tp ON p.idTipo = tp.idTipo
+            WHERE p.idProducto = %s
+        """, (id,))
+        producto = cursor.fetchone()
+
+        # Consulta para obtener los colores asociados al producto
+        cursor.execute("""
+            SELECT c.idColor, c.nombre
+            FROM Producto_Color pc
+            JOIN Color c ON pc.idColor = c.idColor
+            WHERE pc.idProducto = %s
+        """, (id,))
+        producto_colores = cursor.fetchall()
+
+        # Consulta para obtener las categorías asociadas al producto
+        cursor.execute("""
+            SELECT c.idCategoria, c.nombre
+            FROM categoriaproducto pc
+            JOIN Categoria c ON pc.CategoriaidCategoria = c.idCategoria
+            WHERE pc.ProductoidProducto = %s
+        """, (id,))
+        producto_categorias = cursor.fetchall()
+
+    conexion.close()
+
+    # Retorna los datos del producto junto con las listas de colores y categorías
+    return producto, producto_colores, producto_categorias
+
+
 def obtener_productos():
     conexion = conectarse()
     producto = None

@@ -224,10 +224,38 @@ def registrarUsuario():
 def mostrarPerfil():
     datos = session.get("usuario", {"nombre":"Invitado","apellidos":"Invitado"})
     if datos["nombre"] != "Invitado":
-        # Solo formatear la fecha si hay sesión del usuario
-        fecha_nac = datetime.strptime(datos["fechaNac"], "%a, %d %b %Y %H:%M:%S %Z")
-        formato_fecha = fecha_nac.strftime("%d/%m/%Y")
-        return render_template("MiPerfil.html", userData=datos,nacimiento=formato_fecha)
+        fecha_str = datos["fechaNac"]
+
+        # Dividir la cadena y extraer los componentes necesarios
+        partes = fecha_str.split()  # Esto separa la cadena en partes
+
+        # Obtener el día, el mes y el año
+        dia = partes[1]  # '06'
+        mes = partes[2]  # 'Sep'
+        anio = partes[3]  # '2024'
+
+        # Crear un diccionario para convertir el mes abreviado a su número correspondiente
+        meses = {
+            'Jan': '01',
+            'Feb': '02',
+            'Mar': '03',
+            'Apr': '04',
+            'May': '05',
+            'Jun': '06',
+            'Jul': '07',
+            'Aug': '08',
+            'Sep': '09',
+            'Oct': '10',
+            'Nov': '11',
+            'Dec': '12'
+        }
+
+        # Obtener el número del mes
+        mes_num = meses[mes]
+
+        # Formatear la nueva fecha
+        nueva_fecha = f"{dia}/{mes_num}/{anio}"
+        return render_template("MiPerfil.html", userData=datos,nacimiento=nueva_fecha)
     else:
         return redirect("/IniciarSesion")
     
@@ -765,16 +793,40 @@ def eliminar_producto():
 
 
 # Editar producto
+# @app.route("/editar_producto/<int:id>")
+# def editar_producto(id):
+#     producto = controlador_productos.obtener_producto_por_id(id)
+#     modelos = controlador_productos.obtener_modelos()
+#     tallas = controlador_productos.obtener_tallas()
+#     colores = controlador_productos.obtener_colores()
+#     categorias = controlador_productos.obtener_categorias()
+#     generos = controlador_productos.obtener_generos()
+#     tipos = controlador_productos.obtener_tipos()
+#     return render_template("editar_producto.html", producto=producto, modelos=modelos, tallas=tallas,colores=colores, categorias=categorias,generos=generos,tipos=tipos)
+
 @app.route("/editar_producto/<int:id>")
 def editar_producto(id):
-    producto = controlador_productos.obtener_producto_por_id(id)
+    producto, producto_colores, producto_categorias = controlador_productos.obtener_producto_por_id_2(id)
     modelos = controlador_productos.obtener_modelos()
     tallas = controlador_productos.obtener_tallas()
     colores = controlador_productos.obtener_colores()
     categorias = controlador_productos.obtener_categorias()
     generos = controlador_productos.obtener_generos()
     tipos = controlador_productos.obtener_tipos()
-    return render_template("editar_producto.html", producto=producto, modelos=modelos, tallas=tallas,colores=colores, categorias=categorias,generos=generos,tipos=tipos)
+
+    # Renderiza el template pasando el producto y sus colores y categorías seleccionados
+    return render_template(
+        "editar_producto.html",
+        producto=producto,
+        producto_colores=[color[0] for color in producto_colores],  # Solo los IDs de colores
+        producto_categorias=[categoria[0] for categoria in producto_categorias],  # Solo los IDs de categorías
+        modelos=modelos,
+        tallas=tallas,
+        colores=colores,
+        categorias=categorias,
+        generos=generos,
+        tipos=tipos
+    )
 
 # Actualizar producto
 @app.route("/actualizar_producto", methods=["POST"])

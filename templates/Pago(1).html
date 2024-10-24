@@ -507,7 +507,7 @@
         $("#codeSeg").on("keyup blur", function () {
             delayedValidation(function () {
                 var codeSeg = $("#codeSeg").val();
-                if (codeSeg.length < 3) {
+                if (codeSeg.length != 3) {
                     $("#errorCodeSeg").text(
                         "El código de seguridad debe tener al menos 3 dígitos."
                     );
