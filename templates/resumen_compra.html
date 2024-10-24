@@ -3,10 +3,12 @@
 {% block titulo %}
 Resumen de Compra
 {% endblock %}
-
+{% block link %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/resumencompra.css')}}">
+{% endblock %}
 {% block contenido %}
-<div class="container mt-5">
-    <h2 class="text-center mb-4">Boleta de Compra</h2>
+<div class="container my-5 contenedorresumen">
+    <h2 class="text-center mb-4">Boleta de Venta</h2>
 
     {% if productos %}
     <div class="mb-4">
