@@ -331,15 +331,25 @@
     </div>
 
     <!-- Modal de confirmación de compra -->
-<div id="purchaseModal" class="modal">
+<div id="confirmationModal" class="modal">
     <div class="modal-content">
-      <span class="close-btn" id="closePurchaseModal">&times;</span>
       <h2>¿Desea continuar con la compra?</h2>
       <p>Confirme si desea proceder con la compra y realizar el pago.</p>
-      <button id="confirmPurchaseButton">Confirmar</button>
-      <button id="cancelPurchaseButton">Cancelar</button>
+      <button id="confirmButton">Confirmar</button>
+      <button id="cancelButton">Cancelar</button>
     </div>
   </div>
+
+
+  <!-- Estructura del Modal de Confirmación -->
+<!-- <div id="confirmationModal" class="modal">
+    <div class="modal-content">
+        <h2>¿Estás seguro de continuar?</h2>
+        <p>Esta acción guardará la categoría. ¿Deseas continuar?</p>
+        <button id="confirmButton" class="btn">Sí, Guardar</button>
+        <button id="cancelButton" class="btn">Cancelar</button>
+    </div>
+</div> -->
 
 </main>
 {% endblock %} {% block js %}
