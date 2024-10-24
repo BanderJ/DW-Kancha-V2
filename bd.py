@@ -28,4 +28,4 @@ def conectarse():
                                 port=3306,
                                 user='root',
                                 password='',
-                                db='dawa_kancha')
+                                db='kancha')
