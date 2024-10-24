@@ -255,21 +255,31 @@ def actualizar_producto(id, precio, stock, idModelo, idTalla, genero, tipo_produ
     finally:
         conexion.close()
 
-# Eliminar producto y sus relaciones
 def eliminar_producto(id):
     conexion = conectarse()
     try:
         with conexion.cursor() as cursor:
+            # Eliminar las relaciones del producto con colores y categorías primero
             cursor.execute("DELETE FROM Producto_Color WHERE idProducto = %s", (id,))
             cursor.execute("DELETE FROM CategoriaProducto WHERE ProductoidProducto = %s", (id,))
+
+            # Eliminar las imágenes relacionadas con el producto
+
+            # Finalmente, eliminar el producto
             cursor.execute("DELETE FROM Producto WHERE idProducto = %s", (id,))
-            cursor.execute("DELETE FROM Imagen WHERE idImagen = (SELECT idImagen FROM Producto WHERE idProducto = %s)", (id,))
+            cursor.execute("DELETE FROM Imagen WHERE idImagen IN (SELECT idImagen FROM Producto WHERE idProducto = %s)", (id,))
+
+        
         conexion.commit()
+        return True  # Eliminación exitosa
     except Exception as e:
         conexion.rollback()
-        raise e
+        print(f"Error eliminando producto: {e}")
+        return False  # En caso de error
     finally:
         conexion.close()
+
+
 
 # Obtener modelos y tallas
 def obtener_modelos():

@@ -751,9 +751,18 @@ def guardar_producto():
 # Eliminar producto
 @app.route("/eliminar_producto", methods=["POST"])
 def eliminar_producto():
-    controlador_productos.eliminar_producto(request.form["id"])
-    flash("Producto eliminado.")
-    return redirect("/formulario_productos")
+    id_producto = request.form["id"]
+    producto = controlador_productos.obtener_producto_por_id(id_producto)
+    nombre_producto = producto[3] if producto else "Producto desconocido"  # Usar el nombre o modelo del producto
+    
+    exito = controlador_productos.eliminar_producto(id_producto)
+    if not exito:
+        # Enviar mensaje indicando que la eliminación falló
+        return jsonify({"status": "error", "message": f'No se puede eliminar el producto "{nombre_producto}" porque está asociado a un proceso.'})
+    else:
+        # Enviar mensaje indicando que la eliminación fue exitosa
+        return jsonify({"status": "success", "message": f'Producto "{nombre_producto}" eliminado correctamente.'})
+
 
 # Editar producto
 @app.route("/editar_producto/<int:id>")

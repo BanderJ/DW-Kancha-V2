@@ -1,11 +1,16 @@
 {% extends "maestradashboard.html" %}
-{% block titulomantenimiento %}Producto{% endblock %}
+{% block titulomantenimiento %}Productos{% endblock %}
+
 {% block mantenimiento %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
+
 <section class="section">
     <div class="columns">
         <div class="column">
-            <h3 class="is-size-3">Productos</h3>
-            <a href="{{ url_for('formulario_agregar_producto') }}" class="button is-success">Agregar</a>
+            <h3 class="is-size-3">Lista de productos</h3>
+            <div>
+                <a href="{{ url_for('formulario_agregar_producto') }}" class="btn bg-gris-k l-blanco-k">Agregar</a>
+            </div>
             <table class="table">
                 <thead>
                     <tr>
@@ -14,7 +19,7 @@
                         <th>Género</th>
                         <th>Talla</th>
                         <th>Tipo Producto</th>
-                        <th>Descripcion</th>
+                        <th>Descripción</th>
                         <th>Imagen Principal</th>
                         <th>Imágenes Secundarias</th>
                         <th>Precio</th>
@@ -32,12 +37,12 @@
                         <td>{{ producto[5] }}</td> <!-- Género -->
                         <td>{{ producto[6] }}</td> <!-- Talla -->
                         <td>{{ producto[7] }}</td> <!-- Tipo de Producto -->
-                        <td>{{ producto[12] }}</td> <!-- Descripcion -->
-                        <td><img src="{{ url_for('static', filename='img/' + producto[8]) }}" width="100"></td>
+                        <td>{{ producto[12] }}</td> <!-- Descripción -->
+                        <td><img src="{{ url_for('static', filename='img/' + producto[8]) }}" width="100" alt="Imagen principal de {{ producto[3] }}"></td>
                         <td>
-                            <img src="{{ url_for('static', filename='img/' + producto[9]) }}" width="50">
-                            <img src="{{ url_for('static', filename='img/' + producto[10]) }}" width="50">
-                            <img src="{{ url_for('static', filename='img/' + producto[11]) }}" width="50">
+                            <img src="{{ url_for('static', filename='img/' + producto[9]) }}" width="50" alt="Imagen secundaria 1 de {{ producto[3] }}">
+                            <img src="{{ url_for('static', filename='img/' + producto[10]) }}" width="50" alt="Imagen secundaria 2 de {{ producto[3] }}">
+                            <img src="{{ url_for('static', filename='img/' + producto[11]) }}" width="50" alt="Imagen secundaria 3 de {{ producto[3] }}">
                         </td>
                         <td>{{ producto[1] }}</td> <!-- Precio -->
                         <td>{{ producto[2] }}</td> <!-- Stock -->
@@ -49,18 +54,18 @@
                             {% else %}
                             Desconocido
                             {% endif %}
-
                         </td> <!-- Vigencia -->
                         <td>
-                            <a href="{{ url_for('editar_producto', id=producto[0]) }}"
-                                class="button is-warning">Editar</a>
+                            <a href="{{ url_for('editar_producto', id=producto[0]) }}">
+                                <button class="btn bg-azul-k l-blanco-k">Editar</button>
+                            </a>
                         </td>
                         <td>
-                            <form action="{{ url_for('eliminar_producto') }}" method="POST">
+                            <form action="{{ url_for('eliminar_producto') }}" method="POST" class="delete-form" data-id="{{ producto[0] }}" style="background-color: transparent; border-style: none;">
                                 <input type="hidden" name="id" value="{{ producto[0] }}">
-                                <button class="button is-danger">Eliminar</button>
+                                <button type="button" class="btn btn-danger openModalButton" data-nombre="{{ producto[3] }}">Eliminar</button>
                             </form>
-                        </td>
+                        </td>                        
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -68,4 +73,17 @@
         </div>
     </div>
 </section>
+
+<!-- Modal de confirmación o error -->
+<div id="confirmationModal" class="modal">
+    <div class="modal-content">
+        <h2 id="modalTitle">¿Estás seguro de eliminar este producto?</h2>
+        <p id="modalMessage">Esta acción no se puede deshacer.</p>
+        <button id="confirmButton" class="button is-danger">Sí, Eliminar</button>
+        <button id="cancelButton" class="button is-secondary">Cancelar</button>
+    </div>
+</div>
+
+<!-- Enlace al archivo JavaScript -->
+<script src="{{ url_for('static', filename='js/modalproducto.js') }}"></script>
 {% endblock %}
