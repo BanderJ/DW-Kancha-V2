@@ -24,7 +24,7 @@
             <label for="idModelo">Modelo:</label>
             <select name="idModelo" class="input" required>
                 {% for modelo in modelos %}
-                <option value="{{ modelo[0] }}" {% if producto[4] == modelo[0] %} selected {% endif %}>{{ modelo[1] }}</option>
+                <option value="{{ modelo[0] }}" {% if producto[3] == modelo[1] %} selected {% endif %}>{{ modelo[1] }}</option>
                 {% endfor %}
             </select>
             <label for="idTalla">Talla:</label>
